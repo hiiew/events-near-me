@@ -75,3 +75,19 @@
 - [ ] Requirement ID(s) in commit message and code comment
 - [ ] No secrets, no coordinates in logs
 - [ ] `dev-log.md` updated (one line is fine)
+
+## 6. AI assistant skills (shared by the cloud session and your laptop)
+
+Three reviewed agent skills are committed in `.claude/skills/` (versions pinned in `skills-lock.json`),
+so any Claude session working in this repo — the cloud session or the Claude extension in
+Antigravity after `git pull` — loads them automatically:
+
+| Skill | Source | Use it for |
+|---|---|---|
+| `vercel-react-best-practices` | vercel-labs/agent-skills | React / Next.js patterns and performance |
+| `vitest` | antfu/skills | Writing Vitest tests |
+| `accessibility` | addyosmani/web-quality-skills | WCAG checks (NFR-05) |
+
+They were reviewed on 2026-11-11: Markdown guidance only, no scripts. **Owner-writes-code rule still
+applies** — use them for hints and reviews, not to generate whole files.
+Update later with `npx skills update -p` and review the diff before committing.
