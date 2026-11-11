@@ -103,7 +103,6 @@ To update: review the new tag's diff first, then change `ref` in `.claude/settin
 > (ADR-01 … ADR-09), not `docs/adr/`. If a skill wants to record a new ADR, add it there and log
 > requirement changes in `docs/02-requirements/change-log.md`. The domain glossary is SRS §1.3.
 
-They were reviewed on 2026-11-11: Markdown guidance only, except one script in `ui-taste` (`scripts/verify-visual-evidence.mjs`) — read in full; it only checks local screenshot hashes and makes no network calls, installs or writes. Don't run it without a reason. **Owner-writes-code rule still
-applies** — use them for hints and reviews, not to generate whole files.
+They were reviewed on 2026-11-11: Markdown guidance only, except one script in `ui-taste` (`scripts/verify-visual-evidence.mjs`) — read in full; it only checks local screenshot hashes and makes no network calls, installs or writes. Don't run it without a reason. Claude now writes the slices (changed 2026-11-11), using these skills.
 `.claude/CLAUDE.md` tells every Claude session to check these skills before each change.
 Update later with `npx skills update -p` and review the diff before committing.

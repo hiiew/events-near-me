@@ -1,0 +1,118 @@
+[
+  {
+    "id": "kl-0001",
+    "title": "SAMPLE — Weekend Craft Market",
+    "description": "Placeholder event for development. Replace with real curated events before Phase 5.",
+    "start": "2026-11-14T10:00:00+08:00",
+    "end": "2026-11-14T18:00:00+08:00",
+    "venue": { "name": "Central Market (Pasar Seni)", "address": "Jalan Hang Kasturi, Kuala Lumpur", "lat": 3.1456, "lon": 101.6955 },
+    "category": "food",
+    "price": { "min": 0, "currency": "MYR" },
+    "url": "https://example.com/sample/craft-market",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0002",
+    "title": "SAMPLE — Indie Night at the Park",
+    "description": "Placeholder event for development.",
+    "start": "2026-11-21T20:00:00+08:00",
+    "end": "2026-11-21T23:00:00+08:00",
+    "venue": { "name": "KLCC Park", "address": "Kuala Lumpur City Centre", "lat": 3.1544, "lon": 101.7146 },
+    "category": "music",
+    "price": { "min": 35, "currency": "MYR" },
+    "url": "https://example.com/sample/indie-night",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0003",
+    "title": "SAMPLE — Intro to Web Dev Workshop",
+    "description": "Placeholder event for development. Price intentionally not listed.",
+    "start": "2026-11-28T14:00:00+08:00",
+    "end": "2026-11-28T17:00:00+08:00",
+    "venue": { "name": "Bangsar South", "address": "Bangsar, Kuala Lumpur", "lat": 3.1112, "lon": 101.6654 },
+    "category": "learning",
+    "price": null,
+    "url": "https://example.com/sample/web-dev-workshop",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0004",
+    "title": "SAMPLE — Tech Meetup: Building with AI",
+    "description": "Placeholder event for development.",
+    "start": "2026-12-03T19:30:00+08:00",
+    "venue": { "name": "Bukit Bintang", "address": "Bukit Bintang, Kuala Lumpur", "lat": 3.1466, "lon": 101.7101 },
+    "category": "tech",
+    "price": { "min": 0, "currency": "MYR" },
+    "url": "https://example.com/sample/tech-meetup",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0005",
+    "title": "SAMPLE — Art Exhibition Opening",
+    "description": "Placeholder event for development. Has a price range.",
+    "start": "2026-12-05T11:00:00+08:00",
+    "end": "2026-12-05T20:00:00+08:00",
+    "venue": { "name": "National Art Gallery", "address": "Jalan Temerloh, Kuala Lumpur", "lat": 3.1730, "lon": 101.7050 },
+    "category": "arts",
+    "price": { "min": 20, "max": 80, "currency": "MYR" },
+    "url": "https://example.com/sample/art-exhibition",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0006",
+    "title": "SAMPLE — 5K Fun Run (outside 10 km)",
+    "description": "Placeholder event about 15 km from KLCC, to test the radius filter.",
+    "start": "2026-12-06T06:30:00+08:00",
+    "venue": { "name": "Sunway Pyramid", "address": "Bandar Sunway, Selangor", "lat": 3.0733, "lon": 101.6070 },
+    "category": "sports",
+    "price": { "min": 60, "currency": "MYR" },
+    "url": "https://example.com/sample/fun-run",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0007",
+    "title": "SAMPLE — Rooftop Party",
+    "description": "Placeholder event for development.",
+    "start": "2026-12-12T21:00:00+08:00",
+    "venue": { "name": "Bukit Bintang", "address": "Bukit Bintang, Kuala Lumpur", "lat": 3.1480, "lon": 101.7115 },
+    "category": "nightlife",
+    "price": { "min": 50, "currency": "MYR" },
+    "url": "https://example.com/sample/rooftop-party",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0008",
+    "title": "SAMPLE — Campus Open Day (Setapak)",
+    "description": "Placeholder event for development.",
+    "start": "2026-12-08T09:00:00+08:00",
+    "end": "2026-12-08T16:00:00+08:00",
+    "venue": { "name": "Setapak", "address": "Setapak, Kuala Lumpur", "lat": 3.2156, "lon": 101.7262 },
+    "category": "other",
+    "price": { "min": 0, "currency": "MYR" },
+    "url": "https://example.com/sample/open-day",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0009",
+    "title": "SAMPLE — Past Event (should be hidden)",
+    "description": "Already ended — FR-05 must hide it.",
+    "start": "2026-11-01T10:00:00+08:00",
+    "end": "2026-11-01T18:00:00+08:00",
+    "venue": { "name": "KLCC Park", "address": "Kuala Lumpur City Centre", "lat": 3.1544, "lon": 101.7146 },
+    "category": "food",
+    "price": { "min": 0, "currency": "MYR" },
+    "url": "https://example.com/sample/past-event",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0010",
+    "title": "SAMPLE — New Year Concert (beyond 30 days)",
+    "description": "Starts more than 30 days from mid-November, to test the search window.",
+    "start": "2027-01-17T20:00:00+08:00",
+    "venue": { "name": "KLCC Park", "address": "Kuala Lumpur City Centre", "lat": 3.1544, "lon": 101.7146 },
+    "category": "music",
+    "price": { "min": 99, "currency": "MYR" },
+    "url": "https://example.com/sample/new-year-concert",
+    "imageUrl": null
+  }
+]

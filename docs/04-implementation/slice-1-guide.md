@@ -5,7 +5,7 @@
 | Branch | `slice-1-location-list` |
 | Target | M4a — Tue 2026-12-08 (you're ahead of schedule) |
 | Estimated effort | ~10–12 h |
-| You write the code; Claude reviews the pull request and merges it | |
+| **Update 2026-11-11:** at the owner's request, Claude built this slice. This guide is kept as the record of what was built and why. | |
 
 **Slice goal:** open the app → tap "Use my location" → see a list of upcoming SAMPLE events within
 10 km, soonest first, each showing title, date/time, venue, distance, category and price.

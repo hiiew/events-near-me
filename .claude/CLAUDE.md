@@ -41,8 +41,10 @@ If a skill's advice conflicts with this project, the project wins:
 
 - **SDLC, one phase at a time.** Phases 1–3 are approved; the project is in **Phase 4 — Implementation**.
   Check `README.md` for the current phase status. The master prompt is `PROMPT.md`.
-- **The owner writes the application code** (decided in Phase 4). Claude guides, gives hints and
-  reviews pull requests. Don't write whole feature files for the owner unless they ask for that task.
+- **Claude writes the application code and explains it** (changed 2026-11-11 at the owner's request;
+  originally the owner wrote it). Each slice's pull request explains what every file does so the
+  owner can review and learn from it. If the owner asks to write a task themselves, switch to
+  guiding and reviewing for that task.
 - **One branch + pull request per slice.** Claude reviews and merges. Follow
   `docs/04-implementation/coding-standards.md` (commit format, Definition of Done).
 - **Traceability.** Every change names the requirement IDs it serves (`FR-xx`, `NFR-xx`) in the
