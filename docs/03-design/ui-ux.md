@@ -285,4 +285,4 @@ light mode uses the same layout with the light tokens.
 
 ## 7. Directions behaviour (FR-19, decided Phase 3)
 Primary button opens **Google Maps** (works on phone and desktop). A smaller "Open in Waze
-instead" link sits underneath. The user's last choice is remembered in `happening.prefs.v1`.
+instead" link sits underneath. (Not remembered between visits — saved preferences dropped 2026-11-11.)

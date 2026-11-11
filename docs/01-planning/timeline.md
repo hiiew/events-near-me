@@ -22,7 +22,9 @@
 | M4b | Slice 2 working | ✅ Wed 2026-11-11 (early) | Map view + filters |
 | M4c | Implementation complete | Tue 2026-12-22 | All Must-have requirements built; dev log up to date |
 | M5 | Testing complete | Tue 2026-12-29 | Test cases executed; test report; all Must-haves have passing tests |
-| M6 | Deployed + docs | Tue 2027-01-05 | Live on Vercel; deployment guide, user manual, maintenance plan; final sign-off |
+| M6 | Deployed + docs | Tue 2027-01-05 | Live on Vercel (**early deploy to `happening-kl.vercel.app` decided 2026-11-11**); deployment guide, user manual, maintenance plan; final sign-off |
+| — | Real events | Sun 2026-12-06 | ≥20 real KL events replace the SAMPLE data (owner sends ~5/week) |
+| — | UAT sessions | 23–29 Dec 2026 | Owner + 3 anonymous classmates (Tester A–C), ~20 min each |
 
 *Week 4–6 fall over the holiday period — adjust if you plan time off (that's what the buffer is for).*
 

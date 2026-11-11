@@ -153,7 +153,6 @@ interface SearchResponse {
 | Key | Value | Purpose | Req |
 |---|---|---|---|
 | `happening.bookmarks.v1` | `Bookmark[]` (JSON) | Saved events, with a snapshot so they still show if the source drops them | FR-20, FR-21 |
-| `happening.prefs.v1` | `{ radiusKm, dateRange, categories, price, sort, view, directionsApp }` | Remember last filters | Convenience |
 | *(never stored)* | Location / pin coordinates | Privacy | NFR-09, NFR-10 |
 
 The Privacy page "Clear saved data" button removes both keys (NFR-11). The `.v1` suffix lets us
