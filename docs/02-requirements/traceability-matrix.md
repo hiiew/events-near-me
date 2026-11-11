@@ -16,20 +16,20 @@
 | Req ID | Pri | Summary | User story | Design element (Ph 3) | Code module (Ph 4) | Test case (Ph 5) | Status |
 |---|---|---|---|---|---|---|---|
 | FR-01 | M | The app shall explain why it needs location and then request the device's… | US-01, US-10 | D-02, S-1 | `src/lib/location.ts`, `src/app/page.tsx` | | 🛠 |
-| FR-02 | M | If location is denied, unavailable or takes longer than 10 s, the app shall… | US-02 | D-02, D-05, S-3 | | | 🎨 |
-| FR-03 | M | The user shall be able to change the search point at any time by using their… | US-02 | D-02, S-2/S-3 | | | 🎨 |
+| FR-02 | M | If location is denied, unavailable or takes longer than 10 s, the app shall… | US-02 | D-02, D-05, S-3 | `src/app/page.tsx` (pick-a-spot state), `src/components/MapView.tsx` (tap to pin) | | 🛠 |
+| FR-03 | M | The user shall be able to change the search point at any time by using their… | US-02 | D-02, S-2/S-3 | `page.tsx` (tap map / Search this map area / Use my location) | | 🛠 |
 | FR-04 | M | The app shall show upcoming events within the selected radius of the search… | US-01 | D-03, D-06, D-07 | `src/lib/filters.ts`, `src/lib/geo.ts`, `src/app/api/events/search/route.ts` (+ tests) | | 🛠 |
 | FR-05 | M | The app shall hide events that have already ended | US-01 | D-09, D-03 | `src/lib/sources/curated.ts` (+ test) | | 🛠 |
-| FR-06 | M | The app shall show results in a list, sorted by start date (soonest first)… | US-01 | D-01 S-2, D-03 (sort) | `src/app/page.tsx`, `src/components/EventCard.tsx`, `src/lib/filters.ts` (+ test) | | 🛠 |
-| FR-07 | M | The app shall show results on a map with one marker per event; tapping a… | US-03 | D-05, S-3 | | | 🎨 |
-| FR-08 | M | The user shall be able to switch between list and map view without losing… | US-03 | D-01 (Explore toggle) | | | 🎨 |
-| FR-09 | M | Events without coordinates shall appear in the list (labelled "Location on… | US-03 | D-05, S-2 label | `src/lib/filters.ts`, `EventCard.tsx` — list part only; map part in Slice 2 | | 🛠 partial |
-| FR-10 | M | Distance filter: 2, 5, 10 (default), 25 or 50 km | US-04 | D-03, S-7 | | | 🎨 |
-| FR-11 | M | Date filter: Today, This weekend, Next 7 days, Next 30 days (default) | US-04 | D-03, S-7 | | | 🎨 |
-| FR-12 | M | Category filter (multi-select): Music, Food & Markets, Arts & Culture,… | US-04 | D-03, S-7, categories table | | | 🎨 |
-| FR-13 | M | Price filter: All (default), Free only, or Maximum price in RM | US-04 | D-03, S-7 | | | 🎨 |
-| FR-14 | M | Filters shall combine (AND) and update results without a full page reload | US-04 | D-03 (client-side, ADR-06) | | | 🎨 |
-| FR-15 | M | The app shall show a clear empty state when no events match, suggesting a… | US-04 | D-01 S-2 empty state | `src/app/page.tsx` (empty state) | | 🛠 |
+| FR-06 | M | The app shall show results in a list, sorted by start date (soonest first)… | US-01 | D-01 S-2, D-03 (sort) | `src/lib/filters.ts` sort soonest/nearest (+ test), `EventRow.tsx` | | 🛠 |
+| FR-07 | M | The app shall show results on a map with one marker per event; tapping a… | US-03 | D-05, S-3 | `MapView.tsx` pins; selected pin highlights its row | | 🛠 |
+| FR-08 | M | The user shall be able to switch between list and map view without losing… | US-03 | D-01 (Explore toggle) | Map and list shown together on Explore (Night Map); filters shared | | 🛠 |
+| FR-09 | M | Events without coordinates shall appear in the list (labelled "Location on… | US-03 | D-05, S-2 label | `filters.ts` keeps no-coordinate events in list (+ test); `EventRow` says "not on map" | | 🛠 |
+| FR-10 | M | Distance filter: 2, 5, 10 (default), 25 or 50 km | US-04 | D-03, S-7 | `filters.ts` (+ test), `FilterSheet.tsx` | | 🛠 |
+| FR-11 | M | Date filter: Today, This weekend, Next 7 days, Next 30 days (default) | US-04 | D-03, S-7 | `filters.ts` `whenWindow` in Malaysia time (+ tests), `FilterSheet.tsx` | | 🛠 |
+| FR-12 | M | Category filter (multi-select): Music, Food & Markets, Arts & Culture,… | US-04 | D-03, S-7, categories table | `filters.ts` (+ test), `FilterSheet.tsx`, `categories.ts` | | 🛠 |
+| FR-13 | M | Price filter: All (default), Free only, or Maximum price in RM | US-04 | D-03, S-7 | `filters.ts` (+ test), `FilterSheet.tsx` | | 🛠 |
+| FR-14 | M | Filters shall combine (AND) and update results without a full page reload | US-04 | D-03 (client-side, ADR-06) | `applyFilters` runs on the device, no reload (ADR-06) | | 🛠 |
+| FR-15 | M | The app shall show a clear empty state when no events match, suggesting a… | US-04 | D-01 S-2 empty state | `page.tsx` empty state with "Widen to N km" | | 🛠 |
 | FR-16 | C | Custom date range picker | — | S-7 (deferred) | | | ⏸ |
 | FR-17 | M | The event detail view shall show: title, start (and end if known) date/time… | US-05 | D-01 S-4, data-model Event | `EventCard.tsx` shows most fields — full detail view in Slice 3 | | 🛠 partial |
 | FR-18 | M | The detail view shall have a button that opens the official event / ticket… | US-05 | D-01 S-4 | `EventCard.tsx` official-page link — detail-view button in Slice 3 | | 🛠 partial |
@@ -46,7 +46,7 @@
 | FR-29 | S | The system shall remove obvious duplicates (same title, same start date,… | — | D-07 dedupe | | | 🎨 |
 | FR-30 | S | The system shall cache each source's responses on the server for a… | — | D-08 | | | 🎨 |
 | FR-31 | M | The app shall have a Privacy page explaining what location data is used,… | US-10 | S-6, security-privacy §5 | | | 🎨 |
-| FR-32 | M | The app shall show data-source attribution and OpenStreetMap attribution | US-05 | D-05, S-6 | | | 🎨 |
+| FR-32 | M | The app shall show data-source attribution and OpenStreetMap attribution | US-05 | D-05, S-6 | OpenStreetMap attribution on the map (`MapView.tsx`); source attribution in Slice 3 | | 🛠 partial |
 | FR-33 | C | The app shall be installable to the home screen (PWA manifest) | — | D-12 | | | 🎨 |
 | NFR-01 | M | Performance: First results appear within 3 s of the search point being set,… | — | ADR-06, D-08 | | | 🎨 |
 | NFR-02 | S | Performance: Lighthouse Performance score ≥ 80 on mobile for the home page | — | ADR-06, D-08 | | | 🎨 |
@@ -72,7 +72,7 @@
 
 | Priority | Total | Designed | Built | Tested ✅ |
 |---|---|---|---|---|
-| Must | 39 (24 FR + 15 NFR) | 39 | 15 full + 5 partial (Slice 1) | 0 (unit tests exist; Phase 5 test cases pending) |
+| Must | 39 (24 FR + 15 NFR) | 39 | 25 full + 5 partial (Slices 1–2) | 0 (unit tests exist; Phase 5 test cases pending) |
 | Should | 9 (5 FR + 4 NFR) | 9 | 0 | 0 |
 | Could | 4 | 2 (FR-27 conditional, FR-33); FR-16, FR-23 deferred | 0 | 0 |
 

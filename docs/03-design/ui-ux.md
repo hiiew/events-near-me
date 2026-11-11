@@ -64,6 +64,12 @@ flowchart LR
 
 ## 3. Wireframes (360 px wide, low-fidelity)
 
+> **Superseded by DC-01 (Night Map).** The low-fidelity wireframes below are kept as the Phase 3
+> record. The current screens are the Night Map mock-ups (canvas linked in §4) and the built
+> screenshots in `docs/04-implementation/screenshots/slice2-*`. Main differences: Explore shows the
+> map and the list together (no List/Map toggle), pins are dots with the selected pin labelled, and
+> categories are text tags instead of emoji.
+
 ### S-1 Welcome
 ```
 ┌────────────────────────────────┐
