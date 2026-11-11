@@ -98,14 +98,14 @@ flowchart LR
 │ ┌────────────────────────────┐ │
 │ │ [img]  🎵 MUSIC            │ │
 │ │ Indie Night at …           │ │
-│ │ Fri 5 Dec · 8:00 PM        │ │
+│ │ Fri 4 Dec · 8:00 PM        │ │
 │ │ 📍 Venue name · 2.4 km     │ │
 │ │ RM 35.00            🔖     │ │
 │ └────────────────────────────┘ │
 │ ┌────────────────────────────┐ │
 │ │ [img]  🍜 FOOD & MARKETS   │ │
 │ │ Weekend Craft Market       │ │
-│ │ Sat 6 Dec · 10:00 AM       │ │
+│ │ Sat 5 Dec · 10:00 AM       │ │
 │ │ 📍 Venue · 4.1 km    FREE  │ │
 │ └────────────────────────────┘ │
 │ ⚠ Some sources are unavailable │  ← only when FR-28 applies
@@ -125,7 +125,7 @@ flowchart LR
 │ │  (tap anywhere to move pin)│ │
 │ │ ┌────────────────────────┐ │ │
 │ │ │ 🍜 Weekend Craft Market│ │ │  ← summary card on marker tap
-│ │ │ Sat 6 Dec · FREE       │ │ │
+│ │ │ Sat 5 Dec · FREE       │ │ │
 │ │ │ [ View details → ]     │ │ │
 │ │ └────────────────────────┘ │ │
 │ └──────────── © OpenStreetMap┘ │
@@ -145,7 +145,7 @@ flowchart LR
 │ └────────────────────────────┘ │
 │ 🍜 FOOD & MARKETS              │
 │ Weekend Craft Market           │
-│ 🗓 Sat 6 Dec 2026              │
+│ 🗓 Sat 5 Dec 2026              │
 │    10:00 AM – 6:00 PM (MYT)    │
 │ 📍 Venue name                  │
 │    Full address · 4.1 km       │
@@ -170,7 +170,7 @@ flowchart LR
 │ 🔖 Saved (3)                   │
 │ ┌────────────────────────────┐ │
 │ │ 🎵 Indie Night at …   🔖   │ │
-│ │ Fri 5 Dec · RM 35.00       │ │
+│ │ Fri 4 Dec · RM 35.00       │ │
 │ └────────────────────────────┘ │
 │ ┌────────────────────────────┐ │
 │ │ 🎨 Art Exhibition   ENDED  │ │  ← FR-21, greyed out
@@ -243,7 +243,7 @@ Follows the phone's setting (`prefers-color-scheme`); tokens above swap automati
 
 | Item | Format | Example |
 |---|---|---|
-| Date | `EEE d MMM` (+ year if not this year) | Sat 6 Dec |
+| Date | `EEE d MMM` (+ year if not this year) | Sat 5 Dec |
 | Time | 12-hour, Malaysia time | 8:00 PM |
 | Price | `RM 0.00`; free → `FREE` badge; null → "Price not listed" | RM 35.00 |
 | Price range | `RM min – RM max` | RM 20.00 – RM 80.00 |
