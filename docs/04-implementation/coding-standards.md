@@ -91,6 +91,14 @@ Antigravity after `git pull` — loads them automatically:
 | `ui-taste` | uizze.sh (Uizze) | Building or polishing screens. Free playbooks only; its paid add-on service is not used |
 | `improve-codebase-architecture` (+ `codebase-design`, `domain-modeling`) | mattpocock/skills | Once there is code (after Slice 1+): scans for "shallow" modules, writes a visual HTML report, then grills you on the one you pick |
 
+**Plugin:** `ponytail` (DietrichGebert/ponytail, MIT, pinned to tag `v5.3.3`) is enabled in
+`.claude/settings.json`, so Claude asks to install it when a session opens this repo. It nudges
+Claude toward the simplest code that works and adds `/ponytail-review` and `/ponytail-audit`.
+Reviewed 2026-11-11: its hooks run on session start and each prompt, list repo files with
+`git ls-files` for a short map, and keep a local usage CSV in `~/.config/ponytail/`. Nothing is
+sent anywhere unless a webhook URL is configured — **leave the webhook empty.**
+To update: review the new tag's diff first, then change `ref` in `.claude/settings.json`.
+
 > **Project conventions win over skill defaults:** our ADRs live in `docs/03-design/architecture.md`
 > (ADR-01 … ADR-09), not `docs/adr/`. If a skill wants to record a new ADR, add it there and log
 > requirement changes in `docs/02-requirements/change-log.md`. The domain glossary is SRS §1.3.

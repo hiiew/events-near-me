@@ -20,8 +20,9 @@ every skill that matches the task (table below), load it with the Skill tool (or
 | Reviewing existing code for structural problems (only once real code exists) | `improve-codebase-architecture` |
 | Naming domain concepts, glossary terms, recording a design decision | `domain-modeling` |
 | The user says "grill me" or wants a plan/decision stress-tested | `grill-me` → `grilling` |
+| Reviewing a pull request or the whole repo for bugs, risk, bloat | **ponytail plugin**: `/ponytail-review`, `/ponytail-audit` (also `/ponytail-debt`, `/ponytail-gain`, `/ponytail-help`) |
 
-The list of installed skills is in `skills-lock.json`. If a skill is added or removed, update this
+The list of installed skills is in `skills-lock.json`; plugins are in `.claude/settings.json`. If a skill is added or removed, update this
 table and `docs/04-implementation/coding-standards.md` §6 in the same commit.
 
 ## Rule 2 — Project conventions beat skill defaults
@@ -31,6 +32,9 @@ If a skill's advice conflicts with this project, the project wins:
 - **Design decisions (ADRs)** live in `docs/03-design/architecture.md` (ADR-01 …), not `docs/adr/`.
 - **Domain terms** live in the SRS glossary, `docs/02-requirements/srs.md` §1.3, not a new `GLOSSARY.md`.
 - **UI style** is defined in `docs/03-design/ui-ux.md` (playful campus style, colour tokens, WCAG AA). It is this project's DESIGN.md for `ui-taste`: keep its style instead of redesigning.
+- **Ponytail's "write the least code" mode** applies to code Claude writes or reviews. It must never
+  replace teaching: when guiding the owner, still explain the why, and keep the slice guides,
+  tests and traceability that this project requires.
 - **Requirement changes** after Phase 2 go in `docs/02-requirements/change-log.md` *before* they are applied.
 
 ## Rule 3 — How this project works
