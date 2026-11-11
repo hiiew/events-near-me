@@ -96,4 +96,5 @@ Antigravity after `git pull` — loads them automatically:
 
 They were reviewed on 2026-11-11: Markdown guidance only, no scripts. **Owner-writes-code rule still
 applies** — use them for hints and reviews, not to generate whole files.
+`.claude/CLAUDE.md` tells every Claude session to check these skills before each change.
 Update later with `npx skills update -p` and review the diff before committing.
