@@ -21,7 +21,7 @@ export default function EventPage({ params }: PageProps<"/event/[id]">) {
     <main className="mx-auto min-h-dvh max-w-xl px-5 pt-4 pb-10">
       <Suspense fallback={<p className="pt-24 text-muted">Loading event…</p>}>
         {params.then(({ id }) => (
-          <EventDetail id={decodeURIComponent(id)} />
+          <EventDetail id={decodeURIComponent(id)} /* Next passes the param still encoded; it rejects malformed % itself */ />
         ))}
       </Suspense>
     </main>
