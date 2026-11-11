@@ -47,7 +47,7 @@ describe("FR-24 EventSchema", () => {
 });
 
 describe("FR-25 CuratedEventSchema", () => {
-  const { sourceId: _ignored, ...curated } = validEvent;
+  const curated = Object.fromEntries(Object.entries(validEvent).filter(([key]) => key !== "sourceId"));
 
   it("accepts a curated event without sourceId", () => {
     expect(CuratedEventSchema.safeParse(curated).success).toBe(true);
