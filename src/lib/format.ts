@@ -8,6 +8,15 @@ const dayFmt = new Intl.DateTimeFormat("en-GB", { timeZone: TIME_ZONE, weekday: 
 const timeFmt = new Intl.DateTimeFormat("en-US", { timeZone: TIME_ZONE, hour: "numeric", minute: "2-digit", hour12: true });
 const yearFmt = new Intl.DateTimeFormat("en-GB", { timeZone: TIME_ZONE, year: "numeric" });
 
+const dayNumFmt = new Intl.DateTimeFormat("en-GB", { timeZone: TIME_ZONE, day: "numeric" });
+const monthFmt = new Intl.DateTimeFormat("en-GB", { timeZone: TIME_ZONE, month: "short" });
+
+/** Day number and short month in Malaysia time, e.g. { day: "5", month: "Dec" }. */
+export function formatDayMonth(iso: string): { day: string; month: string } {
+  const d = new Date(iso);
+  return { day: dayNumFmt.format(d), month: monthFmt.format(d) };
+}
+
 /** e.g. "Sat 5 Dec · 10:00 AM"; adds the year when it isn't this year (in Malaysia time). */
 export function formatEventDate(iso: string, now: Date = new Date()): string {
   const date = new Date(iso);

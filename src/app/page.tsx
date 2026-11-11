@@ -50,6 +50,7 @@ export default function Home() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(false);
   const mapCenter = useRef<LatLon>(KL_CENTER);
+  const lastSearch = useRef(0); // only the newest search may update the list
 
   const visible = useMemo(() => (point ? applyFilters(events, point, filters) : []), [events, point, filters]);
 
@@ -58,13 +59,15 @@ export default function Home() {
     setPointKind(kind);
     setSelectedId(null);
     setStatus("loading");
+    const id = ++lastSearch.current;
     try {
       const data = await searchEvents(p);
+      if (id !== lastSearch.current) return; // a newer search started meanwhile
       setEvents(data.events);
       setSomeDown(data.sources.some((s) => !s.ok));
       setStatus("ready");
     } catch {
-      setStatus("fetch-error");
+      if (id === lastSearch.current) setStatus("fetch-error");
     }
   }
 
