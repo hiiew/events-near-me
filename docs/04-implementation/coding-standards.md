@@ -78,7 +78,7 @@
 
 ## 6. AI assistant skills (shared by the cloud session and your laptop)
 
-Three reviewed agent skills are committed in `.claude/skills/` (versions pinned in `skills-lock.json`),
+Reviewed agent skills are committed in `.claude/skills/` (versions pinned in `skills-lock.json`),
 so any Claude session working in this repo — the cloud session or the Claude extension in
 Antigravity after `git pull` — loads them automatically:
 
@@ -87,6 +87,7 @@ Antigravity after `git pull` — loads them automatically:
 | `vercel-react-best-practices` | vercel-labs/agent-skills | React / Next.js patterns and performance |
 | `vitest` | antfu/skills | Writing Vitest tests |
 | `accessibility` | addyosmani/web-quality-skills | WCAG checks (NFR-05) |
+| `grill-me` → `grilling` | mattpocock/skills | Say **"grill me"** to have Claude stress-test a plan or design with rounds of numbered questions (each with a recommended answer) until nothing is left assumed |
 
 They were reviewed on 2026-11-11: Markdown guidance only, no scripts. **Owner-writes-code rule still
 applies** — use them for hints and reviews, not to generate whole files.
