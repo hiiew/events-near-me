@@ -1,13 +1,8 @@
 // FR-05, FR-24, FR-25 — the curated KL events file as an event source.
 import curatedData from "../../../data/curated-events.json";
-import { CuratedEventSchema, type Event } from "../event-schema";
+import { CuratedEventSchema, endTime, type Event } from "../event-schema";
 import { haversineKm } from "../geo";
 import type { SourceAdapter, SourceQuery } from "./types";
-
-/** An event is "ended" once its end (or its start, if no end is given) has passed. */
-export function endTime(e: Pick<Event, "start" | "end">): number {
-  return Date.parse(e.end ?? e.start);
-}
 
 /**
  * Pure core of the curated adapter, so tests can pass their own entries.
@@ -34,6 +29,13 @@ export function filterCurated(entries: unknown[], query: SourceQuery): Event[] {
     events.push({ ...e, id: `curated:${e.id}`, sourceId: "curated" });
   }
   return events;
+}
+
+/** FR-17: one curated event by its app id ("curated:kl-0002"), or null if missing or invalid. */
+export function getCuratedEvent(id: string, entries: unknown[] = curatedData as unknown[]): Event | null {
+  const raw = entries.find((e) => `curated:${(e as { id?: unknown })?.id}` === id);
+  const parsed = CuratedEventSchema.safeParse(raw);
+  return parsed.success ? { ...parsed.data, id, sourceId: "curated" } : null;
 }
 
 export const curatedAdapter: SourceAdapter = {

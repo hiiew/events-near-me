@@ -20,7 +20,7 @@ requirements first, code later.
 | 1 | Planning | [`docs/01-planning`](docs/01-planning) | ✅ Approved 2026-11-11 |
 | 2 | Requirements | [`docs/02-requirements`](docs/02-requirements) | ✅ Approved 2026-11-11 |
 | 3 | Design | [`docs/03-design`](docs/03-design) | ✅ Approved 2026-11-11 |
-| 4 | Implementation | [`docs/04-implementation`](docs/04-implementation) | 🚧 In progress — Slices 1–2 done |
+| 4 | Implementation | [`docs/04-implementation`](docs/04-implementation) | ✅ Slices 1–3 done |
 | 5 | Testing | [`docs/05-testing`](docs/05-testing) | ⏳ Not started |
 | 6 | Deployment | [`docs/06-deployment`](docs/06-deployment) | ⏳ Not started |
 | 7 | Maintenance | [`docs/07-maintenance`](docs/07-maintenance) | ⏳ Not started |
@@ -54,3 +54,15 @@ DevTools → ⋮ → More tools → Sensors → Location (e.g. 3.158, 101.712 fo
 
 > Events shown now are **SAMPLE** placeholders in `data/curated-events.json`. Replace them with
 > real KL events (see `docs/03-design/curated-events-guide.md`) before Phase 5 testing.
+
+### Try it on your phone (same Wi-Fi)
+
+Development mode blocks other devices, so run the production build:
+```bash
+npm run build
+```
+```bash
+npm run start -- -H 0.0.0.0
+```
+Then open `http://<your PC's local IP>:3000` on the phone (find the IP with `ipconfig`).
+Phones only share location over `https`, so use **Pick a spot on the map** — or use the Vercel link.

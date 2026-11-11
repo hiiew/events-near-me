@@ -1,7 +1,9 @@
-// FR-06, FR-09, FR-18 (link), NFR-05, NFR-18 — one event in the Explore sheet (Night Map row).
+// FR-06, FR-09, FR-17 (opens details), FR-18 (link), NFR-05, NFR-18 — one event in the Explore sheet (Night Map row).
+import Link from "next/link";
 import { CATEGORY_LABELS } from "@/lib/categories";
 import type { EventWithDistance } from "@/lib/filters";
 import { formatDayMonth, formatDistance, formatEventDate, formatPrice } from "@/lib/format";
+import { eventPath } from "@/lib/links";
 import { ExternalIcon } from "./icons";
 
 export function EventRow({ event, selected }: { event: EventWithDistance; selected: boolean }) {
@@ -22,7 +24,11 @@ export function EventRow({ event, selected }: { event: EventWithDistance; select
         <div className="text-[11px] tracking-wider text-muted uppercase">{month}</div>
       </div>
       <div className="min-w-0 grow">
-        <h2 className="line-clamp-2 text-[15px] leading-snug font-semibold">{event.title}</h2>
+        <h2 className="line-clamp-2 text-[15px] leading-snug font-semibold">
+          <Link href={eventPath(event.id)} className="hover:underline">
+            {event.title}
+          </Link>
+        </h2>
         <p className="truncate text-[13px] text-muted">
           <time dateTime={event.start}>{formatEventDate(event.start)}</time> · {where}
         </p>

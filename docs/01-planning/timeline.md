@@ -20,7 +20,7 @@
 | M3 | Design approved | ✅ Wed 2026-11-11 (early) | Architecture, data model, API spec, UI/UX, security docs approved |
 | M4a | Slice 1 working | ✅ Wed 2026-11-11 (early, PR hiiew/events-near-me#1) | Location → list of nearby events (deployed preview) |
 | M4b | Slice 2 working | ✅ Wed 2026-11-11 (early) | Map view + filters |
-| M4c | Implementation complete | Tue 2026-12-22 | All Must-have requirements built; dev log up to date |
+| M4c | Implementation complete | ✅ Wed 2026-11-11 (early; FR-26 deferred, CR-03) | All Must-have requirements built; dev log up to date |
 | M5 | Testing complete | Tue 2026-12-29 | Test cases executed; test report; all Must-haves have passing tests |
 | M6 | Deployed + docs | Tue 2027-01-05 | Live on Vercel (**early deploy to `happening-kl.vercel.app` decided 2026-11-11**); deployment guide, user manual, maintenance plan; final sign-off |
 | — | Real events | Sun 2026-12-06 | ≥20 real KL events replace the SAMPLE data (owner sends ~5/week) |

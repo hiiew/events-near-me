@@ -51,3 +51,47 @@ export const ExternalIcon = (p: SVGProps<SVGSVGElement>) => (
     <path d="M14 4h6v6M20 4 10 14M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />
   </Icon>
 );
+export const BookmarkIcon = ({ filled, ...p }: SVGProps<SVGSVGElement> & { filled?: boolean }) => (
+  <Icon {...p} fill={filled ? "currentColor" : "none"}>
+    <path d="M6 3h12v18l-6-4-6 4z" />
+  </Icon>
+);
+export const ShareIcon = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="M12 15V3M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" />
+  </Icon>
+);
+export const DirectionsIcon = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="m3 11 18-8-8 18-2-8z" />
+  </Icon>
+);
+export const BackIcon = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="m15 18-6-6 6-6" />
+  </Icon>
+);
+export const MapIcon = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z" />
+    <path d="M9 4v14M15 6v14" />
+  </Icon>
+);
+export const InfoIcon = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 11v5M12 8h.01" />
+  </Icon>
+);
+export const CalendarIcon = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <rect x="3" y="5" width="18" height="16" rx="2" />
+    <path d="M3 10h18M8 3v4M16 3v4" />
+  </Icon>
+);
+export const TagIcon = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="M3 7h18v10H3z" />
+    <circle cx="12" cy="12" r="2.5" />
+  </Icon>
+);

@@ -31,22 +31,22 @@
 | FR-14 | M | Filters shall combine (AND) and update results without a full page reload | US-04 | D-03 (client-side, ADR-06) | `applyFilters` runs on the device, no reload (ADR-06) | | 🛠 |
 | FR-15 | M | The app shall show a clear empty state when no events match, suggesting a… | US-04 | D-01 S-2 empty state | `page.tsx` empty state with "Widen to N km" | | 🛠 |
 | FR-16 | C | Custom date range picker | — | S-7 (deferred) | | | ⏸ |
-| FR-17 | M | The event detail view shall show: title, start (and end if known) date/time… | US-05 | D-01 S-4, data-model Event | `EventCard.tsx` shows most fields — full detail view in Slice 3 | | 🛠 partial |
-| FR-18 | M | The detail view shall have a button that opens the official event / ticket… | US-05 | D-01 S-4 | `EventCard.tsx` official-page link — detail-view button in Slice 3 | | 🛠 partial |
-| FR-19 | M | The detail view shall have a Directions button that opens Google Maps or… | US-06 | D-11, S-4 | | | 🎨 |
-| FR-20 | M | The user shall be able to bookmark and un-bookmark an event; bookmarks are… | US-07 | D-04, S-4/S-5 | | | 🎨 |
-| FR-21 | S | Bookmarked events that have ended shall be marked "Ended" on the Saved screen | US-07 | D-04, S-5 | | | 🎨 |
-| FR-22 | S | Share an event using the phone's share sheet, or copy its link where sharing… | US-08 | D-11, S-4 | | | 🎨 |
+| FR-17 | M | The event detail view shall show: title, start (and end if known) date/time… | US-05 | D-01 S-4, data-model Event | `src/app/event/[id]/page.tsx`, `formatEventWhen` (+ test) | | 🛠 |
+| FR-18 | M | The detail view shall have a button that opens the official event / ticket… | US-05 | D-01 S-4 | Detail page "View official page"; row link in `EventRow.tsx` | | 🛠 |
+| FR-19 | M | The detail view shall have a Directions button that opens Google Maps or… | US-06 | D-11, S-4 | `src/lib/links.ts` Google Maps + Waze (+ test), detail page | | 🛠 |
+| FR-20 | M | The user shall be able to bookmark and un-bookmark an event; bookmarks are… | US-07 | D-04, S-4/S-5 | `src/lib/bookmarks.ts` (+ test), `use-bookmarks.ts`, `EventActions.tsx`, `/saved` | | 🛠 |
+| FR-21 | S | Bookmarked events that have ended shall be marked "Ended" on the Saved screen | US-07 | D-04, S-5 | `/saved` "Ended" label via `isEnded` (+ test) | | 🛠 |
+| FR-22 | S | Share an event using the phone's share sheet, or copy its link where sharing… | US-08 | D-11, S-4 | `EventActions.tsx` share sheet / copy link, `shareData` (+ test) | | 🛠 |
 | FR-23 | C | Add an event to the phone's calendar (`.ics` download) | — | — (Could, not designed) | | | ⏸ |
 | FR-24 | M | The system shall get events from all enabled sources through adapters that… | US-09 | D-06, D-07, D-09 (ADR-05) | `src/lib/sources/{types,aggregator,registry}.ts` (+ test) | | 🛠 |
 | FR-25 | M | The system shall load events from a curated dataset file in the repo | US-09, US-11 | D-09 curated, D-10, Zod | `src/lib/sources/curated.ts`, `data/curated-events.json` (+ test) | | 🛠 |
-| FR-26 | S | The system shall load events from Eventbrite for a configured list of KL… | — | D-09 eventbrite | | | 🎨 |
+| FR-26 | S | The system shall load events from Eventbrite for a configured list of KL… | — | D-09 eventbrite | Deferred to backlog — CR-03 (no organiser IDs by cut-off) | | ⏸ |
 | FR-27 | C | The system shall load events from PredictHQ, only if a free plan is confirmed | — | D-09 predicthq (conditional) | | | 🎨 |
 | FR-28 | M | If one source fails or times out (5 s), the system shall still return… | US-09 | D-07 timeouts | `src/lib/sources/aggregator.ts` (+ test), notice in `page.tsx` | | 🛠 |
 | FR-29 | S | The system shall remove obvious duplicates (same title, same start date,… | — | D-07 dedupe | | | 🎨 |
 | FR-30 | S | The system shall cache each source's responses on the server for a… | — | D-08 | | | 🎨 |
-| FR-31 | M | The app shall have a Privacy page explaining what location data is used,… | US-10 | S-6, security-privacy §5 | | | 🎨 |
-| FR-32 | M | The app shall show data-source attribution and OpenStreetMap attribution | US-05 | D-05, S-6 | OpenStreetMap attribution on the map (`MapView.tsx`); source attribution in Slice 3 | | 🛠 partial |
+| FR-31 | M | The app shall have a Privacy page explaining what location data is used,… | US-10 | S-6, security-privacy §5 | `src/app/about/page.tsx` (About & privacy) | | 🛠 |
+| FR-32 | M | The app shall show data-source attribution and OpenStreetMap attribution | US-05 | D-05, S-6 | OSM attribution on map + About; source name on detail page | | 🛠 |
 | FR-33 | C | The app shall be installable to the home screen (PWA manifest) | — | D-12 | | | 🎨 |
 | NFR-01 | M | Performance: First results appear within 3 s of the search point being set,… | — | ADR-06, D-08 | | | 🎨 |
 | NFR-02 | S | Performance: Lighthouse Performance score ≥ 80 on mobile for the home page | — | ADR-06, D-08 | | | 🎨 |
@@ -58,7 +58,7 @@
 | NFR-08 | M | Security: Server endpoints validate all inputs (lat/lon ranges, radius from… | — | D-06, ADR-09, T-05 | `route.ts`, `src/lib/event-schema.ts` (+ tests) | | 🛠 |
 | NFR-09 | M | Privacy: The search point is rounded to 3 decimal places (~100 m) before it… | US-10 | D-02, T-01 | `src/lib/geo.ts`, `src/lib/location.ts`, `route.ts` (+ tests) | | 🛠 |
 | NFR-10 | M | Privacy: The server does not store or log users' coordinates | US-10 | ADR-07, T-01 | `route.ts`, `aggregator.ts`, `curated.ts` log ids only (+ tests) | | 🛠 |
-| NFR-11 | S | Privacy: Bookmarks and settings are stored only in the browser… | US-07 | D-04, S-6 | | | 🎨 |
+| NFR-11 | S | Privacy: Bookmarks and settings are stored only in the browser… | US-07 | D-04, S-6 | `ClearSavedData.tsx`, `clearBookmarks` (+ test) | | 🛠 |
 | NFR-12 | M | Availability / resilience: If all live sources fail, curated events are… | US-09 | D-07 | `src/lib/sources/aggregator.ts` (+ test) | | 🛠 |
 | NFR-13 | M | Compatibility: Works on the latest two major versions of Chrome (Android)… | — | ADR-01 (modern browsers) | | | 🎨 |
 | NFR-14 | M | Maintainability: Adding a new source requires only a new adapter file and a… | — | ADR-05, adapter interface | `src/lib/sources/registry.ts`, `types.ts` | | 🛠 |
@@ -72,8 +72,8 @@
 
 | Priority | Total | Designed | Built | Tested ✅ |
 |---|---|---|---|---|
-| Must | 39 (24 FR + 15 NFR) | 39 | 25 full + 5 partial (Slices 1–2) | 0 (unit tests exist; Phase 5 test cases pending) |
-| Should | 9 (5 FR + 4 NFR) | 9 | 0 | 0 |
+| Must | 39 (24 FR + 15 NFR) | 39 | 31 built + 2 partial (NFR-03, NFR-05); 6 NFRs shown in Phase 5/6 (NFR-01, 04, 07, 13, 16, 17) | 0 (unit tests exist; Phase 5 test cases pending) |
+| Should | 9 (5 FR + 4 NFR) | 9 | 3 built (FR-21, FR-22, NFR-11); FR-26 deferred (CR-03); FR-29/FR-30 only needed with a 2nd source; NFR-02/15/19 in Phases 5–7 | 0 |
 | Could | 4 | 2 (FR-27 conditional, FR-33); FR-16, FR-23 deferred | 0 | 0 |
 
 **Project exit rule:** every **Must** row must reach ✅ before final sign-off.

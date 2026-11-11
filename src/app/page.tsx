@@ -1,10 +1,11 @@
 "use client";
 // S-1 Welcome + S-2/S-3 Explore (Night Map: map + list sheet) — FR-01–FR-15, FR-28, NFR-05, NFR-09.
 import dynamic from "next/dynamic";
-import { useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { EventRow } from "@/components/EventRow";
 import { FilterSheet } from "@/components/FilterSheet";
 import { FiltersIcon, PinIcon, PlusIcon, ShieldIcon } from "@/components/icons";
+import { TabBar } from "@/components/TabBar";
 import type { Event, SearchResponse } from "@/lib/event-schema";
 import { applyFilters, DEFAULT_FILTERS, widerRadius, type Filters } from "@/lib/filters";
 import { roundPoint, type LatLon } from "@/lib/geo";
@@ -38,6 +39,7 @@ async function searchEvents(point: LatLon): Promise<SearchResponse> {
 }
 
 export default function Home() {
+  // Next.js keeps this page's state while you view an event or another tab (React Activity).
   const [screen, setScreen] = useState<"welcome" | "explore">("welcome");
   const [status, setStatus] = useState<Status>("idle");
   const [point, setPoint] = useState<LatLon | null>(null);
@@ -51,6 +53,14 @@ export default function Home() {
   const [expanded, setExpanded] = useState(false);
   const mapCenter = useRef<LatLon>(KL_CENTER);
   const lastSearch = useRef(0); // only the newest search may update the list
+
+  // Leaflet breaks when Activity hides and re-shows its container ("Map container is being
+  // reused"), so the map unmounts while this page is hidden and mounts fresh when it shows again.
+  const [mapOn, setMapOn] = useState(false);
+  useLayoutEffect(() => {
+    setMapOn(true); // eslint-disable-line react-hooks/set-state-in-effect -- reacting to Activity show/hide is the point
+    return () => setMapOn(false);
+  }, []);
 
   const visible = useMemo(() => (point ? applyFilters(events, point, filters) : []), [events, point, filters]);
 
@@ -139,6 +149,7 @@ export default function Home() {
     <main className="relative mx-auto h-dvh max-w-xl overflow-hidden">
       {/* Map fills only the area above the collapsed sheet, so no pin hides behind it. */}
       <div className="absolute inset-x-0 top-0 h-[calc(46dvh+26px)]">
+        {mapOn ? (
         <MapView
           center={point ?? KL_CENTER}
           point={point}
@@ -149,6 +160,7 @@ export default function Home() {
           onPick={(p) => searchFrom(p, "pin")}
           onCenterChange={(c) => (mapCenter.current = c)}
         />
+        ) : null}
       </div>
 
       <div className="absolute inset-x-4 top-4 z-[1000] flex gap-2">
@@ -185,7 +197,7 @@ export default function Home() {
           <span className="sr-only">{expanded ? "Show more map" : "Show more of the list"}</span>
         </button>
 
-        <div id="sheet-body" className="min-h-0 grow overflow-y-auto px-5 pb-8">
+        <div id="sheet-body" className="min-h-0 grow overflow-y-auto px-5 pb-28">
           <p role="status" aria-live="polite" className="sr-only">
             {status === "locating" ? "Finding your location" : status === "loading" ? "Finding events" : status === "ready" ? `${visible.length} events` : ""}
           </p>
@@ -245,6 +257,12 @@ export default function Home() {
                 Within {filters.radiusKm} km · {filters.sort === "nearest" ? "nearest first" : "soonest first"} · tap the map to move
               </p>
 
+              {events.some((e) => e.title.startsWith("SAMPLE")) ? (
+                <p className="mt-3 rounded-xl border border-line bg-surface px-3 py-2 text-sm font-semibold">
+                  Sample data: real events coming soon.
+                </p>
+              ) : null}
+
               {someDown ? (
                 <p className="mt-3 rounded-xl border border-warning/40 bg-warning/10 px-3 py-2 text-sm font-semibold text-warning">
                   Some sources are unavailable right now.
@@ -279,6 +297,7 @@ export default function Home() {
         </div>
       </section>
 
+      <TabBar />
       <FilterSheet
         open={filtersOpen}
         filters={filters}

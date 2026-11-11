@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   CuratedEventSchema,
   EventSchema,
+  isEnded,
   SearchRequestSchema,
 } from "./event-schema";
 
@@ -74,5 +75,16 @@ describe("NFR-08 SearchRequestSchema", () => {
 
   it("rejects strings instead of numbers", () => {
     expect(SearchRequestSchema.safeParse({ lat: "3", lon: "101" }).success).toBe(false);
+  });
+});
+
+describe("FR-05 / FR-21 isEnded", () => {
+  const now = Date.parse("2026-11-11T12:00:00+08:00");
+  it("uses the end time when there is one", () => {
+    expect(isEnded({ start: "2026-11-11T10:00:00+08:00", end: "2026-11-11T18:00:00+08:00" }, now)).toBe(false);
+    expect(isEnded({ start: "2026-11-10T10:00:00+08:00", end: "2026-11-10T18:00:00+08:00" }, now)).toBe(true);
+  });
+  it("falls back to the start time", () => {
+    expect(isEnded({ start: "2026-11-11T11:00:00+08:00" }, now)).toBe(true);
   });
 });
