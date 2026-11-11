@@ -62,7 +62,8 @@ function MapEvents({ onPick, onCenterChange }: Pick<MapViewProps, "onPick" | "on
 function FollowPoint({ point, radiusKm }: { point: LatLon | null; radiusKm: number }) {
   const map = useMap();
   useEffect(() => {
-    if (point) map.fitBounds(L.latLng(point.lat, point.lon).toBounds(radiusKm * 2000), { padding: [8, 8] });
+    // animate: false — a zoom animation still running when the page is left crashes Leaflet (_leaflet_pos).
+    if (point) map.fitBounds(L.latLng(point.lat, point.lon).toBounds(radiusKm * 2000), { padding: [8, 8], animate: false });
   }, [map, point, radiusKm]);
   return null;
 }

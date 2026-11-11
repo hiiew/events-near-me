@@ -56,6 +56,13 @@ export const EventSchema = z.strictObject({
 });
 export type Event = z.infer<typeof EventSchema>;
 
+/** FR-05: an event has ended once its end (or its start, if no end is given) has passed. */
+export function endTime(e: Pick<Event, "start" | "end">): number {
+  return Date.parse(e.end ?? e.start);
+}
+
+export const isEnded = (e: Pick<Event, "start" | "end">, now: number = Date.now()) => endTime(e) < now;
+
 // Curated entries: no sourceId (always "curated"), and coordinates are required.
 export const CuratedEventSchema = EventSchema.omit({ sourceId: true }).extend({
   venue: VenueSchema.extend({ lat: Latitude, lon: Longitude }),
