@@ -88,6 +88,11 @@ Antigravity after `git pull` — loads them automatically:
 | `vitest` | antfu/skills | Writing Vitest tests |
 | `accessibility` | addyosmani/web-quality-skills | WCAG checks (NFR-05) |
 | `grill-me` → `grilling` | mattpocock/skills | Say **"grill me"** to have Claude stress-test a plan or design with rounds of numbered questions (each with a recommended answer) until nothing is left assumed |
+| `improve-codebase-architecture` (+ `codebase-design`, `domain-modeling`) | mattpocock/skills | Once there is code (after Slice 1+): scans for "shallow" modules, writes a visual HTML report, then grills you on the one you pick |
+
+> **Project conventions win over skill defaults:** our ADRs live in `docs/03-design/architecture.md`
+> (ADR-01 … ADR-09), not `docs/adr/`. If a skill wants to record a new ADR, add it there and log
+> requirement changes in `docs/02-requirements/change-log.md`. The domain glossary is SRS §1.3.
 
 They were reviewed on 2026-11-11: Markdown guidance only, no scripts. **Owner-writes-code rule still
 applies** — use them for hints and reviews, not to generate whole files.
