@@ -15,7 +15,7 @@
 
 | ID | Milestone | Target date | Exit criterion (definition of done) |
 |---|---|---|---|
-| M1 | Planning approved | Tue 2026-11-17 | Charter, feasibility, risks, timeline approved; data-source spike done |
+| M1 | Planning approved | ✅ Wed 2026-11-11 (early) | Charter, feasibility, risks, timeline approved; data-source spike moved to start of Phase 2 |
 | M2 | Requirements approved | Tue 2026-11-24 | SRS with FR/NFR IDs, user stories, MoSCoW, MVP defined; traceability matrix started |
 | M3 | Design approved | Tue 2026-12-01 | Architecture, data model, API spec, UI/UX, security docs approved |
 | M4a | Slice 1 working | Tue 2026-12-08 | Location → list of nearby events (deployed preview) |

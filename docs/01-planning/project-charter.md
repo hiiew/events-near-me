@@ -108,4 +108,4 @@ with a working, tested slice.
 
 | Role | Name | Decision | Date |
 |---|---|---|---|
-| Developer / project owner | | ☐ Approved ☐ Changes needed | |
+| Developer / project owner | Project student | ☑ Approved (data-source spike deferred to start of Phase 2) | 2026-11-11 |
