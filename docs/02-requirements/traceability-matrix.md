@@ -72,8 +72,8 @@
 
 | Priority | Total | Designed | Built | Tested ✅ |
 |---|---|---|---|---|
-| Must | 39 (24 FR + 15 NFR) | 39 | 29 full + 2 partial (NFR-03, NFR-05 → Phase 5) + 8 verified only in Phase 5 | 0 (unit tests exist; Phase 5 test cases pending) |
-| Should | 9 (5 FR + 4 NFR) | 9 | 0 | 0 |
+| Must | 39 (24 FR + 15 NFR) | 39 | 31 built + 2 partial (NFR-03, NFR-05); 6 NFRs shown in Phase 5/6 (NFR-01, 04, 07, 13, 16, 17) | 0 (unit tests exist; Phase 5 test cases pending) |
+| Should | 9 (5 FR + 4 NFR) | 9 | 3 built (FR-21, FR-22, NFR-11); FR-26 deferred (CR-03); FR-29/FR-30 only needed with a 2nd source; NFR-02/15/19 in Phases 5–7 | 0 |
 | Could | 4 | 2 (FR-27 conditional, FR-33); FR-16, FR-23 deferred | 0 | 0 |
 
 **Project exit rule:** every **Must** row must reach ✅ before final sign-off.
