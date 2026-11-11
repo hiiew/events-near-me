@@ -135,7 +135,7 @@ A new request is made only when the **search point changes** (new location or pi
 | Source | Access | Auth | Used for | Notes |
 |---|---|---|---|---|
 | Curated JSON | Read file at build/run | — | Baseline KL events (Must) | Owner adds events weekly; each must link to official page |
-| Eventbrite | REST API, events for a configured list of organiser IDs **[verify endpoint during Eventbrite spike]** | Private token in `Authorization: Bearer` header (server env var) | Live events (Should) | Organiser list in `EVENTBRITE_ORGANIZER_IDS`. Respect rate limits **[verify]** |
+| Eventbrite | `GET /v3/organizers/{id}/events/?status=live&expand=venue,ticket_availability,category` — **confirmed working 2026-11-11** (no `page_size` param) | Private token in `Authorization: Bearer` header (server env var) | Live events (Should) | Organiser list in `EVENTBRITE_ORGANIZER_IDS`. Respect rate limits **[verify]** |
 | PredictHQ | REST API with radius search **[verify]** | Token (server env var) | Live events (Could) | Built **only** if a free plan is confirmed; otherwise backlog |
 | OpenStreetMap tiles | `https://tile.openstreetmap.org/{z}/{x}/{y}.png` from the browser | — | Map | Attribution required; light use only **[verify tile policy]** |
 | Google Maps | URL `https://www.google.com/maps/dir/?api=1&destination=LAT,LON` | — | Directions (default) | No API key needed |

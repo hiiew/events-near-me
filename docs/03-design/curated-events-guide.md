@@ -27,3 +27,9 @@ Don't copy long descriptions or use images unless the page clearly allows it —
 ## Weekly upkeep (~30 min, NFR-19)
 - Add new upcoming events; ended ones are hidden automatically (you can delete them monthly).
 - Re-check events that might have changed (date, venue, cancelled).
+
+## Finding Eventbrite organiser IDs (for `EVENTBRITE_ORGANIZER_IDS`)
+Eventbrite links usually show an **event** ID (e.g. `eventbrite.com/e/some-event-1996549445136`).
+To get the organiser: call `GET https://www.eventbriteapi.com/v3/events/{event_id}/` with your token
+and read `organizer_id` — or open the organiser's profile page, whose URL ends in the organiser ID.
+Aim for ~10 KL organisers who post regularly.

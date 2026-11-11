@@ -59,7 +59,15 @@ Facts marked **[verify]** are from general knowledge and must be checked on the 
 | Token valid | `GET /v3/users/me/` with private token (Bearer header) | **HTTP 200** | Free private token works ✅ |
 | Location search | `GET /v3/events/search/?location.latitude=…` | **HTTP 404 "path does not exist"** | Confirms Eventbrite has **no "events near a point" search** — **[verify] item resolved** |
 | Events by organiser | `GET /v3/organizers/{id}/events/?status=live` (with dummy id) | **HTTP 404 "organizer does not exist"** | The **endpoint exists** (it understood the path); needs real organiser IDs |
-| Real KL organisers | *pending — owner to supply 1–2 organiser IDs* | | Decides how many KL events Eventbrite can add |
+| Real KL organiser | `GET /v3/organizers/51678302483/events/?status=live&expand=venue,ticket_availability,category` (organiser found via event `1996549445136`) | **HTTP 200 — 2 live KL events** | Works ✅. Each event has venue **lat/lon**, `Asia/Kuala_Lumpur` start time, `is_free`, minimum price in **MYR**, and an Eventbrite category |
 
-Interim conclusion: A-8 is **partly confirmed** — the organiser-based approach in the design is the
-only way Eventbrite can be used. Final verdict once real organiser IDs are tested.
+**Conclusion: A-8 confirmed ✅ — FR-26 (Should) is feasible.**
+
+Findings that affect implementation:
+- `page_size` is **not** accepted on the organiser-events endpoint (HTTP 400); use default paging.
+- One organiser gave only **2** events → Eventbrite adds variety, but the **curated dataset stays the
+  baseline**. Target ~10 KL organisers in `EVENTBRITE_ORGANIZER_IDS`.
+- Owners usually see **event** IDs in URLs, not organiser IDs. Look up `GET /v3/events/{event_id}/`
+  and read `organizer_id` (documented in the curated-events guide).
+- Eventbrite categories (e.g. "Hobbies & Special Interest") need mapping to our 8 categories;
+  unmapped → keyword match on title → `other`.
