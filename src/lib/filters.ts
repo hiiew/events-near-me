@@ -1,29 +1,96 @@
-// D-03 (Slice 1 part) — FR-04, FR-06: keep events near the search point, soonest first.
-// Runs in the browser: the server returns 50 km / 30 days, the device narrows it (ADR-06).
-import type { Event } from "./event-schema";
+// D-03 — FR-04, FR-06, FR-09, FR-10–FR-14. Runs in the browser: the server returns
+// 50 km / 30 days and the device narrows it instantly (ADR-06).
+import type { CategoryId, Event } from "./event-schema";
 import { haversineKm, type LatLon } from "./geo";
 
-export const DEFAULT_RADIUS_KM = 10;
+export const RADIUS_OPTIONS = [2, 5, 10, 25, 50] as const;
+export type RadiusKm = (typeof RADIUS_OPTIONS)[number];
+export const DEFAULT_RADIUS_KM: RadiusKm = 10;
+
+export type When = "today" | "weekend" | "7d" | "30d";
+export type PriceFilter = { kind: "any" } | { kind: "free" } | { kind: "max"; max: number };
+export type SortBy = "soonest" | "nearest";
+
+export interface Filters {
+  radiusKm: RadiusKm;
+  when: When;
+  categories: CategoryId[]; // empty = all
+  price: PriceFilter;
+  sort: SortBy;
+}
+
+export const DEFAULT_FILTERS: Filters = {
+  radiusKm: DEFAULT_RADIUS_KM,
+  when: "30d",
+  categories: [],
+  price: { kind: "any" },
+  sort: "soonest",
+};
 
 export interface EventWithDistance extends Event {
   /** undefined when the venue has no coordinates (FR-09). */
   distanceKm?: number;
 }
 
-export function nearbyEvents(
+const HOUR = 3_600_000;
+const DAY = 24 * HOUR;
+// shortcut: Malaysia is UTC+8 all year (no daylight saving), so a fixed offset is exact; use a tz library if other countries are added.
+const MYT_OFFSET = 8 * HOUR;
+
+/** [start, end) of the date window in epoch ms, using Malaysia calendar days. */
+export function whenWindow(when: When, now: Date): [number, number] {
+  const t = now.getTime();
+  const startOfTodayMyt = Math.floor((t + MYT_OFFSET) / DAY) * DAY - MYT_OFFSET;
+  if (when === "today") return [t, startOfTodayMyt + DAY];
+  if (when === "weekend") {
+    const dow = new Date(startOfTodayMyt + MYT_OFFSET).getUTCDay(); // 0 Sun … 6 Sat, in MYT
+    const saturday = dow === 0 ? startOfTodayMyt - DAY : startOfTodayMyt + ((6 - dow) % 7) * DAY;
+    return [Math.max(t, saturday), saturday + 2 * DAY];
+  }
+  return [t, t + (when === "7d" ? 7 : 30) * DAY];
+}
+
+function matchesPrice(price: Event["price"], filter: PriceFilter): boolean {
+  if (filter.kind === "any") return true;
+  if (price === null) return false; // "Price not listed" only shows under Any (FR-13)
+  if (filter.kind === "free") return price.min === 0 && !price.max;
+  return price.min <= filter.max;
+}
+
+export function applyFilters(
   events: Event[],
   point: LatLon,
-  radiusKm: number = DEFAULT_RADIUS_KM,
+  filters: Filters,
+  now: Date = new Date(),
 ): EventWithDistance[] {
+  const [from, to] = whenWindow(filters.when, now);
+  const cats = new Set(filters.categories);
   const out: EventWithDistance[] = [];
+
   for (const e of events) {
+    const start = Date.parse(e.start);
+    const end = Date.parse(e.end ?? e.start);
+    if (end < from || start >= to) continue;
+    if (cats.size > 0 && !cats.has(e.category)) continue;
+    if (!matchesPrice(e.price, filters.price)) continue;
+
     const { lat, lon } = e.venue;
     if (lat === undefined || lon === undefined) {
-      out.push({ ...e }); // no location: keep it in the list (FR-09), distance unknown
+      out.push({ ...e }); // no location: list only, distance unknown (FR-09)
       continue;
     }
     const distanceKm = haversineKm(point, { lat, lon });
-    if (distanceKm <= radiusKm) out.push({ ...e, distanceKm });
+    if (distanceKm <= filters.radiusKm) out.push({ ...e, distanceKm });
   }
-  return out.toSorted((a, b) => Date.parse(a.start) - Date.parse(b.start));
+
+  const byStart = (a: Event, b: Event) => Date.parse(a.start) - Date.parse(b.start);
+  return filters.sort === "nearest"
+    ? out.toSorted((a, b) => (a.distanceKm ?? Infinity) - (b.distanceKm ?? Infinity) || byStart(a, b))
+    : out.toSorted(byStart);
+}
+
+/** Next bigger radius for the empty state's "Widen search" button, or null at 50 km. */
+export function widerRadius(r: RadiusKm): RadiusKm | null {
+  const i = RADIUS_OPTIONS.indexOf(r);
+  return i < RADIUS_OPTIONS.length - 1 ? RADIUS_OPTIONS[i + 1] : null;
 }
