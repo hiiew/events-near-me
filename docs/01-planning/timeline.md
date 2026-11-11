@@ -17,7 +17,7 @@
 |---|---|---|---|
 | M1 | Planning approved | ✅ Wed 2026-11-11 (early) | Charter, feasibility, risks, timeline approved; data-source spike moved to start of Phase 2 |
 | M2 | Requirements approved | ✅ Wed 2026-11-11 (early) | SRS with FR/NFR IDs, user stories, MoSCoW, MVP defined; traceability matrix started |
-| M3 | Design approved | Tue 2026-12-01 | Architecture, data model, API spec, UI/UX, security docs approved |
+| M3 | Design approved | ✅ Wed 2026-11-11 (early) | Architecture, data model, API spec, UI/UX, security docs approved |
 | M4a | Slice 1 working | Tue 2026-12-08 | Location → list of nearby events (deployed preview) |
 | M4b | Slice 2 working | Tue 2026-12-15 | Map view + filters |
 | M4c | Implementation complete | Tue 2026-12-22 | All Must-have requirements built; dev log up to date |

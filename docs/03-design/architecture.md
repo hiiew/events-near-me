@@ -209,3 +209,9 @@ events-near-me/
 | Eventbrite token | secret | env `EVENTBRITE_TOKEN` |
 | Eventbrite organisers | comma-separated IDs | env `EVENTBRITE_ORGANIZER_IDS` |
 | Enabled sources | e.g. `curated,eventbrite` | env `ENABLED_SOURCES` |
+
+## Approval
+
+| Role | Name | Decision | Date |
+|---|---|---|---|
+| Developer / project owner | Project student | ☑ Approved (all Phase 3 design documents) | 2026-11-11 |
