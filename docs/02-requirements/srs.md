@@ -83,7 +83,7 @@ documentation first). Language: **English only**. Currency: **RM**.
 | ID | Assumption / dependency |
 |---|---|
 | A-7 | The developer can spend ~30 min/week keeping the curated dataset current (new) |
-| A-8 | Eventbrite still offers events-by-organiser access with a free key **[verify in Phase 3]** (new) |
+| A-8 | Eventbrite still offers events-by-organiser access with a free key — **verified 2026-11-11** (spike); source later deferred, CR-03 |
 | A-9 | Curated events can be given coordinates by looking up the venue (e.g. on OpenStreetMap) (new) |
 
 ---
@@ -108,7 +108,7 @@ Priority uses MoSCoW. **M** = Must (MVP), **S** = Should, **C** = Could, **W** =
 | FR-05 | The app shall hide events that have already ended. | M |
 | FR-06 | The app shall show results in a **list**, sorted by start date (soonest first) by default, with an option to sort by distance. Each item shows title, date/time, venue, distance (km), category and price. | M |
 | FR-07 | The app shall show results on a **map** with one marker per event; tapping a marker shows a summary card that opens the event detail. | M |
-| FR-08 | The user shall be able to switch between list and map view without losing filters. | M |
+| FR-08 | The user shall be able to switch between list and map view without losing filters. *(Night Map, DC-01: list and map are shown together on one screen, so no switch is needed; filters apply to both.)* | M |
 | FR-09 | Events without coordinates shall appear in the list (labelled "Location on map not available") but not on the map. | M |
 
 ### 3.3 Filters

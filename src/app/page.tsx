@@ -10,6 +10,7 @@ import type { Event, SearchResponse } from "@/lib/event-schema";
 import { applyFilters, DEFAULT_FILTERS, widerRadius, type Filters } from "@/lib/filters";
 import { roundPoint, type LatLon } from "@/lib/geo";
 import { getDeviceLocation, type LocationError } from "@/lib/location";
+import { rememberSearchPoint } from "@/lib/search-point";
 
 // Leaflet needs the browser, so the map is loaded on the client only (bundle-dynamic-imports).
 const MapView = dynamic(() => import("@/components/MapView"), {
@@ -65,6 +66,7 @@ export default function Home() {
   const visible = useMemo(() => (point ? applyFilters(events, point, filters) : []), [events, point, filters]);
 
   async function searchFrom(p: LatLon, kind: "device" | "pin") {
+    rememberSearchPoint(p);
     setPoint(p);
     setPointKind(kind);
     setSelectedId(null);

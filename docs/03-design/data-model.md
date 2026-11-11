@@ -51,12 +51,10 @@ erDiagram
     CATEGORY {
         string id PK "music | food | arts | sports | learning | tech | nightlife | other"
         string label
-        string emoji
     }
     BOOKMARK {
-        string eventId FK
         datetime savedAt
-        json eventSnapshot "copy of Event at save time"
+        json event "full copy of Event at save time (re-validated on read)"
     }
 ```
 
@@ -109,16 +107,18 @@ interface EventWithDistance extends Event { distanceKm?: number }
 
 ## 3. Categories
 
-| ID | Label | Emoji | Example source keywords mapped here |
-|---|---|---|---|
-| `music` | Music | 🎵 | concert, gig, festival (music), DJ |
-| `food` | Food & Markets | 🍜 | food, market, bazaar, pasar malam, night market |
-| `arts` | Arts & Culture | 🎨 | exhibition, theatre, film, museum, culture |
-| `sports` | Sports | ⚽ | run, marathon, match, fitness, tournament |
-| `learning` | Workshops & Learning | 📚 | workshop, class, course, talk, seminar |
-| `tech` | Tech & Meetups | 💻 | meetup, hackathon, tech, startup, networking |
-| `nightlife` | Nightlife | 🌙 | party, club, bar, night |
-| `other` | Other | ✨ | anything unmapped |
+> Emoji were dropped in DC-01 (Night Map): categories show as text tags.
+
+| ID | Label | Example source keywords mapped here |
+|---|---|---|
+| `music` | Music | concert, gig, festival (music), DJ |
+| `food` | Food & Markets | food, market, bazaar, pasar malam, night market |
+| `arts` | Arts & Culture | exhibition, theatre, film, museum, culture |
+| `sports` | Sports | run, marathon, match, fitness, tournament |
+| `learning` | Workshops & Learning | workshop, class, course, talk, seminar |
+| `tech` | Tech & Meetups | meetup, hackathon, tech, startup, networking |
+| `nightlife` | Nightlife | party, club, bar, night |
+| `other` | Other | anything unmapped |
 
 Mapping lives in `src/lib/sources/categories.ts`. Each adapter maps the source's own category
 field first, then falls back to keyword matching on the title, then `other`.
@@ -152,7 +152,7 @@ interface SearchResponse {
 
 | Key | Value | Purpose | Req |
 |---|---|---|---|
-| `happening.bookmarks.v1` | `Bookmark[]` (JSON) | Saved events, with a snapshot so they still show if the source drops them | FR-20, FR-21 |
+| `happening.bookmarks.v1` | `{ savedAt, event }[]` (JSON) | Saved events, with a snapshot so they still show if the source drops them | FR-20, FR-21 |
 | *(never stored)* | Location / pin coordinates | Privacy | NFR-09, NFR-10 |
 
 The Privacy page "Clear saved data" button removes both keys (NFR-11). The `.v1` suffix lets us
