@@ -1,0 +1,33 @@
+# Risk Register — Events Near Me
+
+| Field | Value |
+|---|---|
+| Phase | 1 — Planning (living document — update every phase) |
+| Version | 1.0 |
+| Date | 2026-11-11 |
+
+> **What is a risk register?** A table of things that *might* go wrong, how likely and how bad
+> each is, and what you'll do about it. You review it at every phase gate. Score = Likelihood ×
+> Impact (each 1–5). Scores ≥ 12 are **high** and need active mitigation now.
+
+**Scale:** Likelihood 1 = rare … 5 = almost certain. Impact 1 = negligible … 5 = project fails.
+
+| ID | Risk | Category | L | I | Score | Mitigation | Contingency (if it happens) | Owner | Status |
+|---|---|---|---|---|---|---|---|---|---|
+| R-01 | Free event APIs return too few events in KL | Data / technical | 4 | 5 | **20 🔴** | Data-source spike in Phase 1; test several providers | Combine sources; widen radius; demo with another city as well; consider a low-cost source (needs approval) | Developer | Open |
+| R-02 | API terms forbid caching, require specific attribution, or are non-commercial only | Legal | 3 | 4 | **12 🔴** | Read and record each provider's ToS during the spike | Shorten/remove cache; adjust UI attribution; drop provider | Developer | Open |
+| R-03 | Beginner learning curve makes Phase 4 take longer than planned | Schedule | 4 | 4 | **16 🔴** | Small MVP; well-documented stack; vertical slices; 6 h buffer | Move "Should" items to "Could"; use buffer week | Developer | Open |
+| R-04 | API key leaked by committing it to GitHub | Security | 3 | 4 | **12 🔴** | `.env` in `.gitignore` from day 1; `.env.example` only; enable GitHub secret scanning; keys used only server-side | Revoke and rotate key immediately; purge from history | Developer | Open |
+| R-05 | Free-tier limits change or a service asks for a credit card | Economic | 2 | 4 | 8 🟠 | Use services with no card required; check limits at signup | Swap to alternative free provider (documented in feasibility) | Developer | Open |
+| R-06 | Precise user location exposed or stored, breaching PDPA principles | Privacy / legal | 2 | 5 | 10 🟠 | Consent prompt; round coordinates; no server-side storage or logging of location; privacy notice | Remove offending code/logs; review data flow | Developer | Open |
+| R-07 | Third-party API rate limit exceeded | Technical | 2 | 3 | 6 🟡 | Server-side cache; debounce filter changes | Show cached results with "last updated" notice | Developer | Open |
+| R-08 | Third-party API changes or goes down | Technical | 2 | 3 | 6 🟡 | Wrap each provider behind an adapter; graceful error messages | Disable that provider; rely on others | Developer | Open |
+| R-09 | User denies location permission or device has poor GPS | Usability | 4 | 2 | 8 🟠 | Manual area picker (e.g. KL neighbourhoods) as fallback | — (fallback is the design) | Developer | Open |
+| R-10 | Scope creep (adding accounts, submissions, notifications) | Schedule | 3 | 3 | 9 🟠 | MoSCoW in Phase 2; change log after Phase 2 approval | Defer to maintenance backlog | Developer | Open |
+| R-11 | Event data incomplete (no price, no coordinates, vague category) | Data quality | 4 | 2 | 8 🟠 | Handle missing fields in design ("Price not listed"); category mapping table | Hide events without coordinates from the map but keep them in the list | Developer | Open |
+| R-12 | Single developer unavailable (exams, illness) | Schedule | 3 | 3 | 9 🟠 | 6 h buffer; keep work committed and documented so it's easy to resume | Reduce to Must-have only | Developer | Open |
+
+## Top risks to act on now
+1. **R-01 (20)** — do the data-source spike before Phase 2 is approved.
+2. **R-03 (16)** — keep the MVP minimal in Phase 2.
+3. **R-04 / R-02 (12)** — set up secret handling before any key exists; read ToS during the spike.

@@ -15,7 +15,7 @@ requirements first, code later.
 
 | # | Phase | Folder | Status |
 |---|---|---|---|
-| 1 | Planning | [`docs/01-planning`](docs/01-planning) | ⏳ Not started |
+| 1 | Planning | [`docs/01-planning`](docs/01-planning) | 📝 Awaiting approval |
 | 2 | Requirements | [`docs/02-requirements`](docs/02-requirements) | ⏳ Not started |
 | 3 | Design | [`docs/03-design`](docs/03-design) | ⏳ Not started |
 | 4 | Implementation | [`docs/04-implementation`](docs/04-implementation) | ⏳ Not started |
