@@ -51,3 +51,15 @@ Facts marked **[verify]** are from general knowledge and must be checked on the 
 | Decision | Chosen option | Decided by | Date |
 |---|---|---|---|
 | Event data source for MVP | **E — Hybrid**: curated KL dataset (baseline) + Eventbrite by organiser (Should) + PredictHQ only if free (Could), via adapter layer | Developer | 2026-11-11 |
+
+## 5. Test 2 — Eventbrite API (run during Phase 3, 2026-11-11)
+
+| Check | Request | Result | Meaning |
+|---|---|---|---|
+| Token valid | `GET /v3/users/me/` with private token (Bearer header) | **HTTP 200** | Free private token works ✅ |
+| Location search | `GET /v3/events/search/?location.latitude=…` | **HTTP 404 "path does not exist"** | Confirms Eventbrite has **no "events near a point" search** — **[verify] item resolved** |
+| Events by organiser | `GET /v3/organizers/{id}/events/?status=live` (with dummy id) | **HTTP 404 "organizer does not exist"** | The **endpoint exists** (it understood the path); needs real organiser IDs |
+| Real KL organisers | *pending — owner to supply 1–2 organiser IDs* | | Decides how many KL events Eventbrite can add |
+
+Interim conclusion: A-8 is **partly confirmed** — the organiser-based approach in the design is the
+only way Eventbrite can be used. Final verdict once real organiser IDs are tested.
