@@ -31,7 +31,7 @@
 | FR-14 | M | Filters shall combine (AND) and update results without a full page reload | US-04 | D-03 (client-side, ADR-06) | `applyFilters` runs on the device, no reload (ADR-06) | | 🛠 |
 | FR-15 | M | The app shall show a clear empty state when no events match, suggesting a… | US-04 | D-01 S-2 empty state | `page.tsx` empty state with "Widen to N km" | | 🛠 |
 | FR-16 | C | Custom date range picker | — | S-7 (deferred) | | | ⏸ |
-| FR-17 | M | The event detail view shall show: title, start (and end if known) date/time… | US-05 | D-01 S-4, data-model Event | `src/app/event/[id]/page.tsx`, `formatEventWhen` (+ test) | | 🛠 |
+| FR-17 | M | The event detail view shall show: title, start (and end if known) date/time… | US-05 | D-01 S-4, data-model Event | `src/app/event/[id]/page.tsx` (incl. image), `DistanceFromSearch.tsx`, `formatEventWhen` (+ test) | | 🛠 |
 | FR-18 | M | The detail view shall have a button that opens the official event / ticket… | US-05 | D-01 S-4 | Detail page "View official page"; row link in `EventRow.tsx` | | 🛠 |
 | FR-19 | M | The detail view shall have a Directions button that opens Google Maps or… | US-06 | D-11, S-4 | `src/lib/links.ts` Google Maps + Waze (+ test), detail page | | 🛠 |
 | FR-20 | M | The user shall be able to bookmark and un-bookmark an event; bookmarks are… | US-07 | D-04, S-4/S-5 | `src/lib/bookmarks.ts` (+ test), `use-bookmarks.ts`, `EventActions.tsx`, `/saved` | | 🛠 |

@@ -165,36 +165,33 @@ acceptable: the cache saves calls but correctness never depends on it.
 | Event has no coordinates | Shown in list with label, not on map | FR-09 |
 | Curated entry invalid | Skipped + warning in server log (no user data in log) | FR-25 |
 
-## 8. Project structure (planned for Phase 4)
+## 8. Project structure (as built, Phase 4)
 
 ```
 events-near-me/
-├── data/
-│   └── curated-events.json          # D-10
+├── data/curated-events.json            # D-10
 ├── src/
-│   ├── app/                         # Next.js routes (D-01)
-│   │   ├── page.tsx                 # Explore (list/map)
-│   │   ├── event/[id]/page.tsx      # Detail
-│   │   ├── saved/page.tsx           # Saved
-│   │   ├── about/page.tsx           # Privacy & attribution
-│   │   └── api/events/search/route.ts   # D-06
-│   ├── components/                  # UI pieces, MapView (D-05)
-│   ├── lib/
-│   │   ├── location.ts              # D-02
-│   │   ├── filters.ts               # D-03
-│   │   ├── bookmarks.ts             # D-04
-│   │   ├── links.ts                 # D-11
-│   │   ├── event-schema.ts          # Event type + Zod schemas
-│   │   └── sources/
-│   │       ├── aggregator.ts        # D-07, D-08
-│   │       ├── curated.ts           # D-09
-│   │       ├── eventbrite.ts        # D-09
-│   │       └── categories.ts        # category mapping
-│   └── test/                        # unit/integration tests
-├── public/manifest.webmanifest      # D-12
-├── .env.example
-└── docs/
+│   ├── app/
+│   │   ├── page.tsx                    # Welcome + Explore (map + list sheet) (D-01)
+│   │   ├── event/[id]/page.tsx         # Detail (server lookup per request)
+│   │   ├── saved/page.tsx              # Saved (D-04)
+│   │   ├── about/page.tsx              # Privacy & attribution
+│   │   └── api/events/search/route.ts  # D-06
+│   ├── components/                     # MapView (D-05), FilterSheet, EventRow, TabBar,
+│   │                                   # EventActions (save/share), DistanceFromSearch, icons
+│   └── lib/
+│       ├── event-schema.ts             # Event type, Zod schemas, endTime/isEnded
+│       ├── geo.ts  location.ts         # D-02
+│       ├── filters.ts                  # D-03
+│       ├── bookmarks.ts  use-bookmarks.ts   # D-04
+│       ├── links.ts                    # D-11
+│       ├── format.ts  categories.ts  search-point.ts
+│       └── sources/                    # types, aggregator (D-07), registry, curated (D-09)
+├── next.config.ts                      # security headers (§7 of security-privacy.md)
+├── vitest.config.mts
+└── .env.example
 ```
+Tests sit next to the code (`*.test.ts`). Not built: `eventbrite.ts` (CR-03), PWA manifest D-12 (Could), source cache D-08 (only needed with a live source).
 
 ## 9. Default values and configuration
 

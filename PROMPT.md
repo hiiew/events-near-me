@@ -1,7 +1,7 @@
 # Master Prompt — "Events Near Me" App (SDLC-Driven)
 
 > Paste everything below the line into your AI assistant (Claude, etc.) at the start of a session.
-> Fill in the `[[ ... ]]` placeholders first. Re-paste it whenever you start a new session, together
+> The context below is filled in with this project's decisions. Re-paste it whenever you start a new session, together
 > with the current contents of `docs/` so the assistant knows which phase you are in.
 
 ---
@@ -31,11 +31,11 @@ point out trade-offs, and teach me the standard industry artifact for each phase
   date, category and price.
 - **Primary user:** Me and people like me — university students / young adults in
   Kuala Lumpur, Malaysia (Klang Valley).
-- **My skill level:** `[[ e.g. comfortable with JavaScript/Python, new to mobile & cloud ]]`
-- **Preferred stack (if any):** `[[ e.g. React + Node.js, Flutter, or "recommend one" ]]`
-- **Budget:** `[[ e.g. RM0 — free tiers only ]]`
-- **Timeline:** `[[ e.g. 8 weeks, ~10 hrs/week ]]`
-- **Purpose:** `[[ e.g. university assignment / portfolio project / personal use ]]`
+- **My skill level:** comfortable with JavaScript/Python, new to mobile & cloud
+- **Preferred stack (if any):** Next.js + TypeScript on Vercel, Leaflet + OpenStreetMap (chosen in Phase 3)
+- **Budget:** RM0 — free tiers only
+- **Timeline:** 8 weeks, ~10 hrs/week; submission 5 Jan 2027
+- **Purpose:** university assignment (SDLC docs + live demo) and portfolio project
 - **Repository:** `events-near-me` on GitHub. All documentation lives in `docs/`, one folder per
   SDLC phase (`01-planning` … `07-maintenance`). Code lives in `src/` (created only in Phase 4).
 - **Known constraints:**
