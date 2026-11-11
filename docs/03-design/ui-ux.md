@@ -3,9 +3,9 @@
 | Field | Value |
 |---|---|
 | Phase | 3 — Design |
-| Version | 1.0 (draft for approval) |
+| Version | 1.1 — style changed to Night Map (DC-01, 2026-11-11) |
 | Date | 2026-11-11 |
-| Style | **Playful campus**: bright colours, rounded cards, emoji category icons |
+| Style | **Night Map**: map-first Explore with a list sheet, dark-first with a light mode, lime accent, line icons (was: playful campus) |
 
 > **What's in a UI/UX design doc?** *UX* (user experience) is how the app flows — what the user does
 > step by step. *UI* (user interface) is how each screen looks. Standard artefacts: **user flows**
@@ -204,40 +204,55 @@ flowchart LR
 └────────────────────────────────┘
 ```
 
-## 4. Style guide — "playful campus"
+## 4. Style guide — "Night Map" (DC-01, replaces "playful campus")
 
-### Colour tokens
+> **Design change DC-01 (2026-11-11):** the owner chose direction **B · Night Map** from three
+> options (canvas: claude.ai/artifact/VGcwHwxsvoxUWtDnRioEYU). It replaces the Phase 3
+> "playful campus" look. No requirement changes; FR/NFR stay as approved. Built with Slice 2.
 
-Bright colours are used for **backgrounds, chips and icons**; text always uses high-contrast
-colours so we meet **WCAG 2.1 AA** (NFR-05). Contrast ratios below are calculated against the
-stated background **[re-check with a contrast tool in Phase 5]**.
+### Layout idea
+- **Explore = map on top, list in a sheet below** (one screen instead of a List/Map toggle).
+  The sheet can be dragged up to read the list full-height; the map is never the only way to
+  reach an event (the list always has every event — NFR-05).
+- Search-area field + **Filters** button float over the top of the map.
+- Bottom tab bar is a floating rounded bar: **Explore · Saved · About**.
+- List rows are compact: date block (day + month) · title · time · venue · distance · price tag.
 
-| Token | Light mode | Dark mode | Use | Contrast note |
+### Colour tokens (contrast measured 2026-11-11)
+
+| Token | Dark (default look) | Light | Use | Contrast |
 |---|---|---|---|---|
-| `--bg` | `#FFFBF5` (warm white) | `#17132B` (deep indigo) | Page background | — |
-| `--surface` | `#FFFFFF` | `#231D3F` | Cards, sheets | — |
-| `--text` | `#1E1B2E` | `#F5F3FF` | Body text | ≥ 15:1 |
-| `--text-muted` | `#5B5670` | `#C4BFDB` | Secondary text | ≥ 6:1 |
-| `--primary` | `#6D28D9` (violet) | `#A78BFA` | Buttons, links, active tab | white on `#6D28D9` ≈ 7.1:1 ✅; `#17132B` on `#A78BFA` ≈ 6.6:1 ✅ (dark mode) |
-| `--accent-1` | `#FF6B6B` (coral) | same | Decorative blobs, badges with dark text | not for text on white |
-| `--accent-2` | `#FFD43B` (sunny yellow) | same | "FREE" badge (dark text on yellow) | dark text on yellow ≈ 11.8:1 ✅ |
-| `--accent-3` | `#20C997` (mint) | same | Success, "Saved" toast (dark text) | |
-| `--warning` | `#B45309` | `#FBBF24` | "Some sources unavailable" | 4.9:1 on `--bg` ✅; 10.8:1 dark ✅ |
+| `--bg` | `#0E0F13` | `#F7F7F5` | Page / sheet background | — |
+| `--map` | `#16181F` | `#E9EAE6` | Map area while tiles load | — |
+| `--surface` | `#1C1E26` | `#FFFFFF` | Tab bar, inputs, cards | — |
+| `--line` | `#2E313B` | `#DCDDD8` | Borders, row dividers | — |
+| `--text` | `#F4F4F5` | `#0E0F13` | Body text | 17.4 / 17.9 ✅ |
+| `--text-muted` | `#A1A1AA` | `#52525B` | Secondary text | 7.5 (6.5 on surface) / 7.2 ✅ |
+| `--accent` | `#C6F432` (lime) | `#C6F432` | **Fills only**: Filters button, FREE tag, current pin | ink `#0E0F13` on lime 14.9 ✅ |
+| `--accent-text` | `#C6F432` | `#4D7C0F` | Accent-coloured **text**/icons (active tab, links) | 14.9 / 5.0 on white, 4.7 on bg ✅ |
+| `--warning` | `#FBBF24` | `#B45309` | "Some sources unavailable" | ✅ both |
 
-Category chips use a **light tint background + dark text + emoji**, so colour is never the only
-signal (WCAG 1.4.1).
+Rule: lime is never used as text on a light background (it fails contrast); use `--accent-text`.
+
+### Theme
+Follows the phone's setting (`prefers-color-scheme`). Dark is the signature look in mock-ups;
+light mode uses the same layout with the light tokens.
 
 ### Typography
-- Font: **Nunito** (rounded, friendly; free via `next/font/google`), fallback `system-ui`.
-- Sizes: body 16 px (never smaller than 14 px), card title 18 px bold, screen title 24 px extra-bold.
+- Headings and date numbers: **Space Grotesk** 500/700. Body: **Inter** 400/500/600.
+  Both via `next/font/google`.
+- Sizes: body 15–16 px (never below 12 px for tags), row title 15 px semibold, sheet title 24 px bold.
 
-### Shapes and motion
-- Cards and buttons: border-radius **16 px**; chips fully rounded.
-- Soft shadows; small "pop" animation when bookmarking.
-- All animation disabled when the user's system has **reduced motion** turned on.
+### Icons, shapes and motion
+- **Line icons** (inline SVG, 2 px stroke, `aria-hidden`), no emoji. Categories shown as text
+  tags; colour is never the only signal (WCAG 1.4.1).
+- Radii: sheet top 26 px, tab bar 20 px, inputs/buttons 14 px, tags 8 px.
+- Motion: only the sheet slide and pin highlight; all off with **reduced motion**.
 
-### Dark mode
-Follows the phone's setting (`prefers-color-scheme`); tokens above swap automatically.
+### Map
+- Leaflet + OpenStreetMap tiles (ADR-03). In dark theme the tiles are dimmed with a CSS filter
+  so the screen stays dark; attribution "© OpenStreetMap contributors" always visible (FR-32).
+- Pins are labelled chips (event short name), the search point is a lime dot with a halo.
 
 ## 5. Content and formatting rules (NFR-18)
 
