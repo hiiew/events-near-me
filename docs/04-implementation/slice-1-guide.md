@@ -50,7 +50,7 @@ git switch -c slice-1-location-list
 
 ## Step 2 — Scaffold the Next.js app (~15 min)
 
-`create-next-app` won't run while `README.md` and `PROMPT.md` exist, so move them aside first.
+`create-next-app` won't run while `README.md`, `PROMPT.md` and `skills-lock.json` exist, so move them aside first (the `.claude/` folder can stay).
 These commands work in PowerShell (Windows) and in macOS/Linux terminals — run them one at a time.
 
 ```bash
@@ -63,12 +63,15 @@ mv README.md ../keep/
 mv PROMPT.md ../keep/
 ```
 ```bash
+mv skills-lock.json ../keep/
+```
+```bash
 npx create-next-app@latest . --ts --tailwind --eslint --app --src-dir --import-alias "@/*" --use-npm --yes
 ```
 ```bash
 mv -Force ../keep/README.md .
 ```
-*(macOS/Linux: `mv -f ../keep/README.md .`)* — then do the same for `PROMPT.md`, and delete the empty `../keep` folder.
+*(macOS/Linux: `mv -f ../keep/README.md .`)* — then do the same for `PROMPT.md` and `skills-lock.json`, and delete the empty `../keep` folder.
 
 Then:
 1. **Fix `.gitignore`:** open it, find the line `.env*` and add a new line **under** it: `!.env.example`
