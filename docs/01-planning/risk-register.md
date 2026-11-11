@@ -14,7 +14,7 @@
 
 | ID | Risk | Category | L | I | Score | Mitigation | Contingency (if it happens) | Owner | Status |
 |---|---|---|---|---|---|---|---|---|---|
-| R-01 | Free event APIs return too few events in KL | Data / technical | 4 | 5 | **20 🔴** | Data-source spike in Phase 1; test several providers | Combine sources; widen radius; demo with another city as well; consider a low-cost source (needs approval) | Developer | Open |
+| R-01 | Free event APIs return too few events in KL | Data / technical | 4 | 5 | **20 🔴** | Data-source spike in Phase 1; test several providers | Combine sources; widen radius; demo with another city as well; consider a low-cost source (needs approval) | Developer | **Occurred 2026-11-11** — Ticketmaster returned 0 KL events; fallback pending (see data-source-spike.md) |
 | R-02 | API terms forbid caching, require specific attribution, or are non-commercial only | Legal | 3 | 4 | **12 🔴** | Read and record each provider's ToS during the spike | Shorten/remove cache; adjust UI attribution; drop provider | Developer | Open |
 | R-03 | Beginner learning curve makes Phase 4 take longer than planned | Schedule | 4 | 4 | **16 🔴** | Small MVP; well-documented stack; vertical slices; 6 h buffer | Move "Should" items to "Could"; use buffer week | Developer | Open |
 | R-04 | API key leaked by committing it to GitHub | Security | 3 | 4 | **12 🔴** | `.env` in `.gitignore` from day 1; `.env.example` only; enable GitHub secret scanning; keys used only server-side | Revoke and rotate key immediately; purge from history | Developer | Open |
