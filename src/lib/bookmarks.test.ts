@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import type { Event } from "./event-schema";
-import { clearBookmarks, isSaved, parseBookmarks, readRaw, toggleBookmark } from "./bookmarks";
+import { clearBookmarks, parseBookmarks, readRaw, toggleBookmark } from "./bookmarks";
+
+const isSaved = (id: string, raw: string) => parseBookmarks(raw).some((b) => b.event.id === id);
 
 function memoryStore() {
   const m = new Map<string, string>();

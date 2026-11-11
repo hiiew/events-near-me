@@ -40,10 +40,6 @@ function write(list: Bookmark[], store: Store | null) {
   if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(CHANGED));
 }
 
-export function isSaved(id: string, raw: string): boolean {
-  return parseBookmarks(raw).some((b) => b.event.id === id);
-}
-
 export function toggleBookmark(event: Event, store: Store | null = browserStore(), now = new Date()): boolean {
   const list = parseBookmarks(readRaw(store));
   const saved = list.some((b) => b.event.id === event.id);

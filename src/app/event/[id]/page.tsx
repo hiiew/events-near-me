@@ -1,9 +1,11 @@
 // S-4 Event detail — FR-17, FR-18, FR-19, FR-20, FR-22, FR-32 (source attribution).
 // Server component: the event is looked up on the server by id, so shared links work.
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { connection } from "next/server";
 import { Suspense } from "react";
+import { DistanceFromSearch } from "@/components/DistanceFromSearch";
 import { SaveButton, ShareButton } from "@/components/EventActions";
 import { BackIcon, CalendarIcon, DirectionsIcon, ExternalIcon, PinIcon, TagIcon } from "@/components/icons";
 import { CATEGORY_LABELS } from "@/lib/categories";
@@ -67,6 +69,11 @@ async function EventDetail({ id }: { id: string }) {
       </p>
       <h1 className="font-display text-[32px] leading-[1.05] font-bold tracking-tight">{event.title}</h1>
 
+      {event.imageUrl ? (
+        // unoptimized: images come from organisers' own sites, so no image-domain list to maintain
+        <Image src={event.imageUrl} alt={event.title} width={800} height={450} unoptimized className="aspect-video w-full rounded-2xl object-cover" />
+      ) : null}
+
       <dl className="flex flex-col gap-3">
         <div className="grid grid-cols-[28px_minmax(0,1fr)] gap-2.5">
           <CalendarIcon className="text-accent-text" />
@@ -82,6 +89,7 @@ async function EventDetail({ id }: { id: string }) {
             <dt className="sr-only">Where</dt>
             <dd className="font-semibold">{event.venue.name}</dd>
             {event.venue.address ? <dd className="text-sm text-muted">{event.venue.address}</dd> : null}
+            <DistanceFromSearch venue={event.venue} />
           </div>
         </div>
         <div className="grid grid-cols-[28px_minmax(0,1fr)] gap-2.5">

@@ -67,14 +67,12 @@ export const isEnded = (e: Pick<Event, "start" | "end">, now: number = Date.now(
 export const CuratedEventSchema = EventSchema.omit({ sourceId: true }).extend({
   venue: VenueSchema.extend({ lat: Latitude, lon: Longitude }),
 });
-export type CuratedEvent = z.infer<typeof CuratedEventSchema>;
 
 // Body of POST /api/events/search (api-spec.md §1). Extra fields are rejected.
 export const SearchRequestSchema = z.strictObject({
   lat: Latitude,
   lon: Longitude,
 });
-export type SearchRequest = z.infer<typeof SearchRequestSchema>;
 
 export interface SourceStatus {
   id: SourceId;
