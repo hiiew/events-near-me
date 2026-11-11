@@ -36,6 +36,13 @@ export function filterCurated(entries: unknown[], query: SourceQuery): Event[] {
   return events;
 }
 
+/** FR-17: one curated event by its app id ("curated:kl-0002"), or null if missing or invalid. */
+export function getCuratedEvent(id: string, entries: unknown[] = curatedData as unknown[]): Event | null {
+  const raw = entries.find((e) => `curated:${(e as { id?: unknown })?.id}` === id);
+  const parsed = CuratedEventSchema.safeParse(raw);
+  return parsed.success ? { ...parsed.data, id, sourceId: "curated" } : null;
+}
+
 export const curatedAdapter: SourceAdapter = {
   id: "curated",
   isEnabled: () => true,

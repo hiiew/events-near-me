@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatDayMonth, formatDistance, formatEventDate, formatPrice } from "./format";
+import { formatDayMonth, formatDistance, formatEventDate, formatEventWhen, formatPrice } from "./format";
 
 const NOW = new Date("2026-11-11T12:00:00+08:00");
 
@@ -41,5 +41,18 @@ describe("formatDistance", () => {
 describe("NFR-18 formatDayMonth", () => {
   it("uses Malaysia's date (23:30 UTC on 5 Dec = 6 Dec in MYT)", () => {
     expect(formatDayMonth("2026-12-05T23:30:00Z")).toEqual({ day: "6", month: "Dec" });
+  });
+});
+
+describe("FR-17 formatEventWhen", () => {
+  it("gives the long day and a time range in Malaysia time", () => {
+    expect(formatEventWhen("2026-11-21T20:00:00+08:00", "2026-11-21T23:00:00+08:00")).toEqual({
+      day: "Saturday 21 November 2026",
+      time: "8:00 PM – 11:00 PM",
+    });
+  });
+
+  it("shows only the start time when there is no end", () => {
+    expect(formatEventWhen("2026-12-03T19:30:00+08:00").time).toBe("7:30 PM");
   });
 });

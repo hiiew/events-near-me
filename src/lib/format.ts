@@ -25,6 +25,15 @@ export function formatEventDate(iso: string, now: Date = new Date()): string {
   return `${day} · ${timeFmt.format(date)}`;
 }
 
+const longDayFmt = new Intl.DateTimeFormat("en-GB", { timeZone: TIME_ZONE, weekday: "long", day: "numeric", month: "long", year: "numeric" });
+
+/** Detail view, e.g. { day: "Saturday 21 November 2026", time: "8:00 PM – 11:00 PM" } in Malaysia time. */
+export function formatEventWhen(start: string, end?: string): { day: string; time: string } {
+  const s = new Date(start);
+  const time = end ? `${timeFmt.format(s)} – ${timeFmt.format(new Date(end))}` : timeFmt.format(s);
+  return { day: longDayFmt.format(s).replace(",", ""), time };
+}
+
 function money(amount: number, currency: string): string {
   const label = currency.toUpperCase() === "MYR" ? "RM" : currency.toUpperCase();
   return `${label} ${amount.toFixed(2)}`;

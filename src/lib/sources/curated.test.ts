@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import curatedData from "../../../data/curated-events.json";
 import { CuratedEventSchema } from "../event-schema";
-import { curatedAdapter, filterCurated } from "./curated";
+import { curatedAdapter, filterCurated, getCuratedEvent } from "./curated";
 import type { SourceQuery } from "./types";
 
 const base = {
@@ -79,5 +79,22 @@ describe("FR-25 data/curated-events.json", () => {
     const out = await curatedAdapter.getEvents(query);
     expect(out.length).toBeGreaterThan(0);
     expect(out.every((e) => e.sourceId === "curated")).toBe(true);
+  });
+});
+
+describe("FR-17 getCuratedEvent", () => {
+  it("finds an event by its app id", () => {
+    const e = getCuratedEvent("curated:kl-0002");
+    expect(e?.title).toContain("Indie Night");
+    expect(e?.sourceId).toBe("curated");
+  });
+
+  it("returns null for an unknown id or another source's id", () => {
+    expect(getCuratedEvent("curated:nope")).toBeNull();
+    expect(getCuratedEvent("eventbrite:123")).toBeNull();
+  });
+
+  it("returns null for an invalid entry instead of throwing", () => {
+    expect(getCuratedEvent("curated:bad", [{ id: "bad", url: "http://x" }])).toBeNull();
   });
 });
