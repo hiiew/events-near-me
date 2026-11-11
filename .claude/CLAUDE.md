@@ -15,6 +15,7 @@ every skill that matches the task (table below), load it with the Skill tool (or
 | React components, Next.js pages/routes, data fetching, performance | `vercel-react-best-practices` |
 | Writing or fixing tests, mocks, coverage | `vitest` |
 | Any UI: markup, forms, colours, focus, screen readers (NFR-05) | `accessibility` |
+| Building, polishing or reviewing how a screen looks (layout, hierarchy, visual detail) | `ui-taste` — free part only: no paid Uizze service is connected, and there's no image-generation tool, so work from `ui-ux.md` and say so. Never run its `scripts/` without the user's OK |
 | Module structure, interfaces, adapters, where code should live | `codebase-design` |
 | Reviewing existing code for structural problems (only once real code exists) | `improve-codebase-architecture` |
 | Naming domain concepts, glossary terms, recording a design decision | `domain-modeling` |
@@ -29,7 +30,7 @@ If a skill's advice conflicts with this project, the project wins:
 
 - **Design decisions (ADRs)** live in `docs/03-design/architecture.md` (ADR-01 …), not `docs/adr/`.
 - **Domain terms** live in the SRS glossary, `docs/02-requirements/srs.md` §1.3, not a new `GLOSSARY.md`.
-- **UI style** is defined in `docs/03-design/ui-ux.md` (playful campus style, colour tokens, WCAG AA).
+- **UI style** is defined in `docs/03-design/ui-ux.md` (playful campus style, colour tokens, WCAG AA). It is this project's DESIGN.md for `ui-taste`: keep its style instead of redesigning.
 - **Requirement changes** after Phase 2 go in `docs/02-requirements/change-log.md` *before* they are applied.
 
 ## Rule 3 — How this project works
