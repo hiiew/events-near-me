@@ -284,4 +284,4 @@ Should items move to the maintenance backlog (risk R-03).
 
 | Role | Name | Decision | Date |
 |---|---|---|---|
-| Developer / project owner | | ☐ Approved ☐ Changes needed | |
+| Developer / project owner | Project student | ☑ Approved | 2026-11-11 |
