@@ -16,7 +16,7 @@ requirements first, code later.
 | # | Phase | Folder | Status |
 |---|---|---|---|
 | 1 | Planning | [`docs/01-planning`](docs/01-planning) | ✅ Approved 2026-11-11 |
-| 2 | Requirements | [`docs/02-requirements`](docs/02-requirements) | 🚧 In progress |
+| 2 | Requirements | [`docs/02-requirements`](docs/02-requirements) | 📝 Awaiting approval |
 | 3 | Design | [`docs/03-design`](docs/03-design) | ⏳ Not started |
 | 4 | Implementation | [`docs/04-implementation`](docs/04-implementation) | ⏳ Not started |
 | 5 | Testing | [`docs/05-testing`](docs/05-testing) | ⏳ Not started |

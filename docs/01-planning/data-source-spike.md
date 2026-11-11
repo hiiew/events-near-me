@@ -50,4 +50,4 @@ Facts marked **[verify]** are from general knowledge and must be checked on the 
 
 | Decision | Chosen option | Decided by | Date |
 |---|---|---|---|
-| Event data source for MVP | _pending_ | Developer | |
+| Event data source for MVP | **E — Hybrid**: curated KL dataset (baseline) + Eventbrite by organiser (Should) + PredictHQ only if free (Could), via adapter layer | Developer | 2026-11-11 |

@@ -42,7 +42,7 @@ As a result people miss events they would have enjoyed, and checking several sou
 
 ### In scope (MVP candidates — finalised with MoSCoW in Phase 2)
 - Detect the user's location (with permission) or let them choose an area manually.
-- Fetch events from **official third-party event APIs** only.
+- Fetch events from **official third-party event APIs** and a **curated dataset of real public KL events** maintained by the developer, combined through an adapter layer (*changed 2026-11-11 after the data-source spike — see `data-source-spike.md`*).
 - Show events as a **list** and on a **map**.
 - Filter by distance, date range, category and price (free / paid / price range where available).
 - Event detail view with a link to the official event or ticket page and a directions link.
