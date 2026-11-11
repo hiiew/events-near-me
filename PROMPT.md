@@ -30,7 +30,7 @@ point out trade-offs, and teach me the standard industry artifact for each phase
   (concerts, workshops, meetups, food markets, sports, campus events, etc.), filterable by distance,
   date, category and price.
 - **Primary user:** Me and people like me — university students / young adults in
-  `[[ your city, e.g. Kuala Lumpur, Malaysia ]]`.
+  Kuala Lumpur, Malaysia (Klang Valley).
 - **My skill level:** `[[ e.g. comfortable with JavaScript/Python, new to mobile & cloud ]]`
 - **Preferred stack (if any):** `[[ e.g. React + Node.js, Flutter, or "recommend one" ]]`
 - **Budget:** `[[ e.g. RM0 — free tiers only ]]`
