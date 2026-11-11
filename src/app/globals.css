@@ -1,47 +1,49 @@
 @import "tailwindcss";
 
-/* Colour tokens from docs/03-design/ui-ux.md §4 ("playful campus").
-   Contrast ratios were checked in Phase 3 (all text ≥ 4.5:1). */
+/* "Night Map" tokens — docs/03-design/ui-ux.md §4 (DC-01). Contrast measured 2026-11-11.
+   Lime (--accent) is a FILL colour only; accent-coloured text uses --accent-text. */
 :root {
-  --bg: #fffbf5;
+  --bg: #f7f7f5;
+  --map: #e9eae6;
   --surface: #ffffff;
-  --text: #1e1b2e;
-  --text-muted: #5b5670;
-  --primary: #6d28d9;
-  --on-primary: #ffffff;
-  --accent-1: #ff6b6b;
-  --accent-2: #ffd43b;
-  --accent-3: #20c997;
+  --line: #dcddd8;
+  --text: #0e0f13;
+  --text-muted: #52525b;
+  --accent: #c6f432;
+  --ink: #0e0f13; /* text on lime */
+  --accent-text: #4d7c0f;
   --warning: #b45309;
-  --border: #ece6f5;
+  --tile-filter: none;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #17132b;
-    --surface: #231d3f;
-    --text: #f5f3ff;
-    --text-muted: #c4bfdb;
-    --primary: #a78bfa;
-    --on-primary: #17132b;
+    --bg: #0e0f13;
+    --map: #16181f;
+    --surface: #1c1e26;
+    --line: #2e313b;
+    --text: #f4f4f5;
+    --text-muted: #a1a1aa;
+    --accent-text: #c6f432;
     --warning: #fbbf24;
-    --border: #352d5c;
+    /* Darken OpenStreetMap tiles so the screen stays dark. */
+    --tile-filter: invert(1) hue-rotate(180deg) brightness(0.85) contrast(0.9) saturate(0.6);
   }
 }
 
 @theme inline {
   --color-bg: var(--bg);
+  --color-map: var(--map);
   --color-surface: var(--surface);
+  --color-line: var(--line);
   --color-ink: var(--text);
   --color-muted: var(--text-muted);
-  --color-primary: var(--primary);
-  --color-on-primary: var(--on-primary);
-  --color-coral: var(--accent-1);
-  --color-sunny: var(--accent-2);
-  --color-mint: var(--accent-3);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--ink);
+  --color-accent-text: var(--accent-text);
   --color-warning: var(--warning);
-  --color-line: var(--border);
-  --font-sans: var(--font-nunito), system-ui, sans-serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-space-grotesk), var(--font-inter), system-ui, sans-serif;
 }
 
 body {
@@ -51,8 +53,21 @@ body {
 
 /* Visible keyboard focus everywhere (NFR-05). */
 :focus-visible {
-  outline: 3px solid var(--primary);
+  outline: 3px solid var(--accent-text);
   outline-offset: 2px;
+}
+
+/* Doubled class beats leaflet.css, which loads after this file. */
+.leaflet-container.leaflet-container {
+  background: var(--map);
+  font-family: inherit;
+}
+.leaflet-tile-pane {
+  filter: var(--tile-filter);
+}
+.leaflet-div-icon {
+  background: none;
+  border: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

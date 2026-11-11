@@ -1,13 +1,15 @@
-// FR-12 / data-model.md §3 — display label and emoji for each category.
-import type { CategoryId } from "./event-schema";
+// FR-12 / data-model.md §3 — display labels. Night Map uses text tags, not emoji (DC-01).
+import { CATEGORY_IDS, type CategoryId } from "./event-schema";
 
-export const CATEGORY_META: Record<CategoryId, { label: string; emoji: string }> = {
-  music: { label: "Music", emoji: "🎵" },
-  food: { label: "Food & Markets", emoji: "🍜" },
-  arts: { label: "Arts & Culture", emoji: "🎨" },
-  sports: { label: "Sports", emoji: "⚽" },
-  learning: { label: "Workshops & Learning", emoji: "📚" },
-  tech: { label: "Tech & Meetups", emoji: "💻" },
-  nightlife: { label: "Nightlife", emoji: "🌙" },
-  other: { label: "Other", emoji: "✨" },
+export const CATEGORY_LABELS: Record<CategoryId, string> = {
+  music: "Music",
+  food: "Food & Markets",
+  arts: "Arts & Culture",
+  sports: "Sports",
+  learning: "Workshops & Learning",
+  tech: "Tech & Meetups",
+  nightlife: "Nightlife",
+  other: "Other",
 };
+
+export const CATEGORY_OPTIONS = CATEGORY_IDS.map((id) => ({ id, label: CATEGORY_LABELS[id] }));
