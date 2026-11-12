@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Happening app icon ("any" purpose): Night Map tokens from docs/03-design/ui-ux.md §4 — dark #0E0F13, lime #C6F432. -->
+  <rect width="512" height="512" rx="112" fill="#0E0F13"/>
+  <circle cx="256" cy="256" r="196" fill="#C6F432" fill-opacity="0.08"/>
+  <circle cx="256" cy="256" r="140" fill="#C6F432" fill-opacity="0.14"/>
+  <g transform="translate(0 -32)">
+    <path fill="#C6F432" d="M256 436C256 436 360 336 360 244a104 104 0 0 0-208 0c0 92 104 192 104 192z"/>
+    <circle cx="256" cy="244" r="40" fill="#0E0F13"/>
+  </g>
+</svg>

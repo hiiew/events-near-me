@@ -1,11 +1,12 @@
 "use client";
-// FR-20 save and FR-22 share buttons for the detail page.
+// FR-20 save, FR-22 share and FR-23 add-to-calendar buttons for the detail page.
 import { useState } from "react";
 import { toggleBookmark } from "@/lib/bookmarks";
 import type { Event } from "@/lib/event-schema";
+import { buildIcs, icsFileName } from "@/lib/ics";
 import { shareData } from "@/lib/links";
 import { useBookmarks } from "@/lib/use-bookmarks";
-import { BookmarkIcon, ShareIcon } from "./icons";
+import { BookmarkIcon, CalendarIcon, ShareIcon } from "./icons";
 
 const iconButton = "flex size-11 items-center justify-center rounded-[14px] border";
 const plain = `${iconButton} border-line bg-bg/90`;
@@ -60,3 +61,35 @@ export function ShareButton({ event }: { event: Event }) {
   );
 }
 
+
+export function CalendarButton({ event }: { event: Event }) {
+  const [done, setDone] = useState(false);
+
+  // FR-23: the .ics file is made here in the browser and downloaded; nothing is sent to the server.
+  function download() {
+    const url = URL.createObjectURL(new Blob([buildIcs(event)], { type: "text/calendar;charset=utf-8" }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = icsFileName(event);
+    document.body.append(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    setDone(true);
+  }
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={download}
+        className="flex min-h-[50px] items-center justify-center gap-2 rounded-2xl border border-line font-semibold"
+      >
+        <CalendarIcon /> Add to calendar
+      </button>
+      <p role="status" aria-live="polite" className="sr-only">
+        {done ? "Calendar file downloaded. Open it to add the event." : ""}
+      </p>
+    </>
+  );
+}
