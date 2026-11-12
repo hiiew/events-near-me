@@ -27,6 +27,20 @@ export const DEFAULT_FILTERS: Filters = {
   sort: "soonest",
 };
 
+// FR-34 (CR-04) "Free this week" chip: only a shortcut for two existing filters (FR-11 date, FR-13 price);
+// the filtering itself is still done by applyFilters below.
+export const isFreeThisWeek = (f: Pick<Filters, "when" | "price">): boolean => f.when === "7d" && f.price.kind === "free";
+
+/**
+ * Chip tap. Off → Free only + Next 7 days. On → those two go back to their defaults.
+ * Distance, categories and sort are never touched.
+ */
+export function toggleFreeThisWeek(f: Filters): Filters {
+  return isFreeThisWeek(f)
+    ? { ...f, when: DEFAULT_FILTERS.when, price: DEFAULT_FILTERS.price }
+    : { ...f, when: "7d", price: { kind: "free" } };
+}
+
 export interface EventWithDistance extends Event {
   /** undefined when the venue has no coordinates (FR-09). */
   distanceKm?: number;

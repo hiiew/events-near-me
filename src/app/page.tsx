@@ -1,13 +1,14 @@
 "use client";
-// S-1 Welcome + S-2/S-3 Explore (Night Map: map + list sheet) — FR-01–FR-15, FR-28, NFR-05, NFR-09.
+// S-1 Welcome + S-2/S-3 Explore (Night Map: map + list sheet) — FR-01–FR-15, FR-28, FR-34, NFR-05, NFR-09.
 import dynamic from "next/dynamic";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { EventRow } from "@/components/EventRow";
 import { FilterSheet } from "@/components/FilterSheet";
+import { FreeThisWeekChip } from "@/components/FreeThisWeekChip";
 import { FiltersIcon, PinIcon, PlusIcon, ShieldIcon } from "@/components/icons";
 import { TabBar } from "@/components/TabBar";
 import type { Event, SearchResponse } from "@/lib/event-schema";
-import { applyFilters, DEFAULT_FILTERS, widerRadius, type Filters } from "@/lib/filters";
+import { applyFilters, DEFAULT_FILTERS, isFreeThisWeek, toggleFreeThisWeek, widerRadius, type Filters } from "@/lib/filters";
 import { roundPoint, type LatLon } from "@/lib/geo";
 import { getDeviceLocation, type LocationError } from "@/lib/location";
 import { rememberSearchPoint } from "@/lib/search-point";
@@ -258,6 +259,9 @@ export default function Home() {
               <p className="text-[13px] text-muted">
                 Within {filters.radiusKm} km · {filters.sort === "nearest" ? "nearest first" : "soonest first"} · tap the map to move
               </p>
+              <div className="mt-3">
+                <FreeThisWeekChip pressed={isFreeThisWeek(filters)} onToggle={() => setFilters(toggleFreeThisWeek)} />
+              </div>
 
               {events.some((e) => e.title.startsWith("SAMPLE")) ? (
                 <p className="mt-3 rounded-xl border border-line bg-surface px-3 py-2 text-sm font-semibold">
