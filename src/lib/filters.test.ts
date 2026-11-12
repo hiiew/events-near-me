@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Event } from "./event-schema";
-import { applyFilters, DEFAULT_FILTERS, isFreeThisWeek, matchesQuery, toggleFreeThisWeek, whenWindow, widerRadius, type Filters } from "./filters";
+import { applyFilters, DEFAULT_FILTERS, isFreeThisWeek, isToday, matchesQuery, toggleFreeThisWeek, toggleToday, whenWindow, widerRadius, type Filters } from "./filters";
 
 const KLCC = { lat: 3.158, lon: 101.712 };
 // Wednesday 11 Nov 2026, 12:00 Malaysia time
@@ -226,5 +226,39 @@ describe("FR-35 search box", () => {
     expect(ids(applyFilters(events, KLCC, f({ query: "devfest", radiusKm: 50 }), NOW))).toEqual(["gig"]);
     expect(ids(applyFilters(events, KLCC, f({ query: "devfest", categories: ["food"], radiusKm: 50 }), NOW))).toEqual([]);
     expect(ids(applyFilters(events, KLCC, f({ query: "", radiusKm: 50 }), NOW))).toEqual(["gig", "cafe"]);
+  });
+});
+
+describe("FR-36 Today chip", () => {
+  it("is off by default and on when the date filter is Today", () => {
+    expect(isToday(DEFAULT_FILTERS)).toBe(false);
+    expect(isToday(f({ when: "today" }))).toBe(true);
+    expect(isToday(f({ when: "7d" }))).toBe(false);
+  });
+
+  it("tap sets the date to Today and leaves every other filter alone", () => {
+    const before = f({ radiusKm: 25, categories: ["music"], price: { kind: "free" }, sort: "nearest", query: "jazz" });
+    expect(toggleToday(before)).toEqual({ ...before, when: "today" });
+  });
+
+  it("tap again puts only the date back to its default", () => {
+    const on = f({ when: "today", price: { kind: "max", max: 30 }, radiusKm: 5 });
+    expect(toggleToday(on)).toEqual({ ...on, when: DEFAULT_FILTERS.when });
+    expect(toggleToday(toggleToday(DEFAULT_FILTERS))).toEqual(DEFAULT_FILTERS);
+  });
+
+  it("switching from Free this week to Today changes the date and keeps Free", () => {
+    const next = toggleToday(toggleFreeThisWeek(DEFAULT_FILTERS));
+    expect(next).toEqual({ ...DEFAULT_FILTERS, when: "today", price: { kind: "free" } });
+    expect(isFreeThisWeek(next)).toBe(false);
+  });
+
+  it("only lists events still to come today (Malaysia calendar day)", () => {
+    const events = [
+      ev("later-today", "2026-11-11T20:00:00+08:00"),
+      ev("tomorrow", "2026-11-12T09:00:00+08:00"),
+      ev("already-over", "2026-11-11T09:00:00+08:00", { end: "2026-11-11T10:00:00+08:00" }),
+    ];
+    expect(ids(applyFilters(events, KLCC, toggleToday(DEFAULT_FILTERS), NOW))).toEqual(["later-today"]);
   });
 });

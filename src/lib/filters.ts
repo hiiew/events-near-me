@@ -1,4 +1,4 @@
-// D-03 — FR-04, FR-06, FR-09, FR-10–FR-14, FR-35. Runs in the browser: the server returns
+// D-03 — FR-04, FR-06, FR-09, FR-10–FR-14, FR-34–FR-36. Runs in the browser: the server returns
 // 50 km / 30 days and the device narrows it instantly (ADR-06).
 import { CATEGORY_LABELS } from "./categories";
 import type { CategoryId, Event } from "./event-schema";
@@ -55,6 +55,12 @@ export function matchesQuery(event: Event, query: string): boolean {
   const haystack = fold([event.title, event.venue.name, event.venue.address, CATEGORY_LABELS[event.category]].filter(Boolean).join(" "));
   return words.every((w) => haystack.includes(w));
 }
+
+// FR-36 (CR-06) "Today" chip: a shortcut for the existing date filter (FR-11) only. Price, distance, categories
+// and the search are never touched. Tapping it again puts the date back to its default.
+export const isToday = (f: Pick<Filters, "when">): boolean => f.when === "today";
+
+export const toggleToday = (f: Filters): Filters => ({ ...f, when: isToday(f) ? DEFAULT_FILTERS.when : "today" });
 
 export interface EventWithDistance extends Event {
   /** undefined when the venue has no coordinates (FR-09). */

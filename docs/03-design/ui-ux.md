@@ -226,6 +226,8 @@ flowchart LR
 - **Quick chip (FR-34, CR-04):** a "Free this week" chip sits under the list heading. Off = outlined
   (`--line` border on `--surface`); on = lime fill with ink text **plus a check icon** (state is never
   colour alone) and `aria-pressed`. Button radius 14 px, at least 44 px tall.
+- **Chip row (FR-36, CR-06):** "Today" and "Free this week" sit side by side (wrapping on narrow phones, 8 px
+  gap) and use the same chip style. They can be on together; "Today" only sets the date.
 - **Search box (FR-35, CR-05):** a full-width field under the heading (`--surface` fill, `--line` border, 14 px
   radius, 44 px tall, search icon on the left, a visually hidden "Search events" label). Typing narrows the list
   live; the empty state suggests "a different search". The filter sheet's Reset does not clear it.
