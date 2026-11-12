@@ -106,3 +106,11 @@ export const SearchIcon = (p: SVGProps<SVGSVGElement>) => (
     <path d="M16 16l4.5 4.5" />
   </Icon>
 );
+export const TransitIcon = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <rect x="5" y="3" width="14" height="14" rx="3" />
+    <path d="M5 11h14M9 21l1.5-4M15 21l-1.5-4" />
+    <circle cx="9" cy="14" r="0.6" />
+    <circle cx="15" cy="14" r="0.6" />
+  </Icon>
+);

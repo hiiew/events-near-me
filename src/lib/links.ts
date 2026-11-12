@@ -1,4 +1,4 @@
-// D-11 — FR-19, FR-22, FR-37: directions and share links. No API keys needed.
+// D-11 — FR-19, FR-22, FR-37, FR-38: directions and share links. No API keys needed.
 import type { Event } from "./event-schema";
 import { formatEventDate, formatPrice } from "./format";
 
@@ -10,6 +10,9 @@ export function googleMapsDirectionsUrl(venue: Venue): string {
   const dest = hasCoords(venue) ? `${venue.lat},${venue.lon}` : [venue.name, venue.address].filter(Boolean).join(", ");
   return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(dest)}`;
 }
+
+/** FR-38 (CR-08): the same Google Maps directions, opened in public-transport mode (LRT, MRT, bus). */
+export const googleMapsTransitUrl = (venue: Venue): string => `${googleMapsDirectionsUrl(venue)}&travelmode=transit`;
 
 /** Waze navigation to the venue. */
 export function wazeUrl(venue: Venue): string {
