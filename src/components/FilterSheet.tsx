@@ -75,7 +75,7 @@ export function FilterSheet({
         <div className="flex items-center justify-between">
           <h2 id="filters-title" className="font-display text-2xl font-bold">Filters</h2>
           <div className="flex items-center gap-1">
-            <button type="button" onClick={() => setDraft(DEFAULT_FILTERS)} className="min-h-11 px-2 font-semibold text-accent-text">
+            <button type="button" onClick={() => setDraft({ ...DEFAULT_FILTERS, query: draft.query })} /* the search box is not part of this sheet */ className="min-h-11 px-2 font-semibold text-accent-text">
               Reset
             </button>
             <button type="button" onClick={onClose} aria-label="Close filters" className="flex size-11 items-center justify-center rounded-xl">

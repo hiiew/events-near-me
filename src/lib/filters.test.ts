@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Event } from "./event-schema";
-import { applyFilters, DEFAULT_FILTERS, isFreeThisWeek, toggleFreeThisWeek, whenWindow, widerRadius, type Filters } from "./filters";
+import { applyFilters, DEFAULT_FILTERS, isFreeThisWeek, matchesQuery, toggleFreeThisWeek, whenWindow, widerRadius, type Filters } from "./filters";
 
 const KLCC = { lat: 3.158, lon: 101.712 };
 // Wednesday 11 Nov 2026, 12:00 Malaysia time
@@ -183,5 +183,48 @@ describe("FR-34 Free this week chip", () => {
       ev("unknown-price-soon", "2026-11-14T20:00:00+08:00", { price: null }),
     ];
     expect(ids(applyFilters(events, KLCC, toggleFreeThisWeek(DEFAULT_FILTERS), NOW))).toEqual(["free-soon"]);
+  });
+});
+
+describe("FR-35 search box", () => {
+  const gig = ev("gig", "2026-11-14T20:00:00+08:00", {
+    title: "DevFest KL 2026",
+    venue: { name: "Sunway University", address: "Bandar Sunway, Selangor", lat: 3.0679, lon: 101.6037 },
+    category: "tech",
+  });
+  const cafe = ev("cafe", "2026-11-15T10:00:00+08:00", { title: "Café Crawl", category: "food" });
+
+  it("an empty or blank query matches everything", () => {
+    expect(matchesQuery(gig, "")).toBe(true);
+    expect(matchesQuery(gig, "   ")).toBe(true);
+  });
+
+  it("matches title, venue name, venue address and category label", () => {
+    expect(matchesQuery(gig, "devfest")).toBe(true);
+    expect(matchesQuery(gig, "sunway")).toBe(true);
+    expect(matchesQuery(gig, "selangor")).toBe(true);
+    expect(matchesQuery(gig, "meetups")).toBe(true);
+    expect(matchesQuery(gig, "jazz")).toBe(false);
+  });
+
+  it("ignores case and accents", () => {
+    expect(matchesQuery(cafe, "CAFE")).toBe(true);
+    expect(matchesQuery(cafe, "café")).toBe(true);
+  });
+
+  it("every word must match, in any order", () => {
+    expect(matchesQuery(gig, "kl devfest")).toBe(true);
+    expect(matchesQuery(gig, "devfest penang")).toBe(false);
+  });
+
+  it("does not choke on regex characters", () => {
+    expect(matchesQuery(gig, "(.*")).toBe(false);
+  });
+
+  it("applyFilters combines the search with the other filters", () => {
+    const events = [gig, cafe];
+    expect(ids(applyFilters(events, KLCC, f({ query: "devfest", radiusKm: 50 }), NOW))).toEqual(["gig"]);
+    expect(ids(applyFilters(events, KLCC, f({ query: "devfest", categories: ["food"], radiusKm: 50 }), NOW))).toEqual([]);
+    expect(ids(applyFilters(events, KLCC, f({ query: "", radiusKm: 50 }), NOW))).toEqual(["gig", "cafe"]);
   });
 });
