@@ -160,6 +160,7 @@ Priority uses MoSCoW. **M** = Must (MVP), **S** = Should, **C** = Could, **W** =
 | FR-31 | The app shall have a **Privacy** page explaining what location data is used, why, that it isn't stored, and what is saved on the device. | M |
 | FR-32 | The app shall show data-source attribution and OpenStreetMap attribution. | M |
 | FR-33 | The app shall be **installable** to the home screen (PWA manifest). | C |
+| FR-40 | **Offline mode.** The app's own pages and files shall open without a connection after a first visit. If a search can't reach the server, the app shall show the events from the last successful search with a notice saying when they were saved and a Try again button. Only public event data and the save time are stored on the device, never the search point, and "Clear saved data" removes them (CR-10). | C |
 
 ### 3.7 Won't have (this time)
 
@@ -278,7 +279,7 @@ and all NFRs marked M.
 |---|---|---|
 | Must | 24 FR + 15 NFR | FR as listed above; NFR-01, 03–10, 12–14, 16–18 |
 | Should | 5 FR + 4 NFR | FR-21, FR-22, FR-26, FR-29, FR-30; NFR-02, NFR-11, NFR-15, NFR-19 |
-| Could | 10 FR | FR-16, FR-23, FR-27, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38, FR-39 |
+| Could | 11 FR | FR-16, FR-23, FR-27, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38, FR-39, FR-40 |
 | Won't | 8 | W-01 – W-08 |
 
 **Rule:** Should items are built only after every Must passes its tests. If Phase 4 overruns,

@@ -1,5 +1,5 @@
 "use client";
-// S-1 Welcome + S-2/S-3 Explore (Night Map: map + list sheet) — FR-01–FR-15, FR-28, FR-34, FR-35, FR-36, NFR-05, NFR-09.
+// S-1 Welcome + S-2/S-3 Explore (Night Map: map + list sheet) — FR-01–FR-15, FR-28, FR-34, FR-35, FR-36, FR-40, NFR-05, NFR-09.
 import dynamic from "next/dynamic";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { EventRow } from "@/components/EventRow";
@@ -12,6 +12,8 @@ import type { Event, SearchResponse } from "@/lib/event-schema";
 import { applyFilters, DEFAULT_FILTERS, isFreeThisWeek, isToday, toggleFreeThisWeek, toggleToday, widerRadius, type Filters } from "@/lib/filters";
 import { roundPoint, type LatLon } from "@/lib/geo";
 import { getDeviceLocation, type LocationError } from "@/lib/location";
+import { formatEventDate } from "@/lib/format";
+import { loadLastSearch, saveLastSearch } from "@/lib/offline-cache";
 import { rememberSearchPoint } from "@/lib/search-point";
 
 // Leaflet needs the browser, so the map is loaded on the client only (bundle-dynamic-imports).
@@ -50,6 +52,7 @@ export default function Home() {
   const [locError, setLocError] = useState<LocationError | null>(null);
   const [events, setEvents] = useState<Event[]>([]);
   const [someDown, setSomeDown] = useState(false);
+  const [savedAt, setSavedAt] = useState<string | null>(null); // FR-40: set while the list comes from the last saved search
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -79,9 +82,21 @@ export default function Home() {
       if (id !== lastSearch.current) return; // a newer search started meanwhile
       setEvents(data.events);
       setSomeDown(data.sources.some((s) => !s.ok));
+      setSavedAt(null);
+      saveLastSearch(data.events); // FR-40: kept on this device only
       setStatus("ready");
     } catch {
-      if (id === lastSearch.current) setStatus("fetch-error");
+      if (id !== lastSearch.current) return;
+      // FR-40: server unreachable (offline). Show the last saved results if there are any.
+      const cached = loadLastSearch();
+      if (cached) {
+        setEvents(cached.events);
+        setSomeDown(false);
+        setSavedAt(cached.savedAt);
+        setStatus("ready");
+      } else {
+        setStatus("fetch-error");
+      }
     }
   }
 
@@ -272,6 +287,15 @@ export default function Home() {
                 <p className="mt-3 rounded-xl border border-line bg-surface px-3 py-2 text-sm font-semibold">
                   Sample data: real events coming soon.
                 </p>
+              ) : null}
+
+              {savedAt ? (
+                <div role="status" className="mt-3 rounded-xl border border-warning/40 bg-warning/10 px-3 py-2 text-sm font-semibold text-warning">
+                  <p>Can&apos;t reach the server. Showing events saved on {formatEventDate(savedAt)}; they may be out of date.</p>
+                  <button type="button" onClick={() => point && searchFrom(point, pointKind)} className="mt-1 min-h-11 underline">
+                    Try again
+                  </button>
+                </div>
               ) : null}
 
               {someDown ? (

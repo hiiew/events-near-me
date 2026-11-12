@@ -153,7 +153,8 @@ interface SearchResponse {
 | Key | Value | Purpose | Req |
 |---|---|---|---|
 | `happening.bookmarks.v1` | `{ savedAt, event }[]` (JSON) | Saved events, with a snapshot so they still show if the source drops them | FR-20, FR-21 |
+| `happening.lastsearch.v1` | `{ savedAt, events }` (JSON) | Events from the last successful search, shown with a notice when the server can't be reached (offline mode). Public event data only | FR-40 |
 | *(never stored)* | Location / pin coordinates | Privacy | NFR-09, NFR-10 |
 
-The Privacy page "Clear saved data" button removes both keys (NFR-11). The `.v1` suffix lets us
+The Privacy page "Clear saved data" button removes both stored keys (NFR-11). The `.v1` suffix lets us
 change the format later without breaking old saved data.

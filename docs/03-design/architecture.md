@@ -90,7 +90,7 @@ flowchart LR
 | D-01 | UI screens | Screens, navigation, empty/error states, attribution | FR-06, FR-08, FR-15, FR-17, FR-18, FR-31, FR-32, NFR-03–05 |
 | D-02 | Location service | Ask permission (with explanation), 10 s timeout, pin fallback, round to 3 dp | FR-01–03, NFR-09 |
 | D-03 | Filter engine | Pure functions: distance (Haversine), date windows (Malaysia time), category, price, sort | FR-04, FR-05, FR-10–14, NFR-18 |
-| D-04 | Bookmark store | Save/remove/list/clear bookmarks in `localStorage`; mark ended | FR-20, FR-21, NFR-11 |
+| D-04 | Bookmark store | Save/remove/list/clear bookmarks in `localStorage`; mark ended. Also keeps the last search's events for offline mode (`offline-cache.ts`, no location) | FR-20, FR-21, FR-40, NFR-11 |
 | D-05 | Map component | Markers, summary card, search-point marker, OSM attribution | FR-07, FR-09, FR-32 |
 | D-06 | Search API route | Validate body with Zod; return events + source status | FR-24, NFR-08, NFR-10 |
 | D-07 | Aggregator | Call adapters in parallel, 5 s timeout each, keep successes, report failures, dedupe | FR-24, FR-28, FR-29, NFR-12 |
@@ -98,7 +98,7 @@ flowchart LR
 | D-09 | Adapters | Convert source data → `Event`; map categories; drop ended events | FR-24–27, FR-05 |
 | D-10 | Curated dataset | JSON file validated at build and at load | FR-25, NFR-19 |
 | D-11 | Share & directions helpers | Web Share API / clipboard; Google Maps & Waze URLs | FR-19, FR-22 |
-| D-12 | PWA manifest | Installable app metadata (Could) | FR-33 |
+| D-12 | PWA manifest + offline shell | Installable app metadata; `public/sw.js` stores the app's own pages and files so they open offline (pages network-first, hashed files cache-first, `/api` and map tiles never cached) (Could) | FR-33, FR-40 |
 
 ## 4. Main sequence — "show events near me"
 
