@@ -1,4 +1,4 @@
-// S-4 Event detail — FR-17, FR-18, FR-19, FR-20, FR-22, FR-32 (source attribution).
+// S-4 Event detail — FR-17, FR-18, FR-19, FR-20, FR-22, FR-23, FR-32 (source attribution).
 // Server component: the event is looked up on the server by id, so shared links work.
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -6,7 +6,7 @@ import Link from "next/link";
 import { connection } from "next/server";
 import { Suspense } from "react";
 import { DistanceFromSearch } from "@/components/DistanceFromSearch";
-import { SaveButton, ShareButton } from "@/components/EventActions";
+import { CalendarButton, SaveButton, ShareButton } from "@/components/EventActions";
 import { BackIcon, CalendarIcon, DirectionsIcon, ExternalIcon, PinIcon, TagIcon } from "@/components/icons";
 import { CATEGORY_LABELS } from "@/lib/categories";
 import { formatEventWhen, formatPrice } from "@/lib/format";
@@ -112,6 +112,7 @@ async function EventDetail({ id }: { id: string }) {
         >
           <DirectionsIcon /> Directions (Google Maps)
         </a>
+        <CalendarButton event={event} />
         <a
           href={event.url}
           target="_blank"
