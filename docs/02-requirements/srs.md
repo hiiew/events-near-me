@@ -122,6 +122,7 @@ Priority uses MoSCoW. **M** = Must (MVP), **S** = Should, **C** = Could, **W** =
 | FR-14 | Filters shall combine (AND) and update results without a full page reload. | M |
 | FR-15 | The app shall show a clear empty state when no events match, suggesting a wider radius or date range. | M |
 | FR-16 | **Custom date range** picker. | C |
+| FR-34 | **"Free this week" quick chip** above the results list: one tap sets the Price filter to Free only and the Date filter to Next 7 days; it shows as active while both are set, and tapping it again resets just those two filters (CR-04). | C |
 
 ### 3.4 Event detail and actions
 
@@ -272,7 +273,7 @@ and all NFRs marked M.
 |---|---|---|
 | Must | 24 FR + 15 NFR | FR as listed above; NFR-01, 03–10, 12–14, 16–18 |
 | Should | 5 FR + 4 NFR | FR-21, FR-22, FR-26, FR-29, FR-30; NFR-02, NFR-11, NFR-15, NFR-19 |
-| Could | 4 FR | FR-16, FR-23, FR-27, FR-33 |
+| Could | 5 FR | FR-16, FR-23, FR-27, FR-33, FR-34 |
 | Won't | 8 | W-01 – W-08 |
 
 **Rule:** Should items are built only after every Must passes its tests. If Phase 4 overruns,

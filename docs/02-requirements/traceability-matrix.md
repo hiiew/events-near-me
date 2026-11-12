@@ -31,6 +31,7 @@
 | FR-14 | M | Filters shall combine (AND) and update results without a full page reload | US-04 | D-03 (client-side, ADR-06) | `applyFilters` runs on the device, no reload (ADR-06) | | 🛠 |
 | FR-15 | M | The app shall show a clear empty state when no events match, suggesting a… | US-04 | D-01 S-2 empty state | `page.tsx` empty state with "Widen to N km" | | 🛠 |
 | FR-16 | C | Custom date range picker | — | S-7 (deferred) | | | ⏸ |
+| FR-34 | C | "Free this week" quick chip: one tap sets Free only + Next 7 days; tap again resets those two (CR-04) | US-04 | S-3 (chip under the list heading), ui-ux.md §4 | `filters.ts` `isFreeThisWeek`/`toggleFreeThisWeek` (+ test), `FreeThisWeekChip.tsx`, `page.tsx` | | ⏳ |
 | FR-17 | M | The event detail view shall show: title, start (and end if known) date/time… | US-05 | D-01 S-4, data-model Event | `src/app/event/[id]/page.tsx` (incl. image), `DistanceFromSearch.tsx`, `formatEventWhen` (+ test) | | 🛠 |
 | FR-18 | M | The detail view shall have a button that opens the official event / ticket… | US-05 | D-01 S-4 | Detail page "View official page"; row link in `EventRow.tsx` | | 🛠 |
 | FR-19 | M | The detail view shall have a Directions button that opens Google Maps or… | US-06 | D-11, S-4 | `src/lib/links.ts` Google Maps + Waze (+ test), detail page | | 🛠 |
@@ -74,6 +75,6 @@
 |---|---|---|---|---|
 | Must | 39 (24 FR + 15 NFR) | 39 | 31 built + 2 partial (NFR-03, NFR-05); 6 NFRs shown in Phase 5/6 (NFR-01, 04, 07, 13, 16, 17) | 0 (unit tests exist; Phase 5 test cases pending) |
 | Should | 9 (5 FR + 4 NFR) | 9 | 3 built (FR-21, FR-22, NFR-11); FR-26 deferred (CR-03); FR-29/FR-30 only needed with a 2nd source; NFR-02/15/19 in Phases 5–7 | 0 |
-| Could | 4 | 2 (FR-27 conditional, FR-33); FR-16, FR-23 deferred | 0 | 0 |
+| Could | 5 | 3 (FR-27 conditional, FR-33, FR-34); FR-16, FR-23 deferred | 0 | 0 |
 
 **Project exit rule:** every **Must** row must reach ✅ before final sign-off.
