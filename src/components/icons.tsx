@@ -95,3 +95,8 @@ export const TagIcon = (p: SVGProps<SVGSVGElement>) => (
     <circle cx="12" cy="12" r="2.5" />
   </Icon>
 );
+export const CheckIcon = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="M5 12.5l4.5 4.5L19 7.5" />
+  </Icon>
+);

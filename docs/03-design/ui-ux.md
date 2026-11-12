@@ -223,6 +223,9 @@ flowchart LR
 - Search-area field + **Filters** button float over the top of the map.
 - Bottom tab bar is a floating rounded bar: **Explore · Saved · About**.
 - List rows are compact: date block (day + month) · title · time · venue · distance · price tag.
+- **Quick chip (FR-34, CR-04):** a "Free this week" chip sits under the list heading. Off = outlined
+  (`--line` border on `--surface`); on = lime fill with ink text **plus a check icon** (state is never
+  colour alone) and `aria-pressed`. Button radius 14 px, at least 44 px tall.
 
 ### Colour tokens (contrast measured 2026-11-11)
 

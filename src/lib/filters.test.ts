@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Event } from "./event-schema";
-import { applyFilters, DEFAULT_FILTERS, whenWindow, widerRadius, type Filters } from "./filters";
+import { applyFilters, DEFAULT_FILTERS, isFreeThisWeek, toggleFreeThisWeek, whenWindow, widerRadius, type Filters } from "./filters";
 
 const KLCC = { lat: 3.158, lon: 101.712 };
 // Wednesday 11 Nov 2026, 12:00 Malaysia time
@@ -142,5 +142,46 @@ describe("FR-06 sorting and FR-09 no coordinates", () => {
     const input = [later, sooner];
     applyFilters(input, KLCC, f(), NOW);
     expect(ids(input)).toEqual(["later-near", "sooner-farther"]);
+  });
+});
+
+describe("FR-34 Free this week chip", () => {
+  const FREE: Event["price"] = { min: 0, currency: "MYR" };
+
+  it("is off by default and on only for Free only + Next 7 days", () => {
+    expect(isFreeThisWeek(DEFAULT_FILTERS)).toBe(false);
+    expect(isFreeThisWeek(f({ when: "7d", price: { kind: "free" } }))).toBe(true);
+    expect(isFreeThisWeek(f({ when: "7d", price: { kind: "max", max: 20 } }))).toBe(false);
+    expect(isFreeThisWeek(f({ when: "30d", price: { kind: "free" } }))).toBe(false);
+    expect(isFreeThisWeek(f({ when: "weekend", price: { kind: "free" } }))).toBe(false);
+  });
+
+  it("turns on: sets Free only and Next 7 days", () => {
+    expect(toggleFreeThisWeek(DEFAULT_FILTERS)).toEqual({ ...DEFAULT_FILTERS, when: "7d", price: { kind: "free" } });
+  });
+
+  it("turns off: puts only those two filters back to their defaults", () => {
+    const custom = f({ radiusKm: 25, categories: ["music"], sort: "nearest", when: "7d", price: { kind: "free" } });
+    expect(toggleFreeThisWeek(custom)).toEqual({ ...custom, when: "30d", price: { kind: "any" } });
+  });
+
+  it("keeps distance, categories and sort when turning on", () => {
+    const custom = f({ radiusKm: 5, categories: ["food", "arts"], sort: "nearest", when: "today", price: { kind: "max", max: 30 } });
+    const on = toggleFreeThisWeek(custom);
+    expect([on.radiusKm, on.categories, on.sort]).toEqual([5, ["food", "arts"], "nearest"]);
+  });
+
+  it("two taps return to the starting filters", () => {
+    expect(toggleFreeThisWeek(toggleFreeThisWeek(DEFAULT_FILTERS))).toEqual(DEFAULT_FILTERS);
+  });
+
+  it("with the chip on, applyFilters keeps only free events in the next 7 days", () => {
+    const events = [
+      ev("free-soon", "2026-11-14T20:00:00+08:00", { price: FREE }),
+      ev("free-later", "2026-12-05T20:00:00+08:00", { price: FREE }),
+      ev("paid-soon", "2026-11-14T20:00:00+08:00", { price: { min: 35, currency: "MYR" } }),
+      ev("unknown-price-soon", "2026-11-14T20:00:00+08:00", { price: null }),
+    ];
+    expect(ids(applyFilters(events, KLCC, toggleFreeThisWeek(DEFAULT_FILTERS), NOW))).toEqual(["free-soon"]);
   });
 });
