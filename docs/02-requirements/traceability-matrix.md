@@ -47,7 +47,7 @@
 | FR-30 | S | The system shall cache each source's responses on the server for a… | — | D-08 | | | 🎨 |
 | FR-31 | M | The app shall have a Privacy page explaining what location data is used,… | US-10 | S-6, security-privacy §5 | `src/app/about/page.tsx` (About & privacy) | | 🛠 |
 | FR-32 | M | The app shall show data-source attribution and OpenStreetMap attribution | US-05 | D-05, S-6 | OSM attribution on map + About; source name on detail page | | 🛠 |
-| FR-33 | C | The app shall be installable to the home screen (PWA manifest) | — | D-12 | | | 🎨 |
+| FR-33 | C | The app shall be installable to the home screen (PWA manifest) | — | D-12 | `src/app/manifest.ts` + `manifest.test.ts`, `public/icons/*`, `src/app/apple-icon.png`, `layout.tsx` (`appleWebApp`) | | 🛠 |
 | NFR-01 | M | Performance: First results appear within 3 s of the search point being set,… | — | ADR-06, D-08 | | | 🎨 |
 | NFR-02 | S | Performance: Lighthouse Performance score ≥ 80 on mobile for the home page | — | ADR-06, D-08 | | | 🎨 |
 | NFR-03 | M | Usability / responsive: Fully usable from 360 px wide screens up to desktop;… | — | ui-ux wireframes (360 px) | Checked at 360 px and 390 px (no horizontal scroll) — Phase 5 to test 768/1280 | | 🛠 partial |
@@ -74,6 +74,6 @@
 |---|---|---|---|---|
 | Must | 39 (24 FR + 15 NFR) | 39 | 31 built + 2 partial (NFR-03, NFR-05); 6 NFRs shown in Phase 5/6 (NFR-01, 04, 07, 13, 16, 17) | 0 (unit tests exist; Phase 5 test cases pending) |
 | Should | 9 (5 FR + 4 NFR) | 9 | 3 built (FR-21, FR-22, NFR-11); FR-26 deferred (CR-03); FR-29/FR-30 only needed with a 2nd source; NFR-02/15/19 in Phases 5–7 | 0 |
-| Could | 4 | 3 (FR-23, FR-27 conditional, FR-33); FR-16 deferred | 1 built (FR-23) | 0 |
+| Could | 4 | 3 (FR-23, FR-27 conditional, FR-33); FR-16 deferred | 2 built (FR-23, FR-33) | 0 |
 
 **Project exit rule:** every **Must** row must reach ✅ before final sign-off.

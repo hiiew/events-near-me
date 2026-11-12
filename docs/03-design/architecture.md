@@ -191,7 +191,7 @@ events-near-me/
 ├── vitest.config.mts
 └── .env.example
 ```
-Tests sit next to the code (`*.test.ts`). Not built: `eventbrite.ts` (CR-03), PWA manifest D-12 (Could), source cache D-08 (only needed with a live source).
+Tests sit next to the code (`*.test.ts`). Not built: `eventbrite.ts` (CR-03), source cache D-08 (only needed with a live source).
 
 ## 9. Default values and configuration
 

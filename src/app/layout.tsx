@@ -9,6 +9,8 @@ const spaceGrotesk = Space_Grotesk({ variable: "--font-space-grotesk", subsets: 
 export const metadata: Metadata = {
   title: "Happening — events near you",
   description: "Find gigs, markets, workshops and meetups happening near you.",
+  // FR-33: iOS Safari reads these when the app is added to the Home Screen (the manifest covers Android).
+  appleWebApp: { capable: true, title: "Happening", statusBarStyle: "default" },
 };
 
 export const viewport: Viewport = {
