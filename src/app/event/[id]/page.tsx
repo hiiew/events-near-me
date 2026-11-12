@@ -1,4 +1,4 @@
-// S-4 Event detail — FR-17, FR-18, FR-19, FR-20, FR-22, FR-23, FR-32 (source attribution).
+// S-4 Event detail — FR-17, FR-18, FR-19, FR-20, FR-22, FR-23, FR-32 (source attribution), FR-37 (share preview).
 // Server component: the event is looked up on the server by id, so shared links work.
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -10,11 +10,31 @@ import { CalendarButton, SaveButton, ShareButton } from "@/components/EventActio
 import { BackIcon, CalendarIcon, DirectionsIcon, ExternalIcon, PinIcon, TagIcon } from "@/components/icons";
 import { CATEGORY_LABELS } from "@/lib/categories";
 import { formatEventWhen, formatPrice } from "@/lib/format";
-import { googleMapsDirectionsUrl, wazeUrl } from "@/lib/links";
+import { googleMapsDirectionsUrl, sharePreview, wazeUrl } from "@/lib/links";
 import { isEnded } from "@/lib/event-schema";
 import { getCuratedEvent } from "@/lib/sources/curated";
 
-export const metadata: Metadata = { title: "Event — Happening" };
+const FALLBACK: Metadata = { title: "Event — Happening" };
+
+// FR-37 (CR-07): tab title and the preview card a chat app shows for a shared link. Missing or ended
+// events get the plain title. The route is already dynamic (EventDetail awaits connection()), so reading
+// params here is allowed; chat-app bots get this in <head> instead of streamed.
+export async function generateMetadata({ params }: PageProps<"/event/[id]">): Promise<Metadata> {
+  let event;
+  try {
+    event = getCuratedEvent(decodeURIComponent((await params).id));
+  } catch {
+    return FALLBACK; // malformed % in the URL
+  }
+  if (!event || isEnded(event)) return FALLBACK;
+  const { title, description, imageUrl } = sharePreview(event);
+  return {
+    title,
+    description,
+    openGraph: { title, description, siteName: "Happening", type: "website", ...(imageUrl ? { images: [imageUrl] } : {}) },
+    twitter: { card: imageUrl ? "summary_large_image" : "summary", title, description, ...(imageUrl ? { images: [imageUrl] } : {}) },
+  };
+}
 
 const SOURCE_NAMES = { curated: "Curated by Happening", eventbrite: "Eventbrite", predicthq: "PredictHQ" } as const;
 
