@@ -139,6 +139,7 @@ Priority uses MoSCoW. **M** = Must (MVP), **S** = Should, **C** = Could, **W** =
 | FR-22 | **Share** an event using the phone's share sheet, or copy its link where sharing isn't supported. | S |
 | FR-37 | A shared event link shall show a **preview card** in chat apps and browser tabs: title ("<event> — Happening"), a one-line description (date, venue, price) and, when the event has one, the organiser's image. Missing or ended events get the plain "Event — Happening" title (CR-07). | C |
 | FR-23 | Add an event to the phone's calendar (`.ics` download). | C |
+| FR-39 | The `.ics` file from FR-23 shall include **reminders**: one a day before and one an hour before the event, each only if that moment is still in the future when the file is made. The calendar app shows them; the app sends no notifications (CR-09). | C |
 
 ### 3.5 Data sources (adapter layer)
 
@@ -277,7 +278,7 @@ and all NFRs marked M.
 |---|---|---|
 | Must | 24 FR + 15 NFR | FR as listed above; NFR-01, 03–10, 12–14, 16–18 |
 | Should | 5 FR + 4 NFR | FR-21, FR-22, FR-26, FR-29, FR-30; NFR-02, NFR-11, NFR-15, NFR-19 |
-| Could | 9 FR | FR-16, FR-23, FR-27, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38 |
+| Could | 10 FR | FR-16, FR-23, FR-27, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38, FR-39 |
 | Won't | 8 | W-01 – W-08 |
 
 **Rule:** Should items are built only after every Must passes its tests. If Phase 4 overruns,
