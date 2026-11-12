@@ -114,5 +114,88 @@
     "price": { "min": 99, "currency": "MYR" },
     "url": "https://example.com/sample/new-year-concert",
     "imageUrl": null
+  },
+  {
+    "id": "kl-0011",
+    "title": "The Ghosts Within (遙遠的東方有一群鬼)",
+    "description": "A Mandarin-language theatre production with English surtitles at klpac. Runs 12–15 Nov, with extra 3pm matinees on 14 and 15 Nov.",
+    "start": "2026-11-12T20:00:00+08:00",
+    "end": "2026-11-12T21:30:00+08:00",
+    "venue": { "name": "Pentas 2, klpac", "address": "Sentul Park, Jalan Strachan, Kuala Lumpur", "lat": 3.187, "lon": 101.6913 },
+    "category": "arts",
+    "price": { "min": 88, "max": 128, "currency": "MYR" },
+    "url": "https://www.klpac.org/shows/%e9%81%99%e9%81%a0%e7%9a%84%e6%9d%b1%e6%96%b9%e6%9c%89%e4%b8%80%e7%be%a4%e9%ac%bc-the-ghosts-within/",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0012",
+    "title": "DevFest Kuala Lumpur 2026",
+    "description": "A day-long developer community conference run by GDG Kuala Lumpur. Speakers and schedule not yet announced.",
+    "start": "2026-11-14T09:00:00+08:00",
+    "end": "2026-11-14T18:00:00+08:00",
+    "venue": { "name": "Sunway University", "address": "5 Jalan Universiti, Petaling Jaya", "lat": 3.067, "lon": 101.6035 },
+    "category": "tech",
+    "price": null,
+    "url": "https://gdg.community.dev/events/details/google-gdg-kuala-lumpur-presents-devfest-kuala-lumpur-2026/",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0013",
+    "title": "A Fantasy World II: Anime x Classical",
+    "description": "The klpac String Orchestra plays anime film music in a 90-minute concert. Also on 21 Nov (8:30pm) and 22 Nov (3pm).",
+    "start": "2026-11-20T20:30:00+08:00",
+    "end": "2026-11-20T22:00:00+08:00",
+    "venue": { "name": "Pentas 2, klpac", "address": "Sentul Park, Jalan Strachan, Kuala Lumpur", "lat": 3.187, "lon": 101.6913 },
+    "category": "music",
+    "price": { "min": 48, "max": 100, "currency": "MYR" },
+    "url": "https://www.klpac.org/shows/a-fantasy-world-ii-anime-x-classical-with-the-klpac-string-orchestra/",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0014",
+    "title": "David Glass's TEMPEST",
+    "description": "KL Shakespeare Players stage a 90-minute, no-interval take on The Tempest. Also on 28 Nov (8pm) and 29 Nov (3pm).",
+    "start": "2026-11-27T20:00:00+08:00",
+    "end": "2026-11-27T21:30:00+08:00",
+    "venue": { "name": "Pentas 2, klpac", "address": "Sentul Park, Jalan Strachan, Kuala Lumpur", "lat": 3.187, "lon": 101.6913 },
+    "category": "arts",
+    "price": { "min": 75.68, "max": 85.68, "currency": "MYR" },
+    "url": "https://www.klpac.org/shows/david-glasss-tempest/",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0015",
+    "title": "Ultimate Music Crawl II with The klpac Symphonic Band",
+    "description": "A 90-minute concert by the klpac Symphonic Band. Also on 6 Dec at 3pm.",
+    "start": "2026-12-05T20:30:00+08:00",
+    "end": "2026-12-05T22:00:00+08:00",
+    "venue": { "name": "Pentas 1, klpac", "address": "Sentul Park, Jalan Strachan, Kuala Lumpur", "lat": 3.187, "lon": 101.6913 },
+    "category": "music",
+    "price": { "min": 48, "max": 150, "currency": "MYR" },
+    "url": "https://www.klpac.org/shows/ultimate-music-crawl-ii/",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0016",
+    "title": "KL Rain Run 2026",
+    "description": "Early-morning 3 km, 5 km and 10 km runs starting at Dataran Merdeka. Fees rise on 21 Nov.",
+    "start": "2026-12-06T05:00:00+08:00",
+    "venue": { "name": "Dataran Merdeka", "address": "Kuala Lumpur city centre", "lat": 3.1478, "lon": 101.6934 },
+    "category": "sports",
+    "price": { "min": 40, "max": 70, "currency": "MYR" },
+    "url": "https://raceroster.com/events/2026/166527/kl-rain-run-2026",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0017",
+    "title": "Comic Fiesta 2026",
+    "description": "Annual anime, comics and games convention with cosplay, a creative market and stage shows. Runs 19–20 Dec.",
+    "start": "2026-12-19T09:30:00+08:00",
+    "end": "2026-12-19T19:00:00+08:00",
+    "venue": { "name": "Kuala Lumpur Convention Centre", "address": "KLCC, Kuala Lumpur", "lat": 3.1535, "lon": 101.7118 },
+    "category": "other",
+    "price": null,
+    "url": "https://www.comicfiesta.org/cf2026-tickets",
+    "imageUrl": null
   }
 ]
