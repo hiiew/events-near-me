@@ -1,13 +1,15 @@
 "use client";
-// S-1 Welcome + S-2/S-3 Explore (Night Map: map + list sheet) — FR-01–FR-15, FR-28, FR-34, FR-35, FR-36, FR-40, NFR-05, NFR-09.
+// S-1 Welcome + S-2/S-3 Explore (Night Map: map + list sheet) — FR-01–FR-15, FR-28, FR-34, FR-35, FR-36, FR-40, FR-41, NFR-05, NFR-09.
 import dynamic from "next/dynamic";
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { AreaShortcuts } from "@/components/AreaShortcuts";
 import { EventRow } from "@/components/EventRow";
 import { FilterSheet } from "@/components/FilterSheet";
 import { FiltersIcon, PinIcon, PlusIcon, ShieldIcon } from "@/components/icons";
 import { QuickChip } from "@/components/QuickChip";
 import { SearchBox } from "@/components/SearchBox";
 import { TabBar } from "@/components/TabBar";
+import { AREAS, areaFilters, countForArea, type Area } from "@/lib/areas";
 import type { Event, SearchResponse } from "@/lib/event-schema";
 import { applyFilters, DEFAULT_FILTERS, isFreeThisWeek, isToday, toggleFreeThisWeek, toggleToday, widerRadius, type Filters } from "@/lib/filters";
 import { roundPoint, type LatLon } from "@/lib/geo";
@@ -49,6 +51,8 @@ export default function Home() {
   const [status, setStatus] = useState<Status>("idle");
   const [point, setPoint] = useState<LatLon | null>(null);
   const [pointKind, setPointKind] = useState<"device" | "pin">("pin");
+  const [areaName, setAreaName] = useState<string | null>(null); // FR-41: set while the search point is an area centre
+  const [areaCounts, setAreaCounts] = useState<Record<string, number | undefined>>({});
   const [locError, setLocError] = useState<LocationError | null>(null);
   const [events, setEvents] = useState<Event[]>([]);
   const [someDown, setSomeDown] = useState(false);
@@ -59,6 +63,7 @@ export default function Home() {
   const [expanded, setExpanded] = useState(false);
   const mapCenter = useRef<LatLon>(KL_CENTER);
   const lastSearch = useRef(0); // only the newest search may update the list
+  const countsLoaded = useRef(false);
 
   // Leaflet breaks when Activity hides and re-shows its container ("Map container is being
   // reused"), so the map unmounts while this page is hidden and mounts fresh when it shows again.
@@ -68,12 +73,38 @@ export default function Home() {
     return () => setMapOn(false);
   }, []);
 
+  // FR-41: how many events each area has. Same search call and same filter function as choosing the area, so the
+  // number matches the list. Only public area centres are sent, never the visitor's location. Offline or on an
+  // error the buttons simply show no number.
+  useEffect(() => {
+    if (countsLoaded.current) return;
+    let cancelled = false;
+    Promise.all(
+      AREAS.map(async (a): Promise<[string, number] | null> => {
+        try {
+          return [a.id, countForArea((await searchEvents(a.center)).events, a)];
+        } catch {
+          return null;
+        }
+      }),
+    ).then((entries) => {
+      if (cancelled) return;
+      const found = entries.filter((e): e is [string, number] => e !== null);
+      if (found.length > 0) countsLoaded.current = true;
+      setAreaCounts(Object.fromEntries(found));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const visible = useMemo(() => (point ? applyFilters(events, point, filters) : []), [events, point, filters]);
 
-  async function searchFrom(p: LatLon, kind: "device" | "pin") {
+  async function searchFrom(p: LatLon, kind: "device" | "pin", area?: string) {
     rememberSearchPoint(p);
     setPoint(p);
     setPointKind(kind);
+    setAreaName(area ?? null);
     setSelectedId(null);
     setStatus("loading");
     const id = ++lastSearch.current;
@@ -117,6 +148,14 @@ export default function Home() {
     setStatus("idle");
   }
 
+  // FR-41: jump to an area. Filters go back to their defaults with distance 50 km, so the list matches the count on the button.
+  function pickArea(area: Area) {
+    setScreen("explore");
+    setLocError(null);
+    setFilters(areaFilters());
+    void searchFrom(area.center, "pin", area.name);
+  }
+
   function selectFromMap(id: string) {
     setSelectedId(id);
     setExpanded(false);
@@ -125,8 +164,8 @@ export default function Home() {
 
   if (screen === "welcome") {
     return (
-      <main className="relative mx-auto flex min-h-dvh max-w-xl flex-col overflow-hidden px-6 pt-[38dvh] pb-8">
-        <div aria-hidden="true" className="absolute inset-x-0 top-0 h-[46dvh] bg-map">
+      <main className="relative mx-auto flex min-h-dvh max-w-xl flex-col overflow-hidden px-6 pt-[24dvh] pb-8">
+        <div aria-hidden="true" className="absolute inset-x-0 top-0 h-[32dvh] bg-map">
           <div className="absolute top-[42%] left-1/2 size-5 -translate-x-1/2 rounded-full bg-accent shadow-[0_0_0_4px_var(--bg),0_0_0_16px_rgb(198_244_50/0.2)]" />
           <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-bg" />
         </div>
@@ -155,13 +194,16 @@ export default function Home() {
             <button type="button" onClick={pickOnMap} className="min-h-[50px] rounded-2xl border border-line font-semibold">
               Pick a spot on the map
             </button>
+            <div className="mt-3">
+              <AreaShortcuts areas={AREAS} counts={areaCounts} onPick={pickArea} />
+            </div>
           </div>
         </div>
       </main>
     );
   }
 
-  const placeLabel = point ? (pointKind === "device" ? "Your location" : "Pinned spot") : "Choose a spot";
+  const placeLabel = point ? (areaName ?? (pointKind === "device" ? "Your location" : "Pinned spot")) : "Choose a spot";
   const wider = widerRadius(filters.radiusKm);
 
   return (
@@ -245,6 +287,9 @@ export default function Home() {
                   Use my location
                 </button>
               </div>
+              <div className="mt-2">
+                <AreaShortcuts areas={AREAS} counts={areaCounts} onPick={pickArea} />
+              </div>
             </div>
           ) : null}
 
@@ -254,7 +299,7 @@ export default function Home() {
               <p className="text-sm text-muted">We couldn&apos;t load events. Check your connection and try again.</p>
               <button
                 type="button"
-                onClick={() => point && searchFrom(point, pointKind)}
+                onClick={() => point && searchFrom(point, pointKind, areaName ?? undefined)}
                 className="min-h-[52px] rounded-2xl bg-accent font-semibold text-on-accent"
               >
                 Try again
@@ -292,7 +337,7 @@ export default function Home() {
               {savedAt ? (
                 <div role="status" className="mt-3 rounded-xl border border-warning/40 bg-warning/10 px-3 py-2 text-sm font-semibold text-warning">
                   <p>Can&apos;t reach the server. Showing events saved on {formatEventDate(savedAt)}; they may be out of date.</p>
-                  <button type="button" onClick={() => point && searchFrom(point, pointKind)} className="mt-1 min-h-11 underline">
+                  <button type="button" onClick={() => point && searchFrom(point, pointKind, areaName ?? undefined)} className="mt-1 min-h-11 underline">
                     Try again
                   </button>
                 </div>

@@ -99,6 +99,7 @@ Priority uses MoSCoW. **M** = Must (MVP), **S** = Should, **C** = Could, **W** =
 | FR-01 | The app shall explain why it needs location and then request the device's location using the browser permission prompt. | M |
 | FR-02 | If location is denied, unavailable or takes longer than 10 s, the app shall let the user **drop a pin on the map** to set the search point. | M |
 | FR-03 | The user shall be able to change the search point at any time by using their location again or moving the pin. | M |
+| FR-41 | **Area shortcuts.** The welcome screen and the pick-a-spot screen shall offer buttons for named areas (Klang Valley, Kota Kinabalu), each showing how many upcoming events it has. Choosing one searches from the area's centre at 50 km with all other filters at their defaults, so the list matches the number shown. No location of the visitor is used (CR-12). | C |
 
 ### 3.2 Finding events
 
@@ -279,7 +280,7 @@ and all NFRs marked M.
 |---|---|---|
 | Must | 24 FR + 15 NFR | FR as listed above; NFR-01, 03–10, 12–14, 16–18 |
 | Should | 5 FR + 4 NFR | FR-21, FR-22, FR-26, FR-29, FR-30; NFR-02, NFR-11, NFR-15, NFR-19 |
-| Could | 11 FR | FR-16, FR-23, FR-27, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38, FR-39, FR-40 |
+| Could | 12 FR | FR-16, FR-23, FR-27, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38, FR-39, FR-40, FR-41 |
 | Won't | 8 | W-01 – W-08 |
 
 **Rule:** Should items are built only after every Must passes its tests. If Phase 4 overruns,
