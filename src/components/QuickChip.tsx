@@ -1,8 +1,9 @@
-// FR-34 (CR-04): one-tap "Free this week" chip above the results list. It only shows and flips the
-// state; which filters it sets lives in `toggleFreeThisWeek` in src/lib/filters.ts (and is tested there).
+// FR-34 (CR-04) "Free this week" and FR-36 (CR-06) "Today": one-tap chips above the results list.
+// A chip only shows its label and flips the state; which filters it sets lives in src/lib/filters.ts
+// (`toggleFreeThisWeek`, `toggleToday`) and is tested there.
 import { CheckIcon } from "./icons";
 
-export function FreeThisWeekChip({ pressed, onToggle }: { pressed: boolean; onToggle: () => void }) {
+export function QuickChip({ label, pressed, onToggle }: { label: string; pressed: boolean; onToggle: () => void }) {
   return (
     <button
       type="button"
@@ -14,7 +15,7 @@ export function FreeThisWeekChip({ pressed, onToggle }: { pressed: boolean; onTo
     >
       {/* The check mark means "on" is never shown by colour alone (WCAG 1.4.1, ui-ux.md §4). */}
       {pressed ? <CheckIcon width={16} height={16} /> : null}
-      Free this week
+      {label}
     </button>
   );
 }

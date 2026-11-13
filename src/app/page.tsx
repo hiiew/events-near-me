@@ -1,15 +1,15 @@
 "use client";
-// S-1 Welcome + S-2/S-3 Explore (Night Map: map + list sheet) — FR-01–FR-15, FR-28, FR-34, FR-35, NFR-05, NFR-09.
+// S-1 Welcome + S-2/S-3 Explore (Night Map: map + list sheet) — FR-01–FR-15, FR-28, FR-34, FR-35, FR-36, NFR-05, NFR-09.
 import dynamic from "next/dynamic";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { EventRow } from "@/components/EventRow";
 import { FilterSheet } from "@/components/FilterSheet";
-import { FreeThisWeekChip } from "@/components/FreeThisWeekChip";
 import { FiltersIcon, PinIcon, PlusIcon, ShieldIcon } from "@/components/icons";
+import { QuickChip } from "@/components/QuickChip";
 import { SearchBox } from "@/components/SearchBox";
 import { TabBar } from "@/components/TabBar";
 import type { Event, SearchResponse } from "@/lib/event-schema";
-import { applyFilters, DEFAULT_FILTERS, isFreeThisWeek, toggleFreeThisWeek, widerRadius, type Filters } from "@/lib/filters";
+import { applyFilters, DEFAULT_FILTERS, isFreeThisWeek, isToday, toggleFreeThisWeek, toggleToday, widerRadius, type Filters } from "@/lib/filters";
 import { roundPoint, type LatLon } from "@/lib/geo";
 import { getDeviceLocation, type LocationError } from "@/lib/location";
 import { rememberSearchPoint } from "@/lib/search-point";
@@ -263,8 +263,9 @@ export default function Home() {
               <div className="mt-3">
                 <SearchBox value={filters.query} onChange={(query) => setFilters((f) => ({ ...f, query }))} />
               </div>
-              <div className="mt-3">
-                <FreeThisWeekChip pressed={isFreeThisWeek(filters)} onToggle={() => setFilters(toggleFreeThisWeek)} />
+              <div className="mt-3 flex flex-wrap gap-2">
+                <QuickChip label="Today" pressed={isToday(filters)} onToggle={() => setFilters(toggleToday)} />
+                <QuickChip label="Free this week" pressed={isFreeThisWeek(filters)} onToggle={() => setFilters(toggleFreeThisWeek)} />
               </div>
 
               {events.some((e) => e.title.startsWith("SAMPLE")) ? (
