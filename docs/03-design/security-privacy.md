@@ -67,7 +67,7 @@ flowchart LR
 | Notice and choice | Welcome screen sentence + Privacy page (FR-31) |
 | Disclosure | Rounded point is sent only to our server; never to third parties except as a search area if a live API needs it (Eventbrite adapter filters on our server, so it doesn't) |
 | Security | HTTPS; no storage of location |
-| Retention | Location kept only in memory for the current session; not written to `localStorage` or any server |
+| Retention | Location kept only in memory for the current session; not written to `localStorage` or any server. The offline list (FR-40) stores only the public events returned by the last search plus the save time, never the search point |
 | Data integrity | N/A — not stored |
 | Access | Nothing about the user is stored server-side; device data clearable from Privacy page |
 

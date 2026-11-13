@@ -1,4 +1,4 @@
-// S-6 About & Privacy — FR-31, FR-32, NFR-11 (content: security-privacy.md §5).
+// S-6 About & Privacy — FR-31, FR-32, FR-40, NFR-11 (content: security-privacy.md §5).
 import type { Metadata } from "next";
 import { ClearSavedData } from "@/components/ClearSavedData";
 import { TabBar } from "@/components/TabBar";
@@ -28,8 +28,8 @@ export default function AboutPage() {
       <section aria-labelledby="device">
         <h2 id="device" className={h2}>What stays on this phone</h2>
         <p className="mt-2">
-          Your saved events are kept in this browser only. Nothing about you is stored on our servers — there are no
-          accounts.
+          Your saved events, and the events from your last search (so the list can still open without a connection), are
+          kept in this browser only. Your location is never saved. Nothing about you is stored on our servers — there are no accounts.
         </p>
         <ClearSavedData />
       </section>
