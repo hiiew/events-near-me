@@ -1,5 +1,5 @@
 "use client";
-// FR-20 save, FR-22 share and FR-23 add-to-calendar buttons for the detail page.
+// FR-20 save, FR-22 share and FR-23/FR-39 add-to-calendar (with reminders) buttons for the detail page.
 import { useState } from "react";
 import { toggleBookmark } from "@/lib/bookmarks";
 import type { Event } from "@/lib/event-schema";
@@ -88,7 +88,7 @@ export function CalendarButton({ event }: { event: Event }) {
         <CalendarIcon /> Add to calendar
       </button>
       <p role="status" aria-live="polite" className="sr-only">
-        {done ? "Calendar file downloaded. Open it to add the event." : ""}
+        {done ? "Calendar file downloaded. Open it to add the event and its reminders." : ""}
       </p>
     </>
   );

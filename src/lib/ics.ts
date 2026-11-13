@@ -1,4 +1,4 @@
-// D-11 — FR-23: build an iCalendar (.ics) file for one event. Pure functions, no browser APIs,
+// D-11 — FR-23, FR-39: build an iCalendar (.ics) file for one event. Pure functions, no browser APIs,
 // so they are easy to test (coding-standards rule 2). Times are written in UTC ("...Z") so every
 // calendar app shows the right local time. The file is made on the device, so nothing is sent
 // anywhere and no location data is involved (NFR-09, NFR-10).
@@ -56,9 +56,30 @@ function endOf(event: Pick<Event, "start" | "end">): string {
   return toIcsUtc(new Date(end > start ? end : start + DEFAULT_DURATION_MS).toISOString());
 }
 
+/**
+ * FR-39 (CR-09): reminders that the calendar app itself shows, so no notification service is needed.
+ * One a day before and one an hour before, but only those that are still in the future when the file is
+ * made (a past trigger would fire straight away in some calendar apps).
+ */
+const REMINDERS = [
+  { trigger: "-P1D", ms: 24 * 3_600_000, text: "Tomorrow" },
+  { trigger: "-PT1H", ms: 3_600_000, text: "In 1 hour" },
+] as const;
+
+function alarms(event: IcsEvent, now: Date): string[] {
+  const start = Date.parse(event.start);
+  return REMINDERS.filter((r) => start - r.ms > now.getTime()).flatMap((r) => [
+    "BEGIN:VALARM",
+    "ACTION:DISPLAY",
+    `DESCRIPTION:${escapeText(`${r.text}: ${event.title}`)}`,
+    `TRIGGER:${r.trigger}`,
+    "END:VALARM",
+  ]);
+}
+
 /** The full .ics text for one event (CRLF line endings, as the standard requires). */
 export function buildIcs(event: IcsEvent, now: Date = new Date()): string {
-  // FR-23
+  // FR-23, FR-39
   const location = [event.venue.name, event.venue.address].filter(Boolean).join(", ");
   const description = [event.description, `Official page: ${event.url}`].filter(Boolean).join("\n\n");
   const lines = [
@@ -75,6 +96,7 @@ export function buildIcs(event: IcsEvent, now: Date = new Date()): string {
     `LOCATION:${escapeText(location)}`,
     `DESCRIPTION:${escapeText(description)}`,
     `URL:${event.url}`, // already validated as https:// by EventSchema; URI values are not text-escaped
+    ...alarms(event, now),
     "END:VEVENT",
     "END:VCALENDAR",
   ];

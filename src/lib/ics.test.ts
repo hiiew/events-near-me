@@ -88,6 +88,47 @@ describe("FR-23 buildIcs", () => {
   });
 });
 
+describe("FR-39 reminders", () => {
+  const alarmCount = (ics: string) => (ics.match(/BEGIN:VALARM/g) ?? []).length;
+
+  it("adds a day-before and an hour-before reminder inside the event", () => {
+    const ics = unfold(buildIcs(base, now));
+    expect(alarmCount(ics)).toBe(2);
+    expect(ics).toContain("TRIGGER:-P1D");
+    expect(ics).toContain("TRIGGER:-PT1H");
+    expect(ics.indexOf("BEGIN:VALARM")).toBeGreaterThan(ics.indexOf("BEGIN:VEVENT"));
+    expect(ics.lastIndexOf("END:VALARM")).toBeLessThan(ics.indexOf("END:VEVENT"));
+  });
+
+  it("each reminder is a display alarm that names the event", () => {
+    const ics = unfold(buildIcs(base, now));
+    expect(ics).toContain("ACTION:DISPLAY");
+    expect(ics).toContain("DESCRIPTION:Tomorrow: A Fantasy World II: Anime x Classical");
+    expect(ics).toContain("DESCRIPTION:In 1 hour: A Fantasy World II: Anime x Classical");
+  });
+
+  it("drops the day-before reminder when the event is less than a day away", () => {
+    const soon = { ...base, start: "2026-11-12T20:00:00+08:00", end: undefined };
+    const ics = buildIcs(soon, now);
+    expect(alarmCount(ics)).toBe(1);
+    expect(ics).toContain("TRIGGER:-PT1H");
+    expect(ics).not.toContain("TRIGGER:-P1D");
+  });
+
+  it("adds no reminder when the event is less than an hour away or already started", () => {
+    const inThirty = { ...base, start: new Date(now.getTime() + 30 * 60_000).toISOString() };
+    const started = { ...base, start: new Date(now.getTime() - 60_000).toISOString() };
+    expect(alarmCount(buildIcs(inThirty, now))).toBe(0);
+    expect(alarmCount(buildIcs(started, now))).toBe(0);
+  });
+
+  it("keeps the file balanced and line breaks in the title cannot add lines", () => {
+    const ics = buildIcs({ ...base, title: "Hi\r\nTRIGGER:-PT0S" }, now);
+    expect((ics.match(/BEGIN:VALARM/g) ?? []).length).toBe((ics.match(/END:VALARM/g) ?? []).length);
+    expect(ics).not.toMatch(/\r\nTRIGGER:-PT0S/);
+  });
+});
+
 describe("FR-23 icsFileName", () => {
   it("makes a safe slug", () => {
     expect(icsFileName({ title: "The Ghosts Within (遙遠的東方有一群鬼)" })).toBe("the-ghosts-within.ics");
