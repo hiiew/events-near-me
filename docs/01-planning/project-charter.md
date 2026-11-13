@@ -55,7 +55,7 @@ As a result people miss events they would have enjoyed, and checking several sou
 - Selling tickets or handling payments.
 - Scraping websites or social media (Instagram, Facebook, etc.).
 - Push notifications, social features (friends, comments, ratings).
-- Coverage outside the Klang Valley (the design should not *prevent* it, but it won't be tested).
+- Coverage outside the Klang Valley (the design should not *prevent* it, but it won't be tested). Kota Kinabalu (Sabah) has curated data since CR-11, still without testing.
 
 ## 5. Stakeholders
 
