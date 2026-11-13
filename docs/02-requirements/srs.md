@@ -133,6 +133,7 @@ Priority uses MoSCoW. **M** = Must (MVP), **S** = Should, **C** = Could, **W** =
 | FR-17 | The event detail view shall show: title, start (and end if known) date/time in Malaysia time, venue name and address, distance, category, price in RM (or original currency if not RM, or "Price not listed"), description, image (if provided), and the **source name**. | M |
 | FR-18 | The detail view shall have a button that opens the **official event / ticket page** in a new tab. | M |
 | FR-19 | The detail view shall have a **Directions** button that opens Google Maps or Waze to the venue. | M |
+| FR-38 | The detail view shall have a **By public transport** button that opens Google Maps directions to the venue in public-transport mode (CR-08). | C |
 | FR-20 | The user shall be able to **bookmark** and un-bookmark an event; bookmarks are stored **on the device only** and shown on a "Saved" screen. | M |
 | FR-21 | Bookmarked events that have ended shall be marked "Ended" on the Saved screen. | S |
 | FR-22 | **Share** an event using the phone's share sheet, or copy its link where sharing isn't supported. | S |
@@ -276,7 +277,7 @@ and all NFRs marked M.
 |---|---|---|
 | Must | 24 FR + 15 NFR | FR as listed above; NFR-01, 03–10, 12–14, 16–18 |
 | Should | 5 FR + 4 NFR | FR-21, FR-22, FR-26, FR-29, FR-30; NFR-02, NFR-11, NFR-15, NFR-19 |
-| Could | 8 FR | FR-16, FR-23, FR-27, FR-33, FR-34, FR-35, FR-36, FR-37 |
+| Could | 9 FR | FR-16, FR-23, FR-27, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38 |
 | Won't | 8 | W-01 – W-08 |
 
 **Rule:** Should items are built only after every Must passes its tests. If Phase 4 overruns,

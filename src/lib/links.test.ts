@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { eventPath, googleMapsDirectionsUrl, shareData, sharePreview, wazeUrl } from "./links";
+import { eventPath, googleMapsDirectionsUrl, googleMapsTransitUrl, shareData, sharePreview, wazeUrl } from "./links";
 
 const withCoords = { name: "KLCC Park", lat: 3.1544, lon: 101.7146 };
 const noCoords = { name: "Somewhere Hall", address: "Jalan X, KL" };
@@ -18,6 +18,18 @@ describe("FR-19 directions", () => {
   it("Waze uses coordinates or a search", () => {
     expect(wazeUrl(withCoords)).toBe("https://waze.com/ul?ll=3.1544,101.7146&navigate=yes");
     expect(wazeUrl(noCoords)).toBe("https://waze.com/ul?q=Somewhere%20Hall&navigate=yes");
+  });
+});
+
+describe("FR-38 public transport", () => {
+  it("is the Google Maps directions link in transit mode", () => {
+    expect(googleMapsTransitUrl(withCoords)).toBe("https://www.google.com/maps/dir/?api=1&destination=3.1544%2C101.7146&travelmode=transit");
+  });
+
+  it("falls back to name + address like the car link", () => {
+    expect(googleMapsTransitUrl(noCoords)).toBe(
+      "https://www.google.com/maps/dir/?api=1&destination=Somewhere%20Hall%2C%20Jalan%20X%2C%20KL&travelmode=transit",
+    );
   });
 });
 

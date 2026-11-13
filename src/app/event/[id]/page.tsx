@@ -1,4 +1,4 @@
-// S-4 Event detail — FR-17, FR-18, FR-19, FR-20, FR-22, FR-23, FR-32 (source attribution), FR-37 (share preview).
+// S-4 Event detail — FR-17, FR-18, FR-19, FR-20, FR-22, FR-23, FR-32 (source attribution), FR-37 (share preview), FR-38 (public transport).
 // Server component: the event is looked up on the server by id, so shared links work.
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -7,10 +7,10 @@ import { connection } from "next/server";
 import { Suspense } from "react";
 import { DistanceFromSearch } from "@/components/DistanceFromSearch";
 import { CalendarButton, SaveButton, ShareButton } from "@/components/EventActions";
-import { BackIcon, CalendarIcon, DirectionsIcon, ExternalIcon, PinIcon, TagIcon } from "@/components/icons";
+import { BackIcon, CalendarIcon, DirectionsIcon, ExternalIcon, PinIcon, TagIcon, TransitIcon } from "@/components/icons";
 import { CATEGORY_LABELS } from "@/lib/categories";
 import { formatEventWhen, formatPrice } from "@/lib/format";
-import { googleMapsDirectionsUrl, sharePreview, wazeUrl } from "@/lib/links";
+import { googleMapsDirectionsUrl, googleMapsTransitUrl, sharePreview, wazeUrl } from "@/lib/links";
 import { isEnded } from "@/lib/event-schema";
 import { getCuratedEvent } from "@/lib/sources/curated";
 
@@ -131,6 +131,14 @@ async function EventDetail({ id }: { id: string }) {
           className="flex min-h-[54px] items-center justify-center gap-2 rounded-2xl bg-accent font-semibold text-on-accent"
         >
           <DirectionsIcon /> Directions (Google Maps)
+        </a>
+        <a
+          href={googleMapsTransitUrl(event.venue)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex min-h-[50px] items-center justify-center gap-2 rounded-2xl border border-line font-semibold"
+        >
+          <TransitIcon /> By public transport
         </a>
         <CalendarButton event={event} />
         <a
