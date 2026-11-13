@@ -1,129 +1,22 @@
 [
   {
-    "id": "kl-0001",
-    "title": "SAMPLE — Weekend Craft Market",
-    "description": "Placeholder event for development. Replace with real curated events before Phase 5.",
-    "start": "2026-11-14T10:00:00+08:00",
-    "end": "2026-11-14T18:00:00+08:00",
-    "venue": { "name": "Central Market (Pasar Seni)", "address": "Jalan Hang Kasturi, Kuala Lumpur", "lat": 3.1456, "lon": 101.6955 },
-    "category": "food",
-    "price": { "min": 0, "currency": "MYR" },
-    "url": "https://example.com/sample/craft-market",
-    "imageUrl": null
-  },
-  {
-    "id": "kl-0002",
-    "title": "SAMPLE — Indie Night at the Park",
-    "description": "Placeholder event for development.",
-    "start": "2026-11-21T20:00:00+08:00",
-    "end": "2026-11-21T23:00:00+08:00",
-    "venue": { "name": "KLCC Park", "address": "Kuala Lumpur City Centre", "lat": 3.1544, "lon": 101.7146 },
-    "category": "music",
-    "price": { "min": 35, "currency": "MYR" },
-    "url": "https://example.com/sample/indie-night",
-    "imageUrl": null
-  },
-  {
-    "id": "kl-0003",
-    "title": "SAMPLE — Intro to Web Dev Workshop",
-    "description": "Placeholder event for development. Price intentionally not listed.",
-    "start": "2026-11-28T14:00:00+08:00",
-    "end": "2026-11-28T17:00:00+08:00",
-    "venue": { "name": "Bangsar South", "address": "Bangsar, Kuala Lumpur", "lat": 3.1112, "lon": 101.6654 },
-    "category": "learning",
-    "price": null,
-    "url": "https://example.com/sample/web-dev-workshop",
-    "imageUrl": null
-  },
-  {
-    "id": "kl-0004",
-    "title": "SAMPLE — Tech Meetup: Building with AI",
-    "description": "Placeholder event for development.",
-    "start": "2026-12-03T19:30:00+08:00",
-    "venue": { "name": "Bukit Bintang", "address": "Bukit Bintang, Kuala Lumpur", "lat": 3.1466, "lon": 101.7101 },
-    "category": "tech",
-    "price": { "min": 0, "currency": "MYR" },
-    "url": "https://example.com/sample/tech-meetup",
-    "imageUrl": null
-  },
-  {
-    "id": "kl-0005",
-    "title": "SAMPLE — Art Exhibition Opening",
-    "description": "Placeholder event for development. Has a price range.",
-    "start": "2026-12-05T11:00:00+08:00",
-    "end": "2026-12-05T20:00:00+08:00",
-    "venue": { "name": "National Art Gallery", "address": "Jalan Temerloh, Kuala Lumpur", "lat": 3.1730, "lon": 101.7050 },
-    "category": "arts",
-    "price": { "min": 20, "max": 80, "currency": "MYR" },
-    "url": "https://example.com/sample/art-exhibition",
-    "imageUrl": null
-  },
-  {
-    "id": "kl-0006",
-    "title": "SAMPLE — 5K Fun Run (outside 10 km)",
-    "description": "Placeholder event about 15 km from KLCC, to test the radius filter.",
-    "start": "2026-12-06T06:30:00+08:00",
-    "venue": { "name": "Sunway Pyramid", "address": "Bandar Sunway, Selangor", "lat": 3.0733, "lon": 101.6070 },
-    "category": "sports",
-    "price": { "min": 60, "currency": "MYR" },
-    "url": "https://example.com/sample/fun-run",
-    "imageUrl": null
-  },
-  {
-    "id": "kl-0007",
-    "title": "SAMPLE — Rooftop Party",
-    "description": "Placeholder event for development.",
-    "start": "2026-12-12T21:00:00+08:00",
-    "venue": { "name": "Bukit Bintang", "address": "Bukit Bintang, Kuala Lumpur", "lat": 3.1480, "lon": 101.7115 },
-    "category": "nightlife",
-    "price": { "min": 50, "currency": "MYR" },
-    "url": "https://example.com/sample/rooftop-party",
-    "imageUrl": null
-  },
-  {
-    "id": "kl-0008",
-    "title": "SAMPLE — Campus Open Day (Setapak)",
-    "description": "Placeholder event for development.",
-    "start": "2026-12-08T09:00:00+08:00",
-    "end": "2026-12-08T16:00:00+08:00",
-    "venue": { "name": "Setapak", "address": "Setapak, Kuala Lumpur", "lat": 3.2156, "lon": 101.7262 },
-    "category": "other",
-    "price": { "min": 0, "currency": "MYR" },
-    "url": "https://example.com/sample/open-day",
-    "imageUrl": null
-  },
-  {
-    "id": "kl-0009",
-    "title": "SAMPLE — Past Event (should be hidden)",
-    "description": "Already ended — FR-05 must hide it.",
-    "start": "2026-11-01T10:00:00+08:00",
-    "end": "2026-11-01T18:00:00+08:00",
-    "venue": { "name": "KLCC Park", "address": "Kuala Lumpur City Centre", "lat": 3.1544, "lon": 101.7146 },
-    "category": "food",
-    "price": { "min": 0, "currency": "MYR" },
-    "url": "https://example.com/sample/past-event",
-    "imageUrl": null
-  },
-  {
-    "id": "kl-0010",
-    "title": "SAMPLE — New Year Concert (beyond 30 days)",
-    "description": "Starts more than 30 days from mid-November, to test the search window.",
-    "start": "2027-01-17T20:00:00+08:00",
-    "venue": { "name": "KLCC Park", "address": "Kuala Lumpur City Centre", "lat": 3.1544, "lon": 101.7146 },
-    "category": "music",
-    "price": { "min": 99, "currency": "MYR" },
-    "url": "https://example.com/sample/new-year-concert",
-    "imageUrl": null
-  },
-  {
     "id": "kl-0011",
     "title": "The Ghosts Within (遙遠的東方有一群鬼)",
     "description": "A Mandarin-language theatre production with English surtitles at klpac. Runs 12–15 Nov, with extra 3pm matinees on 14 and 15 Nov.",
     "start": "2026-11-12T20:00:00+08:00",
     "end": "2026-11-12T21:30:00+08:00",
-    "venue": { "name": "Pentas 2, klpac", "address": "Sentul Park, Jalan Strachan, Kuala Lumpur", "lat": 3.187, "lon": 101.6913 },
+    "venue": {
+      "name": "Pentas 2, klpac",
+      "address": "Sentul Park, Jalan Strachan, Kuala Lumpur",
+      "lat": 3.187,
+      "lon": 101.6913
+    },
     "category": "arts",
-    "price": { "min": 88, "max": 128, "currency": "MYR" },
+    "price": {
+      "min": 88,
+      "max": 128,
+      "currency": "MYR"
+    },
     "url": "https://www.klpac.org/shows/%e9%81%99%e9%81%a0%e7%9a%84%e6%9d%b1%e6%96%b9%e6%9c%89%e4%b8%80%e7%be%a4%e9%ac%bc-the-ghosts-within/",
     "imageUrl": null
   },
@@ -133,7 +26,12 @@
     "description": "A day-long developer community conference run by GDG Kuala Lumpur. Speakers and schedule not yet announced.",
     "start": "2026-11-14T09:00:00+08:00",
     "end": "2026-11-14T18:00:00+08:00",
-    "venue": { "name": "Sunway University", "address": "5 Jalan Universiti, Petaling Jaya", "lat": 3.067, "lon": 101.6035 },
+    "venue": {
+      "name": "Sunway University",
+      "address": "5 Jalan Universiti, Petaling Jaya",
+      "lat": 3.067,
+      "lon": 101.6035
+    },
     "category": "tech",
     "price": null,
     "url": "https://gdg.community.dev/events/details/google-gdg-kuala-lumpur-presents-devfest-kuala-lumpur-2026/",
@@ -145,9 +43,18 @@
     "description": "The klpac String Orchestra plays anime film music in a 90-minute concert. Also on 21 Nov (8:30pm) and 22 Nov (3pm).",
     "start": "2026-11-20T20:30:00+08:00",
     "end": "2026-11-20T22:00:00+08:00",
-    "venue": { "name": "Pentas 2, klpac", "address": "Sentul Park, Jalan Strachan, Kuala Lumpur", "lat": 3.187, "lon": 101.6913 },
+    "venue": {
+      "name": "Pentas 2, klpac",
+      "address": "Sentul Park, Jalan Strachan, Kuala Lumpur",
+      "lat": 3.187,
+      "lon": 101.6913
+    },
     "category": "music",
-    "price": { "min": 48, "max": 100, "currency": "MYR" },
+    "price": {
+      "min": 48,
+      "max": 100,
+      "currency": "MYR"
+    },
     "url": "https://www.klpac.org/shows/a-fantasy-world-ii-anime-x-classical-with-the-klpac-string-orchestra/",
     "imageUrl": null
   },
@@ -157,9 +64,18 @@
     "description": "KL Shakespeare Players stage a 90-minute, no-interval take on The Tempest. Also on 28 Nov (8pm) and 29 Nov (3pm).",
     "start": "2026-11-27T20:00:00+08:00",
     "end": "2026-11-27T21:30:00+08:00",
-    "venue": { "name": "Pentas 2, klpac", "address": "Sentul Park, Jalan Strachan, Kuala Lumpur", "lat": 3.187, "lon": 101.6913 },
+    "venue": {
+      "name": "Pentas 2, klpac",
+      "address": "Sentul Park, Jalan Strachan, Kuala Lumpur",
+      "lat": 3.187,
+      "lon": 101.6913
+    },
     "category": "arts",
-    "price": { "min": 75.68, "max": 85.68, "currency": "MYR" },
+    "price": {
+      "min": 75.68,
+      "max": 85.68,
+      "currency": "MYR"
+    },
     "url": "https://www.klpac.org/shows/david-glasss-tempest/",
     "imageUrl": null
   },
@@ -169,9 +85,18 @@
     "description": "A 90-minute concert by the klpac Symphonic Band. Also on 6 Dec at 3pm.",
     "start": "2026-12-05T20:30:00+08:00",
     "end": "2026-12-05T22:00:00+08:00",
-    "venue": { "name": "Pentas 1, klpac", "address": "Sentul Park, Jalan Strachan, Kuala Lumpur", "lat": 3.187, "lon": 101.6913 },
+    "venue": {
+      "name": "Pentas 1, klpac",
+      "address": "Sentul Park, Jalan Strachan, Kuala Lumpur",
+      "lat": 3.187,
+      "lon": 101.6913
+    },
     "category": "music",
-    "price": { "min": 48, "max": 150, "currency": "MYR" },
+    "price": {
+      "min": 48,
+      "max": 150,
+      "currency": "MYR"
+    },
     "url": "https://www.klpac.org/shows/ultimate-music-crawl-ii/",
     "imageUrl": null
   },
@@ -180,22 +105,760 @@
     "title": "KL Rain Run 2026",
     "description": "Early-morning 3 km, 5 km and 10 km runs starting at Dataran Merdeka. Fees rise on 21 Nov.",
     "start": "2026-12-06T05:00:00+08:00",
-    "venue": { "name": "Dataran Merdeka", "address": "Kuala Lumpur city centre", "lat": 3.1478, "lon": 101.6934 },
+    "venue": {
+      "name": "Dataran Merdeka",
+      "address": "Kuala Lumpur city centre",
+      "lat": 3.1478,
+      "lon": 101.6934
+    },
     "category": "sports",
-    "price": { "min": 40, "max": 70, "currency": "MYR" },
+    "price": {
+      "min": 40,
+      "max": 70,
+      "currency": "MYR"
+    },
     "url": "https://raceroster.com/events/2026/166527/kl-rain-run-2026",
     "imageUrl": null
   },
   {
     "id": "kl-0017",
     "title": "Comic Fiesta 2026",
-    "description": "Annual anime, comics and games convention with cosplay, a creative market and stage shows. Runs 19–20 Dec.",
+    "description": "Annual anime, comics and games convention with cosplay, a creative market and stage shows. Runs 19–20 Dec. Tickets from RM 55.",
     "start": "2026-12-19T09:30:00+08:00",
     "end": "2026-12-19T19:00:00+08:00",
-    "venue": { "name": "Kuala Lumpur Convention Centre", "address": "KLCC, Kuala Lumpur", "lat": 3.1535, "lon": 101.7118 },
+    "venue": {
+      "name": "Kuala Lumpur Convention Centre",
+      "address": "KLCC, Kuala Lumpur",
+      "lat": 3.1535,
+      "lon": 101.7118
+    },
+    "category": "other",
+    "price": {
+      "min": 55,
+      "currency": "MYR"
+    },
+    "url": "https://www.comicfiesta.org/cf2026-tickets",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0018",
+    "title": "BIG HOME Expo (13–15 Nov)",
+    "description": "Home and furnishing expo at Stadium Bukit Jalil, 13–15 Nov. Daily opening hours not listed.",
+    "start": "2026-11-13T11:00:00+08:00",
+    "end": "2026-11-15T23:59:00+08:00",
+    "venue": {
+      "name": "Stadium Bukit Jalil, Car Park B",
+      "address": "Persiaran Putra, Bukit Jalil, Kuala Lumpur",
+      "lat": 3.0547,
+      "lon": 101.6914
+    },
     "category": "other",
     "price": null,
-    "url": "https://www.comicfiesta.org/cf2026-tickets",
+    "url": "https://www.ticket2u.com.my/event/52645/big-home-expo-(13-15-nov-2026)-stadium-bukit-jalil",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0019",
+    "title": "Major Basketball League Season 2026: KL Titans",
+    "description": "Basketball league game for the KL Titans at Hextar World, Empire City.",
+    "start": "2026-11-13T20:00:00+08:00",
+    "venue": {
+      "name": "Exhibition Hall, Hextar World at Empire City",
+      "address": "Jalan Damansara, Mutiara Damansara, Petaling Jaya",
+      "lat": 3.168,
+      "lon": 101.6155
+    },
+    "category": "sports",
+    "price": null,
+    "url": "https://www.ticket2u.com.my/event/52688/major-basketball-league-season-2026-(kuala-lumpur)-kl-titans",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0020",
+    "title": "Animania Festival Encore: Chaeeun Meet & Greet",
+    "description": "Fan meet-and-greet session at 3 Damansara. Tickets from RM 45.",
+    "start": "2026-11-14T10:00:00+08:00",
+    "venue": {
+      "name": "3 Damansara Shopping Mall",
+      "address": "Jalan SS20/27, Bandar Utama, Petaling Jaya",
+      "lat": 3.1305,
+      "lon": 101.6271
+    },
+    "category": "other",
+    "price": {
+      "min": 45,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52936/animania-festival-encore-chaeeun-meet-greet",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0021",
+    "title": "Animania Festival Encore: Thames Meet & Greet",
+    "description": "Fan meet-and-greet session at 3 Damansara. Tickets from RM 80.",
+    "start": "2026-11-14T10:00:00+08:00",
+    "venue": {
+      "name": "3 Damansara Shopping Mall",
+      "address": "Jalan SS20/27, Bandar Utama, Petaling Jaya",
+      "lat": 3.1305,
+      "lon": 101.6271
+    },
+    "category": "other",
+    "price": {
+      "min": 80,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52934/animania-festival-encore-thames-meet-greet",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0022",
+    "title": "Hikayat Faire",
+    "description": "Faire at Monumen Alaf Baru, Putrajaya. Tickets from RM 25.",
+    "start": "2026-11-14T10:00:00+08:00",
+    "venue": {
+      "name": "Monumen Alaf Baru",
+      "address": "Jalan Tunku Abdul Rahman, Putrajaya",
+      "lat": 2.9234,
+      "lon": 101.6826
+    },
+    "category": "other",
+    "price": {
+      "min": 25,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52467/hikayat-faire",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0023",
+    "title": "25th Private & International School Fair in Kuala Lumpur",
+    "description": "Education fair for private and international schools at Mid Valley Exhibition Centre.",
+    "start": "2026-11-14T11:00:00+08:00",
+    "venue": {
+      "name": "Mid Valley Exhibition Centre (MVEC)",
+      "address": "Mid Valley City, Kuala Lumpur",
+      "lat": 3.1185,
+      "lon": 101.6768
+    },
+    "category": "learning",
+    "price": null,
+    "url": "https://www.ticket2u.com.my/event/52636/25th-private-international-school-fair-in-kuala-lumpur",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0024",
+    "title": "The Sweatbox 11th Anniversary x Red Ruby Takeover",
+    "description": "Anniversary night at The Iron Fairies KL.",
+    "start": "2026-11-14T23:00:00+08:00",
+    "venue": {
+      "name": "The Iron Fairies KL",
+      "address": "Hive, Pudu, Kuala Lumpur",
+      "lat": 3.1401,
+      "lon": 101.7212
+    },
+    "category": "nightlife",
+    "price": null,
+    "url": "https://www.ticket2u.com.my/event/52951/the-sweatbox-11th-anniversary-x-red-ruby-takeover",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0025",
+    "title": "The Living Code: Whispers of Stone 2026, Live Coding Workshop",
+    "description": "Live coding workshop at GMBB, part of The Living Code programme.",
+    "start": "2026-11-15T11:00:00+08:00",
+    "venue": {
+      "name": "GMBB",
+      "address": "Jalan Robertson, Bukit Bintang, Kuala Lumpur",
+      "lat": 3.1447,
+      "lon": 101.7045
+    },
+    "category": "tech",
+    "price": null,
+    "url": "https://www.ticket2u.com.my/event/52873/the-living-code-whispers-of-stone-2026-live-coding-workshop",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0026",
+    "title": "Meet your Agentic AI: Live Hands-on Workshop (Mandarin)",
+    "description": "Hands-on AI agent workshop in Mandarin, powered by SuDu AI, at PV128 Setapak. Fee from RM 98.",
+    "start": "2026-11-20T09:30:00+08:00",
+    "venue": {
+      "name": "SQL Training, Unit 2-21, PV128",
+      "address": "PV128, Jalan Genting Kelang, Setapak, Kuala Lumpur",
+      "lat": 3.2002,
+      "lon": 101.7168
+    },
+    "category": "learning",
+    "price": {
+      "min": 98,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52942/meet-your-agentic-ai-live-hand-on-workshop-(powered-by-sudu-ai,-mandarin)",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0027",
+    "title": "Safari Carnival Charity Fun Run 2026",
+    "description": "Charity fun run at Taman Tasik Metropolitan Kepong. Entry from RM 68.",
+    "start": "2026-11-21T07:00:00+08:00",
+    "venue": {
+      "name": "Taman Tasik Metropolitan Kepong",
+      "address": "Kepong, Kuala Lumpur",
+      "lat": 3.224,
+      "lon": 101.6458
+    },
+    "category": "sports",
+    "price": {
+      "min": 68,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/51785/safari-carnival-charity-fun-run-2026",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0028",
+    "title": "Meet your Agentic AI: Live Hands-on Workshop (Mandarin)",
+    "description": "Second session of the hands-on AI agent workshop in Mandarin, powered by SuDu AI, at PV128 Setapak. Fee from RM 98.",
+    "start": "2026-11-21T09:30:00+08:00",
+    "venue": {
+      "name": "SQL Training, Unit 2-21, PV128",
+      "address": "PV128, Jalan Genting Kelang, Setapak, Kuala Lumpur",
+      "lat": 3.2002,
+      "lon": 101.7168
+    },
+    "category": "learning",
+    "price": {
+      "min": 98,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52943/meet-your-agentic-ai-live-hand-on-workshop-(powered-by-sudu-ai,-mandarin)",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0029",
+    "title": "An Evening of Symphony and Song",
+    "description": "Orchestral and vocal evening at the British International School KL auditorium. Tickets from RM 52.",
+    "start": "2026-11-22T17:00:00+08:00",
+    "venue": {
+      "name": "The British International School KL, Auditorium",
+      "address": "Changkat Bukit Utama, Bandar Utama, Petaling Jaya",
+      "lat": 3.1363,
+      "lon": 101.6068
+    },
+    "category": "music",
+    "price": {
+      "min": 52,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52158/an-evening-of-symphony-and-song",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0030",
+    "title": "Sustainaboleh Lifestyle & Food Festival",
+    "description": "Lifestyle and food festival at The Campus Ampang.",
+    "start": "2026-11-27T10:00:00+08:00",
+    "venue": {
+      "name": "The Campus Ampang",
+      "address": "Jalan Kolam Air Lama, Ampang",
+      "lat": 3.1622,
+      "lon": 101.7557
+    },
+    "category": "food",
+    "price": null,
+    "url": "https://www.ticket2u.com.my/event/52781/sustainaboleh-lifestyle-food-festival",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0031",
+    "title": "Margam: Natya, Raaga, Rasa",
+    "description": "Classical Indian dance and music performance at the Temple of Fine Arts. Tickets from RM 50.",
+    "start": "2026-11-27T19:30:00+08:00",
+    "venue": {
+      "name": "Shantanand Auditorium, Temple of Fine Arts",
+      "address": "Jalan Berhala, Brickfields, Kuala Lumpur",
+      "lat": 3.1277,
+      "lon": 101.6875
+    },
+    "category": "arts",
+    "price": {
+      "min": 50,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52709/margam-natya,-raaga,-rasa",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0032",
+    "title": "International Songket Run 6.0",
+    "description": "Fun run at Management & Science University, Shah Alam. Entry from RM 25.",
+    "start": "2026-11-28T06:00:00+08:00",
+    "venue": {
+      "name": "Management & Science University (MSU)",
+      "address": "Persiaran Olahraga, Shah Alam",
+      "lat": 3.0781,
+      "lon": 101.5527
+    },
+    "category": "sports",
+    "price": {
+      "min": 25,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/51876/international-songket-run-6.0",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0033",
+    "title": "SHOW ADA KELAS",
+    "description": "Live show at the KLCC Plenary Theatre. Tickets from RM 288.",
+    "start": "2026-11-28T15:00:00+08:00",
+    "venue": {
+      "name": "Plenary Theatre, KLCC",
+      "address": "Kuala Lumpur Convention Centre, KLCC, Kuala Lumpur",
+      "lat": 3.1535,
+      "lon": 101.7118
+    },
+    "category": "arts",
+    "price": {
+      "min": 288,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52696/show-ada-kelas",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0034",
+    "title": "Tirai Citra ke-4: Tradisi & Transisi",
+    "description": "Stage performance at the DBKL auditorium. Tickets from RM 50.",
+    "start": "2026-11-28T20:30:00+08:00",
+    "venue": {
+      "name": "Auditorium DBKL",
+      "address": "Panggung Bandaraya DBKL, Jalan Raja, Kuala Lumpur",
+      "lat": 3.1502,
+      "lon": 101.6949
+    },
+    "category": "arts",
+    "price": {
+      "min": 50,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52991/mempersembahkan-tirai-citra-ke-4-tradisi-transisi",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0035",
+    "title": "Jom Heboh Fun Run 2026 @ Kuala Lumpur",
+    "description": "Fun run at Stadium Merdeka. Entry from RM 40.",
+    "start": "2026-11-29T06:00:00+08:00",
+    "venue": {
+      "name": "Stadium Merdeka",
+      "address": "Jalan Stadium, Kuala Lumpur",
+      "lat": 3.1393,
+      "lon": 101.7008
+    },
+    "category": "sports",
+    "price": {
+      "min": 40,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52361/jom-heboh-fun-run-2026-kuala-lumpur",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0036",
+    "title": "My Heart My Health Run 2026 (My Jantungku Run)",
+    "description": "Health-awareness run at UNITEN. Entry from RM 30.",
+    "start": "2026-11-29T06:45:00+08:00",
+    "venue": {
+      "name": "Universiti Tenaga Nasional (UNITEN)",
+      "address": "IOI Resort City, Putrajaya",
+      "lat": 2.9699,
+      "lon": 101.7288
+    },
+    "category": "sports",
+    "price": {
+      "min": 30,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52468/my-heart-my-health-run-2026-my-jantungku-run",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0037",
+    "title": "BUBBLES 02 MATEC Fun Run 2026",
+    "description": "Fun run at the National Stadium, Bukit Jalil. Entry from RM 30.",
+    "start": "2026-11-29T07:00:00+08:00",
+    "venue": {
+      "name": "National Stadium Bukit Jalil",
+      "address": "Persiaran Putra, Bukit Jalil, Kuala Lumpur",
+      "lat": 3.0547,
+      "lon": 101.6914
+    },
+    "category": "sports",
+    "price": {
+      "min": 30,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/53008/bubbles-02-matec-fun-run-2026",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0038",
+    "title": "Malam Rawan Diorama by Rizky Febian",
+    "description": "Rizky Febian live in Kuala Lumpur at Zepp KL. Tickets from RM 228.",
+    "start": "2026-11-29T20:00:00+08:00",
+    "venue": {
+      "name": "Zepp Kuala Lumpur",
+      "address": "Jalan Hang Tuah, Bukit Bintang, Kuala Lumpur",
+      "lat": 3.1394,
+      "lon": 101.7091
+    },
+    "category": "music",
+    "price": {
+      "min": 228,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52284/malam-rawan-diorama-by-rizky-febian",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0039",
+    "title": "Giant Games",
+    "description": "Sports event at Equestrian Park, Putrajaya. Entry from RM 55.",
+    "start": "2026-12-05T07:00:00+08:00",
+    "venue": {
+      "name": "Equestrian Park Putrajaya",
+      "address": "Lebuh Wadi Ehsan, Putrajaya",
+      "lat": 2.8963,
+      "lon": 101.686
+    },
+    "category": "sports",
+    "price": {
+      "min": 55,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52302/giant-games",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0040",
+    "title": "International Cultural Night 2026 (APU)",
+    "description": "Cultural night with performances at APU, Bukit Jalil. Tickets from RM 22.",
+    "start": "2026-12-05T15:00:00+08:00",
+    "venue": {
+      "name": "Asia Pacific University (APU) Car Park",
+      "address": "Jalan Teknologi, Bukit Jalil, Kuala Lumpur",
+      "lat": 3.0559,
+      "lon": 101.6999
+    },
+    "category": "arts",
+    "price": {
+      "min": 22,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52226/international-cultural-night-2026",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0041",
+    "title": "Under The Palmyra Tree, Version 2.0",
+    "description": "Stage performance at the Temple of Fine Arts. Tickets from RM 50.",
+    "start": "2026-12-05T16:00:00+08:00",
+    "venue": {
+      "name": "Shantanand Auditorium, Temple of Fine Arts",
+      "address": "Jalan Berhala, Brickfields, Kuala Lumpur",
+      "lat": 3.1277,
+      "lon": 101.6875
+    },
+    "category": "arts",
+    "price": {
+      "min": 50,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52800/under-the-palmyra-tree-version-2.0",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0042",
+    "title": "Gig For Good presents MOVIE HITS",
+    "description": "Live charity gig of movie hits at Arthur's Storehouse, Pavilion KL. Tickets from RM 80.",
+    "start": "2026-12-05T18:00:00+08:00",
+    "venue": {
+      "name": "Arthur's Storehouse, Pavilion Kuala Lumpur",
+      "address": "Pavilion Kuala Lumpur, Jalan Bukit Bintang, Kuala Lumpur",
+      "lat": 3.1492,
+      "lon": 101.713
+    },
+    "category": "music",
+    "price": {
+      "min": 80,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52922/gig-for-good-presents-movie-hits",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0043",
+    "title": "Majlis Tertinggi Rockqueen Ella 2026: Sidang Penutup",
+    "description": "Closing concert of Ella's 2026 tour at Unifi Arena. Tickets from RM 179.",
+    "start": "2026-12-05T20:00:00+08:00",
+    "venue": {
+      "name": "Unifi Arena Bukit Jalil",
+      "address": "Persiaran Putra, Bukit Jalil, Kuala Lumpur",
+      "lat": 3.0537,
+      "lon": 101.6935
+    },
+    "category": "music",
+    "price": {
+      "min": 179,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52646/majlis-tertinggi-rockqueen-ella-2026-sidang-penutup",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0044",
+    "title": "Bukit Jalil Half Marathon & 10km Friendship Run by LGRA 2026",
+    "description": "Half marathon and 10 km friendship run from Taman Rekreasi Bukit Jalil. Entry from RM 25. The listing gives a 3:00 AM start.",
+    "start": "2026-12-06T03:00:00+08:00",
+    "venue": {
+      "name": "Pintu C, Taman Rekreasi Bukit Jalil",
+      "address": "Bukit Jalil, Kuala Lumpur",
+      "lat": 3.0528,
+      "lon": 101.6745
+    },
+    "category": "sports",
+    "price": {
+      "min": 25,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52129/bukit-jalil-half-marathon-10km-friendship-run-by-lgra-2026",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0045",
+    "title": "Limp Bizkit Live in Malaysia: One-Stop Asia Show",
+    "description": "Limp Bizkit's only Asia show on their 2026 tour, at the National Hockey Stadium. Tickets from RM 398.",
+    "start": "2026-12-09T20:00:00+08:00",
+    "venue": {
+      "name": "National Hockey Stadium",
+      "address": "Persiaran Hoki, Bukit Jalil, Kuala Lumpur",
+      "lat": 3.0591,
+      "lon": 101.6933
+    },
+    "category": "music",
+    "price": {
+      "min": 398,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/50805/limp-bizkit-live-in-malaysia-one-stop-asia-show",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0046",
+    "title": "Top Tech Summit & Innovation Awards",
+    "description": "Tech conference and awards by Malaysiakini and Digital News Asia at Nexus Bangsar South. Tickets from RM 288.",
+    "start": "2026-12-10T08:00:00+08:00",
+    "venue": {
+      "name": "Connexion Conference & Event Centre",
+      "address": "Nexus Bangsar South, Jalan Kerinchi, Kuala Lumpur",
+      "lat": 3.1099,
+      "lon": 101.6651
+    },
+    "category": "tech",
+    "price": {
+      "min": 288,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52738/top-tech-summit-innovation-awards-by-malaysiakini-digital-news-asia",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0047",
+    "title": "Footloose the Musical (The International School @ ParkCity)",
+    "description": "School musical production of Footloose at The International School @ ParkCity. Tickets from RM 42.",
+    "start": "2026-12-11T19:00:00+08:00",
+    "venue": {
+      "name": "The International School @ ParkCity",
+      "address": "Medan Residen, Kepong, Kuala Lumpur",
+      "lat": 3.1877,
+      "lon": 101.6375
+    },
+    "category": "arts",
+    "price": {
+      "min": 42,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52757/the-international-school-parkcity-proudly-presents-footloose-the-musical",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0048",
+    "title": "FIFTY FIFTY Asia Fancon Tour: Kuala Lumpur",
+    "description": "Fan concert tour stop at JioSpace, Petaling Jaya. Tickets from RM 199.",
+    "start": "2026-12-12T17:00:00+08:00",
+    "venue": {
+      "name": "JioSpace",
+      "address": "Jalan 19/1B, Petaling Jaya",
+      "lat": 3.1141,
+      "lon": 101.6273
+    },
+    "category": "music",
+    "price": {
+      "min": 199,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52894/fifty-fifty-asia-fancon-tour-kuala-lumpur-[still-lobubble]",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0049",
+    "title": "Mad Sabah Live: Special Taping Show",
+    "description": "Stand-up comedy taping at M Theatre, MAHSA Avenue. Tickets from RM 70.",
+    "start": "2026-12-12T19:45:00+08:00",
+    "venue": {
+      "name": "M Theatre, MAHSA Avenue",
+      "address": "Jalan Profesor Diraja Ungku Aziz, Petaling Jaya",
+      "lat": 3.1186,
+      "lon": 101.6488
+    },
+    "category": "arts",
+    "price": {
+      "min": 70,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52394/mad-sabah-live-special-taping-show",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0050",
+    "title": "MMU Bollywood Night",
+    "description": "Bollywood night at Multimedia University, Cyberjaya. Tickets from RM 20.",
+    "start": "2026-12-18T19:00:00+08:00",
+    "venue": {
+      "name": "Dewan Tun Canselor, Multimedia University",
+      "address": "Persiaran Multimedia, Cyberjaya",
+      "lat": 2.9279,
+      "lon": 101.6418
+    },
+    "category": "arts",
+    "price": {
+      "min": 20,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52606/mmu-bollywood-night",
+    "imageUrl": null
+  },
+  {
+    "id": "kl-0051",
+    "title": "Golden 9 Race 2026: Beyond the Finish Line",
+    "description": "Race at KL Wellness City, Bukit Jalil. Entry from RM 169.",
+    "start": "2026-12-19T08:00:00+08:00",
+    "venue": {
+      "name": "KL Wellness City Gallery",
+      "address": "Bukit Jalil, Kuala Lumpur",
+      "lat": 3.0474,
+      "lon": 101.6669
+    },
+    "category": "sports",
+    "price": {
+      "min": 169,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52653/golden-9-race-2026-beyond-the-finish-line",
+    "imageUrl": null
+  },
+  {
+    "id": "sb-0001",
+    "title": "Fadzri Rashid: The Big 40 (Kota Kinabalu)",
+    "description": "Live show by Fadzri Rashid at Horizon Hotel, Kota Kinabalu. Tickets from RM 80.",
+    "start": "2026-11-21T20:00:00+08:00",
+    "venue": {
+      "name": "Horizon Hotel",
+      "address": "Jalan Tun Razak, Kota Kinabalu",
+      "lat": 5.9825,
+      "lon": 116.0753
+    },
+    "category": "arts",
+    "price": {
+      "min": 80,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/51241/[kk]-fadzri-rashid-the-big-40",
+    "imageUrl": null
+  },
+  {
+    "id": "sb-0002",
+    "title": "Kangen Band 21st Anniversary Concert",
+    "description": "Anniversary concert at the Sabah International Convention Centre. Tickets from RM 97.",
+    "start": "2026-12-04T20:00:00+08:00",
+    "venue": {
+      "name": "Sabah International Convention Centre",
+      "address": "Jalan Tun Fuad Stephen, Kota Kinabalu",
+      "lat": 5.9976,
+      "lon": 116.0845
+    },
+    "category": "music",
+    "price": {
+      "min": 97,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52058/kangen-band-21st-anniversary-concert",
+    "imageUrl": null
+  },
+  {
+    "id": "sb-0003",
+    "title": "Mad Sabah Stand-up Comedy Show (Kota Kinabalu)",
+    "description": "Stand-up comedy show at Horizon Hotel, Kota Kinabalu.",
+    "start": "2026-12-05T20:00:00+08:00",
+    "venue": {
+      "name": "Horizon Hotel",
+      "address": "Jalan Tun Razak, Kota Kinabalu",
+      "lat": 5.9825,
+      "lon": 116.0753
+    },
+    "category": "arts",
+    "price": null,
+    "url": "https://www.ticket2u.com.my/event/52735/stand-up-comedy-show-mad-sabah,-kota-kinabalu,-sabah",
+    "imageUrl": null
+  },
+  {
+    "id": "sb-0004",
+    "title": "Diorama by Rizky Febian: Live in Sabah",
+    "description": "Rizky Febian live at the Sabah International Convention Centre. Tickets from RM 188.",
+    "start": "2026-12-05T20:30:00+08:00",
+    "venue": {
+      "name": "Sabah International Convention Centre",
+      "address": "Jalan Tun Fuad Stephen, Kota Kinabalu",
+      "lat": 5.9976,
+      "lon": 116.0845
+    },
+    "category": "music",
+    "price": {
+      "min": 188,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/51768/diorama-by-rizky-febian-live-in-sabah",
+    "imageUrl": null
+  },
+  {
+    "id": "sb-0005",
+    "title": "Kiulu Adventure Challenge 2026",
+    "description": "Outdoor adventure challenge in Pekan Kiulu, about an hour from Kota Kinabalu. Entry from RM 95.",
+    "start": "2026-12-06T06:00:00+08:00",
+    "venue": {
+      "name": "Pekan Kiulu",
+      "address": "Kiulu, Tamparuli, Sabah",
+      "lat": 6.0583,
+      "lon": 116.2824
+    },
+    "category": "sports",
+    "price": {
+      "min": 95,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/51722/kiulu-adventure-challenge-2026",
     "imageUrl": null
   }
 ]
