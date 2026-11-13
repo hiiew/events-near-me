@@ -768,5 +768,116 @@
     },
     "url": "https://www.ticket2u.com.my/event/52653/golden-9-race-2026-beyond-the-finish-line",
     "imageUrl": null
+  },
+  {
+    "id": "sb-0001",
+    "title": "Fadzri Rashid: The Big 40 (Kota Kinabalu)",
+    "description": "Live show by Fadzri Rashid at Horizon Hotel, Kota Kinabalu. Tickets from RM 80.",
+    "start": "2026-11-21T20:00:00+08:00",
+    "venue": {
+      "name": "Horizon Hotel",
+      "address": "Jalan Tun Razak, Kota Kinabalu",
+      "lat": 5.9825,
+      "lon": 116.0753
+    },
+    "category": "arts",
+    "price": {
+      "min": 80,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/51241/[kk]-fadzri-rashid-the-big-40",
+    "imageUrl": null
+  },
+  {
+    "id": "sb-0002",
+    "title": "Kangen Band 21st Anniversary Concert",
+    "description": "Anniversary concert at the Sabah International Convention Centre. Tickets from RM 97.",
+    "start": "2026-12-04T20:00:00+08:00",
+    "venue": {
+      "name": "Sabah International Convention Centre",
+      "address": "Jalan Tun Fuad Stephen, Kota Kinabalu",
+      "lat": 5.9976,
+      "lon": 116.0845
+    },
+    "category": "music",
+    "price": {
+      "min": 97,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/52058/kangen-band-21st-anniversary-concert",
+    "imageUrl": null
+  },
+  {
+    "id": "sb-0003",
+    "title": "Mad Sabah Stand-up Comedy Show (Kota Kinabalu)",
+    "description": "Stand-up comedy show at Horizon Hotel, Kota Kinabalu.",
+    "start": "2026-12-05T20:00:00+08:00",
+    "venue": {
+      "name": "Horizon Hotel",
+      "address": "Jalan Tun Razak, Kota Kinabalu",
+      "lat": 5.9825,
+      "lon": 116.0753
+    },
+    "category": "arts",
+    "price": null,
+    "url": "https://www.ticket2u.com.my/event/52735/stand-up-comedy-show-mad-sabah,-kota-kinabalu,-sabah",
+    "imageUrl": null
+  },
+  {
+    "id": "sb-0004",
+    "title": "Diorama by Rizky Febian: Live in Sabah",
+    "description": "Rizky Febian live at the Sabah International Convention Centre. Tickets from RM 188.",
+    "start": "2026-12-05T20:30:00+08:00",
+    "venue": {
+      "name": "Sabah International Convention Centre",
+      "address": "Jalan Tun Fuad Stephen, Kota Kinabalu",
+      "lat": 5.9976,
+      "lon": 116.0845
+    },
+    "category": "music",
+    "price": {
+      "min": 188,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/51768/diorama-by-rizky-febian-live-in-sabah",
+    "imageUrl": null
+  },
+  {
+    "id": "sb-0005",
+    "title": "Kiulu Adventure Challenge 2026",
+    "description": "Outdoor adventure challenge in Pekan Kiulu, about an hour from Kota Kinabalu. Entry from RM 95.",
+    "start": "2026-12-06T06:00:00+08:00",
+    "venue": {
+      "name": "Pekan Kiulu",
+      "address": "Kiulu, Tamparuli, Sabah",
+      "lat": 6.0583,
+      "lon": 116.2824
+    },
+    "category": "sports",
+    "price": {
+      "min": 95,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/51722/kiulu-adventure-challenge-2026",
+    "imageUrl": null
+  },
+  {
+    "id": "sb-0006",
+    "title": "Jesselton Half Marathon 2027",
+    "description": "Half marathon starting at the Likas Sports Complex hockey stadium. Entry from RM 50. The listing gives a 4:00 AM start.",
+    "start": "2027-01-24T04:00:00+08:00",
+    "venue": {
+      "name": "Hockey Stadium, Likas Sports Complex",
+      "address": "Jalan Kompleks Sukan, Likas, Kota Kinabalu",
+      "lat": 5.9793,
+      "lon": 116.0951
+    },
+    "category": "sports",
+    "price": {
+      "min": 50,
+      "currency": "MYR"
+    },
+    "url": "https://www.ticket2u.com.my/event/51688/jesselton-half-marathon-2027",
+    "imageUrl": null
   }
 ]

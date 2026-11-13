@@ -12,7 +12,7 @@ Don't copy long descriptions or use images unless the page clearly allows it —
 
 ## Steps for each event
 1. Copy one entry from [`curated-events-template.json`](curated-events-template.json).
-2. Give it the next ID: `kl-0004`, `kl-0005`, …
+2. Give it the next ID: `kl-0004`, `kl-0005`, … (Klang Valley) or `sb-0007`, … (Sabah, CR-11).
 3. Fill in `title`, a short `description`, `start` (and `end` if known) as
    `YYYY-MM-DDTHH:MM:SS+08:00`.
 4. **Coordinates:** open openstreetmap.org, search the venue, right-click the spot →
