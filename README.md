@@ -52,8 +52,8 @@ DevTools → ⋮ → More tools → Sensors → Location (e.g. 3.158, 101.712 fo
 | `npm run lint` | Code checks (ESLint) |
 | `npm run build` | Production build |
 
-> Events shown now are **SAMPLE** placeholders in `data/curated-events.json`. Replace them with
-> real KL events (see `docs/03-design/curated-events-guide.md`) before Phase 5 testing.
+> `data/curated-events.json` now holds real Klang Valley events, each linking to its ticket or official page.
+> Coordinates are approximate until checked on a map. Add more with `docs/03-design/curated-events-guide.md`.
 
 ### Try it on your phone (same Wi-Fi)
 
