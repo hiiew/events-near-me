@@ -18,6 +18,7 @@
 | FR-01 | M | The app shall explain why it needs location and then request the device's… | US-01, US-10 | D-02, S-1 | `src/lib/location.ts`, `src/app/page.tsx` | | 🛠 |
 | FR-02 | M | If location is denied, unavailable or takes longer than 10 s, the app shall… | US-02 | D-02, D-05, S-3 | `src/app/page.tsx` (pick-a-spot state), `src/components/MapView.tsx` (tap to pin) | | 🛠 |
 | FR-03 | M | The user shall be able to change the search point at any time by using their… | US-02 | D-02, S-2/S-3 | `page.tsx` (tap map / Search this map area / Use my location) | | 🛠 |
+| FR-41 | C | Area shortcuts: tap "Klang Valley" or "Kota Kinabalu" to see its events, with the count on the button (CR-12) | — | S-1 and S-2 (buttons under "Or browse an area"), ui-ux.md §4 | `src/lib/areas.ts` (+ test), `AreaShortcuts.tsx`, `page.tsx` | | 🛠 |
 | FR-04 | M | The app shall show upcoming events within the selected radius of the search… | US-01 | D-03, D-06, D-07 | `src/lib/filters.ts`, `src/lib/geo.ts`, `src/app/api/events/search/route.ts` (+ tests) | | 🛠 |
 | FR-05 | M | The app shall hide events that have already ended | US-01 | D-09, D-03 | `src/lib/sources/curated.ts` (+ test) | | 🛠 |
 | FR-06 | M | The app shall show results in a list, sorted by start date (soonest first)… | US-01 | D-01 S-2, D-03 (sort) | `src/lib/filters.ts` sort soonest/nearest (+ test), `EventRow.tsx` | | 🛠 |
@@ -81,6 +82,6 @@
 |---|---|---|---|---|
 | Must | 39 (24 FR + 15 NFR) | 39 | 31 built + 2 partial (NFR-03, NFR-05); 6 NFRs shown in Phase 5/6 (NFR-01, 04, 07, 13, 16, 17) | 0 (unit tests exist; Phase 5 test cases pending) |
 | Should | 9 (5 FR + 4 NFR) | 9 | 3 built (FR-21, FR-22, NFR-11); FR-26 deferred (CR-03); FR-29/FR-30 only needed with a 2nd source; NFR-02/15/19 in Phases 5–7 | 0 |
-| Could | 11 | 10 (FR-23, FR-27 conditional, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38, FR-39, FR-40); FR-16 deferred | 9 built (FR-23, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38, FR-39, FR-40) | 0 |
+| Could | 12 | 11 (FR-23, FR-27 conditional, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38, FR-39, FR-40, FR-41); FR-16 deferred | 10 built (FR-23, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38, FR-39, FR-40, FR-41) | 0 |
 
 **Project exit rule:** every **Must** row must reach ✅ before final sign-off.
