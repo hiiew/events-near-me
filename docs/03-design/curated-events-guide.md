@@ -10,9 +10,13 @@ time, place, price) in your own words, and always link back to the official page
 Don't copy long descriptions or use images unless the page clearly allows it — leave
 `imageUrl` as `null` if unsure.
 
+## Date window (owner rule, 2026-11-13)
+Only add events from the **current month to the end of the current year** (for now: November–December 2026).
+Skip anything dated next year, even if it is already on sale. Review this rule at the start of each year.
+
 ## Steps for each event
 1. Copy one entry from [`curated-events-template.json`](curated-events-template.json).
-2. Give it the next ID: `kl-0004`, `kl-0005`, …
+2. Give it the next ID: `kl-0004`, `kl-0005`, … (Klang Valley) or `sb-0007`, … (Sabah, CR-11).
 3. Fill in `title`, a short `description`, `start` (and `end` if known) as
    `YYYY-MM-DDTHH:MM:SS+08:00`.
 4. **Coordinates:** open openstreetmap.org, search the venue, right-click the spot →
