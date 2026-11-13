@@ -1,5 +1,6 @@
-// D-03 — FR-04, FR-06, FR-09, FR-10–FR-14. Runs in the browser: the server returns
+// D-03 — FR-04, FR-06, FR-09, FR-10–FR-14, FR-35. Runs in the browser: the server returns
 // 50 km / 30 days and the device narrows it instantly (ADR-06).
+import { CATEGORY_LABELS } from "./categories";
 import type { CategoryId, Event } from "./event-schema";
 import { haversineKm, type LatLon } from "./geo";
 
@@ -17,6 +18,8 @@ export interface Filters {
   categories: CategoryId[]; // empty = all
   price: PriceFilter;
   sort: SortBy;
+  /** FR-35 (CR-05): words typed in the search box; "" = no search. */
+  query: string;
 }
 
 export const DEFAULT_FILTERS: Filters = {
@@ -25,6 +28,7 @@ export const DEFAULT_FILTERS: Filters = {
   categories: [],
   price: { kind: "any" },
   sort: "soonest",
+  query: "",
 };
 
 // FR-34 (CR-04) "Free this week" chip: only a shortcut for two existing filters (FR-11 date, FR-13 price);
@@ -39,6 +43,17 @@ export function toggleFreeThisWeek(f: Filters): Filters {
   return isFreeThisWeek(f)
     ? { ...f, when: DEFAULT_FILTERS.when, price: DEFAULT_FILTERS.price }
     : { ...f, when: "7d", price: { kind: "free" } };
+}
+
+// FR-35 (CR-05) search box. Lower-case and strip accents ("Café" matches "cafe"), then every typed word
+// must appear somewhere in the title, venue name, venue address or category label (AND, like the other filters).
+const fold = (text: string) => text.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
+
+export function matchesQuery(event: Event, query: string): boolean {
+  const words = fold(query).split(/\s+/).filter(Boolean);
+  if (words.length === 0) return true;
+  const haystack = fold([event.title, event.venue.name, event.venue.address, CATEGORY_LABELS[event.category]].filter(Boolean).join(" "));
+  return words.every((w) => haystack.includes(w));
 }
 
 export interface EventWithDistance extends Event {
@@ -87,6 +102,7 @@ export function applyFilters(
     if (end < from || start >= to) continue;
     if (cats.size > 0 && !cats.has(e.category)) continue;
     if (!matchesPrice(e.price, filters.price)) continue;
+    if (!matchesQuery(e, filters.query)) continue;
 
     const { lat, lon } = e.venue;
     if (lat === undefined || lon === undefined) {
