@@ -84,7 +84,7 @@ describe("FR-25 data/curated-events.json", () => {
 
 describe("FR-17 getCuratedEvent", () => {
   it("finds an event by its app id", () => {
-    const e = getCuratedEvent("curated:kl-0002");
+    const e = getCuratedEvent("curated:kl-9", [{ ...base, id: "kl-9", title: "Indie Night", start: "2026-11-20T10:00:00+08:00" }]);
     expect(e?.title).toContain("Indie Night");
     expect(e?.sourceId).toBe("curated");
   });
