@@ -57,7 +57,9 @@ If a skill's advice conflicts with this project, the project wins:
 
 ## Rule 3 — How this project works
 
-- **SDLC, one phase at a time.** Phases 1–3 are approved; the project is in **Phase 4 — Implementation**.
+- **SDLC, one phase at a time.** Phases 1–3 are approved and Phase 4 (Implementation) is done; the project
+  is in **Phase 5 — Testing** (plan and cases in `docs/05-testing/`). Fixes found by testing still follow the
+  Phase 4 rules below.
   Check `README.md` for the current phase status. The master prompt is `PROMPT.md`.
 - **Claude writes the application code and explains it** (changed 2026-11-11 at the owner's request;
   originally the owner wrote it). Each slice's pull request explains what every file does so the
