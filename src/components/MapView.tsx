@@ -93,7 +93,9 @@ export default function MapView(props: MapViewProps) {
             pathOptions={{ color: "#c6f432", weight: 2, dashArray: "6 6", fillOpacity: 0.05 }}
             interactive={false}
           />
-          <Marker position={[point.lat, point.lon]} icon={pointIcon} interactive={false} />
+          {/* Decorative: the top bar already says where the search is from. keyboard={false} stops Leaflet making it
+              a focusable, nameless "button" (DEF-02, NFR-05). */}
+          <Marker position={[point.lat, point.lon]} icon={pointIcon} interactive={false} keyboard={false} />
         </>
       ) : null}
       {events.map((e) =>

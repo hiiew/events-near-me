@@ -1,0 +1,73 @@
+{
+  "run": "2026-11-24, ENV-1, Chromium (Playwright 1.63), axe-core 4.14, tags wcag2a wcag2aa wcag21a wcag21aa",
+  "results": {
+    "TC-60 NFR-05: axe finds no serious or critical WCAG 2.1 AA violations (dark)": [
+      {
+        "screen": "S-2/S-3 results",
+        "id": "aria-command-name",
+        "impact": "serious",
+        "nodes": 1,
+        "help": "ARIA commands must have an accessible name",
+        "first": ".leaflet-marker-icon.leaflet-zoom-animated[role=\"button\"]:nth-child(1)"
+      },
+      {
+        "screen": "S-2 empty state",
+        "id": "aria-command-name",
+        "impact": "serious",
+        "nodes": 1,
+        "help": "ARIA commands must have an accessible name",
+        "first": ".leaflet-marker-icon"
+      },
+      {
+        "screen": "S-4 details",
+        "id": "definition-list",
+        "impact": "serious",
+        "nodes": 1,
+        "help": "<dl> elements must only directly contain properly-ordered <dt> and <dd> groups, <script>, <template> or <div> elements",
+        "first": "dl"
+      },
+      {
+        "screen": "S-4 details",
+        "id": "dlitem",
+        "impact": "serious",
+        "nodes": 8,
+        "help": "<dt> and <dd> elements must be contained by a <dl>",
+        "first": ".grid.grid-cols-\\[28px_minmax\\(0\\,1fr\\)\\].gap-2\\.5:nth-child(1) > div > dt"
+      }
+    ],
+    "TC-60 NFR-05: axe finds no serious or critical WCAG 2.1 AA violations (light)": [
+      {
+        "screen": "S-2/S-3 results",
+        "id": "aria-command-name",
+        "impact": "serious",
+        "nodes": 1,
+        "help": "ARIA commands must have an accessible name",
+        "first": ".leaflet-marker-icon.leaflet-zoom-animated[role=\"button\"]:nth-child(1)"
+      },
+      {
+        "screen": "S-2 empty state",
+        "id": "aria-command-name",
+        "impact": "serious",
+        "nodes": 1,
+        "help": "ARIA commands must have an accessible name",
+        "first": ".leaflet-marker-icon"
+      },
+      {
+        "screen": "S-4 details",
+        "id": "definition-list",
+        "impact": "serious",
+        "nodes": 1,
+        "help": "<dl> elements must only directly contain properly-ordered <dt> and <dd> groups, <script>, <template> or <div> elements",
+        "first": "dl"
+      },
+      {
+        "screen": "S-4 details",
+        "id": "dlitem",
+        "impact": "serious",
+        "nodes": 8,
+        "help": "<dt> and <dd> elements must be contained by a <dl>",
+        "first": ".grid.grid-cols-\\[28px_minmax\\(0\\,1fr\\)\\].gap-2\\.5:nth-child(1) > div > dt"
+      }
+    ]
+  }
+}

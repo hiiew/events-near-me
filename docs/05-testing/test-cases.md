@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Phase | 5 — Testing |
-| Version | 0.1 — draft, **not yet executed** |
+| Version | 0.1 — first automated run 2026-11-24; results in [`test-report.md`](test-report.md) (cases unchanged) |
 | Date | 2026-11-24 |
 | Source | SRS v1.0 §5 user stories US-01 – US-19 (Given/When/Then) and §4 NFR-01 – NFR-19 |
 | Plan | [`test-plan.md`](test-plan.md) — fixtures F-01 – F-09, environments ENV-1 – ENV-4, devices D-1 – D-6 |

@@ -69,6 +69,18 @@ body {
   background: none;
   border: none;
 }
+/* FR-32 / DEF-01: the map runs 26 px under the list sheet (so the sheet's rounded corners show map, not page),
+   which hid the OpenStreetMap credit. Lift the bottom controls clear of the sheet and use the theme colours. */
+.leaflet-bottom.leaflet-bottom {
+  bottom: 26px;
+}
+.leaflet-control-attribution.leaflet-control-attribution {
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  color: var(--text-muted);
+}
+.leaflet-control-attribution.leaflet-control-attribution a {
+  color: var(--accent-text);
+}
 
 @media (prefers-reduced-motion: reduce) {
   *,

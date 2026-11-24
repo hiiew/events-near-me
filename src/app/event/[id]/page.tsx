@@ -26,7 +26,9 @@ export async function generateMetadata({ params }: PageProps<"/event/[id]">): Pr
   } catch {
     return FALLBACK; // malformed % in the URL
   }
-  if (!event || isEnded(event)) return FALLBACK;
+  if (!event) return FALLBACK;
+  await connection(); // isEnded reads the clock; tell Next the result depends on request time (DEF-06)
+  if (isEnded(event)) return FALLBACK;
   const { title, description, imageUrl } = sharePreview(event);
   return {
     title,
@@ -43,7 +45,7 @@ export default function EventPage({ params }: PageProps<"/event/[id]">) {
     <main className="mx-auto min-h-dvh max-w-xl px-5 pt-4 pb-10">
       <Suspense fallback={<p className="pt-24 text-muted">Loading event…</p>}>
         {params.then(({ id }) => (
-          <EventDetail id={decodeURIComponent(id)} /* Next passes the param still encoded; it rejects malformed % itself */ />
+          <EventDetail id={decodeURIComponent(id)} /* Next passes the param still encoded; a malformed % fails inside Next before this runs (DEF-05) */ />
         ))}
       </Suspense>
     </main>
@@ -94,30 +96,26 @@ async function EventDetail({ id }: { id: string }) {
         <Image src={event.imageUrl} alt={event.title} width={800} height={450} unoptimized className="aspect-video w-full rounded-2xl object-cover" />
       ) : null}
 
-      <dl className="flex flex-col gap-3">
-        <div className="grid grid-cols-[28px_minmax(0,1fr)] gap-2.5">
-          <CalendarIcon className="text-accent-text" />
-          <div>
-            <dt className="sr-only">When</dt>
-            <dd className="font-semibold">{when.day}</dd>
-            <dd className="text-sm text-muted">{when.time} (Malaysia time)</dd>
-          </div>
+      {/* Each group is one <div> holding its dt/dd directly, as the HTML rules for <dl> require (DEF-03, NFR-05).
+          The icon sits in column 1 across the group's rows; every dd goes in column 2 (the dt is screen-reader only). */}
+      <dl className="flex flex-col gap-3 [&_dd]:col-start-2 [&>div]:grid [&>div]:grid-cols-[28px_minmax(0,1fr)] [&>div]:gap-x-2.5">
+        <div>
+          <CalendarIcon className="row-span-2 text-accent-text" />
+          <dt className="sr-only">When</dt>
+          <dd className="row-start-1 font-semibold">{when.day}</dd>
+          <dd className="text-sm text-muted">{when.time} (Malaysia time)</dd>
         </div>
-        <div className="grid grid-cols-[28px_minmax(0,1fr)] gap-2.5">
-          <PinIcon className="text-accent-text" />
-          <div>
-            <dt className="sr-only">Where</dt>
-            <dd className="font-semibold">{event.venue.name}</dd>
-            {event.venue.address ? <dd className="text-sm text-muted">{event.venue.address}</dd> : null}
-            <DistanceFromSearch venue={event.venue} />
-          </div>
+        <div>
+          <PinIcon className="row-span-3 text-accent-text" />
+          <dt className="sr-only">Where</dt>
+          <dd className="row-start-1 font-semibold">{event.venue.name}</dd>
+          {event.venue.address ? <dd className="text-sm text-muted">{event.venue.address}</dd> : null}
+          <DistanceFromSearch venue={event.venue} />
         </div>
-        <div className="grid grid-cols-[28px_minmax(0,1fr)] gap-2.5">
+        <div>
           <TagIcon className="text-accent-text" />
-          <div>
-            <dt className="sr-only">Price</dt>
-            <dd className="font-semibold">{formatPrice(event.price)}</dd>
-          </div>
+          <dt className="sr-only">Price</dt>
+          <dd className="row-start-1 font-semibold">{formatPrice(event.price)}</dd>
         </div>
       </dl>
 
