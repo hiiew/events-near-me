@@ -49,7 +49,7 @@ If a skill's advice conflicts with this project, the project wins:
 
 - **Design decisions (ADRs)** live in `docs/03-design/architecture.md` (ADR-01 …), not `docs/adr/`.
 - **Domain terms** live in the SRS glossary, `docs/02-requirements/srs.md` §1.3, not a new `GLOSSARY.md`.
-- **UI style** is defined in `docs/03-design/ui-ux.md` (playful campus style, colour tokens, WCAG AA). It is this project's DESIGN.md for `ui-taste`: keep its style instead of redesigning.
+- **UI style** is defined in `docs/03-design/ui-ux.md` (**Night Map** style since DC-01 — dark-first, lime accent, map + list on one Explore screen; colour tokens in §4; WCAG AA). It is this project's DESIGN.md for `ui-taste`: keep its style instead of redesigning.
 - **Ponytail's "write the least code" mode** applies to code Claude writes or reviews. It must never
   replace teaching: when guiding the owner, still explain the why, and keep the slice guides,
   tests and traceability that this project requires.

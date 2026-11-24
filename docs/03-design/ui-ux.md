@@ -3,8 +3,8 @@
 | Field | Value |
 |---|---|
 | Phase | 3 — Design |
-| Version | 1.1 — style changed to Night Map (DC-01, 2026-11-11) |
-| Date | 2026-11-11 |
+| Version | 1.2 — screen table and Flow B updated for the one-screen Explore (CR-13, 2026-11-24); 1.1 — style changed to Night Map (DC-01, 2026-11-11) |
+| Date | 2026-11-11 (last updated 2026-11-24) |
 | Style | **Night Map**: map-first Explore with a list sheet, dark-first with a light mode, lime accent, line icons (was: playful campus) |
 
 > **What's in a UI/UX design doc?** *UX* (user experience) is how the app flows — what the user does
@@ -18,14 +18,18 @@
 | ID | Screen | Purpose | Requirements |
 |---|---|---|---|
 | S-1 | Welcome / location prompt | Explain why location is needed, then ask | FR-01, US-10 |
-| S-2 | Explore — List | Results list + filter bar | FR-04–06, FR-10–15 |
-| S-3 | Explore — Map | Markers, pin dropping, summary card | FR-02, FR-03, FR-07, FR-09 |
-| S-4 | Event detail | All details + actions | FR-17–20, FR-22 |
+| S-2 | Explore — list sheet | Results list, search box, quick chips, offline notice, empty state | FR-04–06, FR-08, FR-10–15, FR-34, FR-35, FR-36, FR-40 |
+| S-3 | Explore — map | Pins, pin dropping, "Search this map area"; same screen as S-2 (DC-01) | FR-02, FR-03, FR-07, FR-08, FR-09 |
+| S-4 | Event detail | All details + actions (save, share, calendar, directions, public transport) | FR-17–20, FR-22, FR-23, FR-37, FR-38, FR-39 |
 | S-5 | Saved | Bookmarked events | FR-20, FR-21 |
-| S-6 | About & Privacy | Privacy notice, attribution, clear data | FR-31, FR-32, NFR-11 |
+| S-6 | About & Privacy | Privacy notice, attribution, clear data | FR-31, FR-32, FR-40, NFR-11 |
 | S-7 | Filter sheet | Distance, date, category, price, sort | FR-10–14 |
+| — | Whole app | Installable (manifest, icons) and opens offline | FR-33, FR-40 |
 
-Bottom tab bar (thumb-friendly): **🔍 Explore · 🔖 Saved · ℹ️ About**. List/Map is a toggle inside Explore.
+**S-2 and S-3 are one screen** since DC-01 (Night Map): the map sits on top and the list sheet below
+it, so there is no List/Map toggle. They keep separate IDs so tests can say which part they check.
+
+Bottom tab bar (thumb-friendly): **Explore · Saved · About** (line icons, no emoji).
 
 ## 2. User flows
 
@@ -46,18 +50,23 @@ flowchart TD
     H --> I
 ```
 
-### Flow B — Find, filter, act (FR-10–22)
+### Flow B — Find, filter, act (FR-10–23, FR-34–39)
+
+Updated for DC-01: the map (S-3) and list (S-2) are one Explore screen.
 
 ```mermaid
 flowchart LR
-    L[S-2 List] -->|Filters button| F[S-7 Filter sheet]
-    F -->|Apply| L
-    L -->|Toggle| M[S-3 Map]
-    M -->|Tap marker| C[Summary card]
-    C -->|View details| D[S-4 Detail]
-    L -->|Tap card| D
+    subgraph E[Explore screen]
+        M[S-3 Map] -->|Tap pin| L[S-2 List: row highlighted]
+        L -->|Type / tap chip| L
+    end
+    L -->|Filters button| F[S-7 Filter sheet]
+    F -->|Show N events| L
+    M -->|Move map, Search this map area| L
+    L -->|Tap row| D[S-4 Detail]
     D -->|View official page| X[(Source site, new tab)]
-    D -->|Directions| G[(Google Maps / Waze)]
+    D -->|Directions / By public transport| G[(Google Maps / Waze)]
+    D -->|Add to calendar| CAL[(.ics file with reminders)]
     D -->|Save| S[S-5 Saved]
     D -->|Share| SH[(Share sheet / copy link)]
 ```
@@ -269,7 +278,8 @@ light mode uses the same layout with the light tokens.
 ### Map
 - Leaflet + OpenStreetMap tiles (ADR-03). In dark theme the tiles are dimmed with a CSS filter
   so the screen stays dark; attribution "© OpenStreetMap contributors" always visible (FR-32).
-- Pins are labelled chips (event short name), the search point is a lime dot with a halo.
+- Pins are dots; the selected pin shows the event's short name (labels on every pin overlapped
+  where events cluster). The search point is a lime dot with a halo.
 
 ## 5. Content and formatting rules (NFR-18)
 
@@ -277,7 +287,7 @@ light mode uses the same layout with the light tokens.
 |---|---|---|
 | Date | `EEE d MMM` (+ year if not this year) | Sat 5 Dec |
 | Time | 12-hour, Malaysia time | 8:00 PM |
-| Price | `RM 0.00`; free → `FREE` badge; null → "Price not listed" | RM 35.00 |
+| Price | `RM 0.00`; free → `FREE` badge (lime fill; NFR-18's "Free"); null → "Price not listed" | RM 35.00 |
 | Price range | `RM min – RM max` | RM 20.00 – RM 80.00 |
 | Non-MYR | Original currency, no conversion | USD 15.00 |
 | Distance | 1 decimal km | 2.4 km |

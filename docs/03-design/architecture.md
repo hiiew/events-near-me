@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Phase | 3 — Design |
-| Version | 1.0 (draft for approval) |
+| Version | 1.0 — approved 2026-11-11 |
 | Date | 2026-11-11 |
 | Product name | **Happening** (was "Events Near Me", see change log CR-01) |
 
@@ -33,14 +33,14 @@ flowchart TB
     user(["👤 Visitor<br/>student on a phone"])
     maint(["🛠 Maintainer<br/>developer"])
     app["🎉 Happening<br/>(web app on Vercel)"]
-    eb["Eventbrite API<br/>(events by organiser)"]
+    eb["Eventbrite API<br/>(events by organiser)<br/>deferred, CR-03"]
     phq["PredictHQ API<br/>(optional, if free)"]
     osm["OpenStreetMap<br/>tile servers"]
     gmaps["Google Maps / Waze<br/>(directions links)"]
     gh["GitHub repo<br/>(code + curated-events.json)"]
 
     user -->|"uses in browser (HTTPS)"| app
-    app -->|"server-side, secret token"| eb
+    app -.->|"server-side, secret token (deferred, CR-03)"| eb
     app -.->|"server-side, optional"| phq
     user -->|"map tiles"| osm
     user -->|"opens link"| gmaps
@@ -66,7 +66,7 @@ flowchart LR
         CACHE["D-08 Source cache<br/>15 min"]
         subgraph Adapters["D-09 Source adapters"]
             AC["curated adapter"]
-            AE["eventbrite adapter"]
+            AE["eventbrite adapter<br/>(not built, CR-03)"]
             AP["predicthq adapter (optional)"]
         end
         DATA[("D-10 curated-events.json")]
@@ -102,13 +102,16 @@ flowchart LR
 
 ## 4. Main sequence — "show events near me"
 
+> Since CR-03 only the curated adapter is enabled. The Eventbrite lines show how a live source
+> joins the same flow when one is added (NFR-14); today the curated adapter answers alone.
+
 ```mermaid
 sequenceDiagram
     actor U as User
     participant B as Browser (UI + D-02/D-03)
     participant S as /api/events/search (D-06/D-07)
     participant C as Curated adapter
-    participant E as Eventbrite adapter
+    participant E as Eventbrite adapter (deferred, CR-03)
 
     U->>B: Tap "Use my location"
     B->>U: Browser permission prompt
@@ -135,7 +138,7 @@ A new request is made only when the **search point changes** (new location or pi
 | Source | Access | Auth | Used for | Notes |
 |---|---|---|---|---|
 | Curated JSON | Read file at build/run | — | Baseline KL events (Must) | Owner adds events weekly; each must link to official page |
-| Eventbrite | `GET /v3/organizers/{id}/events/?status=live&expand=venue,ticket_availability,category` — **confirmed working 2026-11-11** (no `page_size` param) | Private token in `Authorization: Bearer` header (server env var) | Live events (Should) | Organiser list in `EVENTBRITE_ORGANIZER_IDS`. Respect rate limits **[verify]** |
+| Eventbrite | `GET /v3/organizers/{id}/events/?status=live&expand=venue,ticket_availability,category` — **confirmed working 2026-11-11** (no `page_size` param) | Private token in `Authorization: Bearer` header (server env var) | Live events (Should) — **deferred, CR-03** | Organiser list in `EVENTBRITE_ORGANIZER_IDS`. Respect rate limits **[verify]** |
 | PredictHQ | REST API with radius search **[verify]** | Token (server env var) | Live events (Could) | Built **only** if a free plan is confirmed; otherwise backlog |
 | OpenStreetMap tiles | `https://tile.openstreetmap.org/{z}/{x}/{y}.png` from the browser | — | Map | Attribution required; light use only **[verify tile policy]** |
 | Google Maps | URL `https://www.google.com/maps/dir/?api=1&destination=LAT,LON` | — | Directions (default) | No API key needed |
@@ -165,26 +168,35 @@ acceptable: the cache saves calls but correctness never depends on it.
 | Event has no coordinates | Shown in list with label, not on map | FR-09 |
 | Curated entry invalid | Skipped + warning in server log (no user data in log) | FR-25 |
 
-## 8. Project structure (as built, Phase 4)
+## 8. Project structure (as built, Phase 4 — updated 2026-11-24)
 
 ```
 events-near-me/
 ├── data/curated-events.json            # D-10
+├── public/
+│   ├── sw.js                           # D-12 offline shell (FR-40)
+│   └── icons/                          # D-12 app icons (FR-33)
 ├── src/
 │   ├── app/
 │   │   ├── page.tsx                    # Welcome + Explore (map + list sheet) (D-01)
-│   │   ├── event/[id]/page.tsx         # Detail (server lookup per request)
+│   │   ├── event/[id]/page.tsx         # Detail + share preview metadata (FR-37)
 │   │   ├── saved/page.tsx              # Saved (D-04)
 │   │   ├── about/page.tsx              # Privacy & attribution
+│   │   ├── manifest.ts  apple-icon.png # D-12 installable app (FR-33)
+│   │   ├── layout.tsx                  # fonts, theme colours, service-worker registration
 │   │   └── api/events/search/route.ts  # D-06
 │   ├── components/                     # MapView (D-05), FilterSheet, EventRow, TabBar,
-│   │                                   # EventActions (save/share), DistanceFromSearch, icons
+│   │                                   # EventActions (save/share/calendar), QuickChip,
+│   │                                   # SearchBox, ClearSavedData, DistanceFromSearch,
+│   │                                   # ServiceWorkerRegister, icons
 │   └── lib/
 │       ├── event-schema.ts             # Event type, Zod schemas, endTime/isEnded
 │       ├── geo.ts  location.ts         # D-02
-│       ├── filters.ts                  # D-03
+│       ├── filters.ts                  # D-03 (incl. quick chips, search text)
 │       ├── bookmarks.ts  use-bookmarks.ts   # D-04
-│       ├── links.ts                    # D-11
+│       ├── offline-cache.ts            # D-04 last search for offline mode (FR-40)
+│       ├── links.ts                    # D-11 directions, transit, share preview
+│       ├── ics.ts                      # D-11 calendar file + reminders (FR-23, FR-39)
 │       ├── format.ts  categories.ts  search-point.ts
 │       └── sources/                    # types, aggregator (D-07), registry, curated (D-09)
 ├── next.config.ts                      # security headers (§7 of security-privacy.md)
@@ -205,7 +217,7 @@ Tests sit next to the code (`*.test.ts`). Not built: `eventbrite.ts` (CR-03), so
 | Cache time | 900 s | env `SOURCE_CACHE_SECONDS` |
 | Eventbrite token | secret | env `EVENTBRITE_TOKEN` |
 | Eventbrite organisers | comma-separated IDs | env `EVENTBRITE_ORGANIZER_IDS` |
-| Enabled sources | e.g. `curated,eventbrite` | env `ENABLED_SOURCES` |
+| Enabled sources | `curated` today; `curated,eventbrite` once FR-26 is built | env `ENABLED_SOURCES` |
 
 ## Approval
 
