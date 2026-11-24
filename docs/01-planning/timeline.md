@@ -3,7 +3,8 @@
 | Field | Value |
 |---|---|
 | Phase | 1 — Planning |
-| Version | 1.0 (draft for approval) |
+| Product name | Written as "Events Near Me"; the product is now **Happening** (CR-01). Title kept as approved. |
+| Version | 1.0 — approved 2026-11-11 |
 | Date | 2026-11-11 |
 | Duration | 8 weeks, ~10 h/week (~80 h) — `ASSUMPTION` A-2 |
 
@@ -23,12 +24,15 @@
 | M4c | Implementation complete | ✅ Wed 2026-11-11 (early; FR-26 deferred, CR-03) | All Must-have requirements built; dev log up to date |
 | M5 | Testing complete | Tue 2026-12-29 | Test cases executed; test report; all Must-haves have passing tests |
 | M6 | Deployed + docs | Tue 2027-01-05 | Live on Vercel (**early deploy to `happening-kl.vercel.app` decided 2026-11-11**); deployment guide, user manual, maintenance plan; final sign-off |
-| — | Real events | Sun 2026-12-06 | ≥20 real KL events replace the SAMPLE data (owner sends ~5/week) |
+| — | Real events | ✅ Fri 2026-11-13 (early; target was Sun 2026-12-06) | ≥20 real KL events replace the SAMPLE data (owner sends ~5/week) |
 | — | UAT sessions | 23–29 Dec 2026 | Owner + 3 anonymous classmates (Tester A–C), ~20 min each |
 
 *Week 4–6 fall over the holiday period — adjust if you plan time off (that's what the buffer is for).*
 
-## 2. Weekly plan
+## 2. Weekly plan (original baseline)
+
+> Kept as approved on 2026-11-11. Phases 1–4 finished early (see the milestones table); the
+> remaining dates for M5 and M6 still apply.
 
 | Week | Dates | Phase | Main activities | Hours |
 |---|---|---|---|---|

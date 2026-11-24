@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Phase | 3 — Design |
-| Version | 1.0 (draft for approval) |
+| Version | 1.0 — approved 2026-11-11 |
 | Date | 2026-11-11 |
 
 > **What is a threat model?** A structured way of asking "what could go wrong, security-wise?"
@@ -48,7 +48,7 @@ flowchart LR
 | # | Threat (STRIDE) | Where | Mitigation | Req |
 |---|---|---|---|---|
 | T-01 | **I**nformation disclosure — precise location leaked | Browser → server | Round to 3 dp (~100 m) on device; server re-rounds; POST body not URL (ADR-07); no logging of body; `Cache-Control: no-store` | NFR-09, NFR-10 |
-| T-02 | **I**nformation disclosure — API token leaked | Repo, browser bundle | Tokens only in server env vars; never prefixed `NEXT_PUBLIC_`; `.env` git-ignored; `.env.example` has placeholders; GitHub secret scanning + push protection on | NFR-06, R-04 |
+| T-02 | **I**nformation disclosure — API token leaked | Repo, browser bundle | Tokens only in server env vars; never prefixed `NEXT_PUBLIC_`; `.env` git-ignored; `.env.example` has placeholders; GitHub secret scanning + push protection **to be enabled in Phase 6** | NFR-06, R-04 |
 | T-03 | **T**ampering — malicious script in event description (XSS) | Event data from APIs | React escapes text by default; descriptions stored as **plain text** (HTML stripped); never use `dangerouslySetInnerHTML`; Content-Security-Policy header | Security |
 | T-04 | **T**ampering — malicious link (`javascript:` URL) in event `url`/`imageUrl` | Event data | Zod requires `https://` URLs; external links use `rel="noopener noreferrer"` | FR-18 |
 | T-05 | **T**ampering — invalid/huge input to API | `/api/events/search` | Zod schema, ranges, no extra fields, 1 KB body limit → 400/413 | NFR-08 |
@@ -110,23 +110,24 @@ sequenceDiagram
 | Detection | Enable GitHub secret scanning & push protection **[verify availability for private repos on your plan]** |
 | If leaked | Revoke in provider dashboard → create new token → update Vercel env → redeploy → note in maintenance log |
 
-### `.env.example` (planned)
+### `.env.example` (as committed)
 ```bash
-# Comma-separated list of sources to use
-ENABLED_SOURCES=curated,eventbrite
-# Eventbrite private token (server only — never commit the real value)
+# Comma-separated list of sources to use (Slice 1: curated only)
+ENABLED_SOURCES=curated
+# Eventbrite private token (server only — never commit the real value). Used from Slice 3.
 EVENTBRITE_TOKEN=replace-me
-# Comma-separated Eventbrite organiser IDs to pull events from
+# Comma-separated Eventbrite organiser IDs to pull events from. Used from Slice 3.
 EVENTBRITE_ORGANIZER_IDS=
-# Live-source cache time in seconds
+# Live-source cache time in seconds. Used from Slice 3.
 SOURCE_CACHE_SECONDS=900
 ```
+The Eventbrite and cache settings are unused until FR-26 is built (CR-03).
 
 ## 7. Security headers (set in `next.config`)
 
 | Header | Value (summary) |
 |---|---|
-| `Content-Security-Policy` | default `'self'`; images from `self`, OSM tiles, event image hosts; no inline scripts except Next.js needs **[tune in Phase 4]** |
+| `Content-Security-Policy` | default `'self'`; images from `self`, OSM tiles, event image hosts; no inline scripts except what Next.js needs — **set in `next.config.ts` (production only), Phase 4 audit** |
 | `Referrer-Policy` | `strict-origin-when-cross-origin` |
 | `X-Content-Type-Options` | `nosniff` |
 | `Permissions-Policy` | `geolocation=(self)`, camera/microphone disabled |

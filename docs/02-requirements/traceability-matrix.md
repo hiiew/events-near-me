@@ -4,6 +4,7 @@
 |---|---|
 | Phase | 2 — Requirements (living document — filled in during Phases 3–5) |
 | Version | 1.1 |
+| Product name | Written as "Events Near Me"; the product is now **Happening** (CR-01). Title kept as approved. |
 | Date | 2026-11-11 (last updated 2026-11-24: user stories US-12–US-18 linked, screen IDs corrected — CR-13) |
 
 > **What is an RTM?** A table that links every requirement forward to the design element that

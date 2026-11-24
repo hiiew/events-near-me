@@ -3,7 +3,8 @@
 | Field | Value |
 |---|---|
 | Phase | 2 — Requirements |
-| Version | 1.0 (draft for approval) |
+| Product name | Written as "Events Near Me"; the product is now **Happening** (CR-01). Title kept as approved. |
+| Version | 1.0 — approved 2026-11-11 |
 | Date | 2026-11-11 |
 | Standard | Structure based on IEEE 830 / ISO/IEC/IEEE 29148 |
 

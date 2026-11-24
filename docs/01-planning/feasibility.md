@@ -3,7 +3,8 @@
 | Field | Value |
 |---|---|
 | Phase | 1 — Planning |
-| Version | 1.0 (draft for approval) |
+| Product name | Written as "Events Near Me"; the product is now **Happening** (CR-01). Title kept as approved. |
+| Version | 1.0 — approved 2026-11-11 |
 | Date | 2026-11-11 |
 
 > **What is a feasibility study?** Before spending weeks building something, you check whether it
@@ -60,7 +61,8 @@ app. Directions can open Google Maps / Waze via a plain link (no API needed).
 
 **Storage**
 
-For the MVP we likely need **no database**: events come live from APIs, and bookmarks can be stored
+For the MVP we likely need **no database**: events come from a curated file and, later, live APIs
+(*updated after the spike*), and bookmarks can be stored
 on the user's own device (`localStorage`). This is simpler *and* better for privacy (nothing personal
 leaves the phone). A short server-side cache of API responses (e.g. 10–30 min) reduces API calls.
 Final choice in Phase 3.
@@ -72,11 +74,11 @@ This is the project's biggest technical risk (see R-01). International event API
 
 | Source | What we believe | Concern | Verified? |
 |---|---|---|---|
-| Ticketmaster Discovery API | Free developer key; location/radius search; daily and per-second rate limits **[verify]** | Ticketmaster's presence in Malaysia may be small → few KL events | ☐ |
-| Eventbrite API | Free key | Eventbrite **removed its public event-search endpoint** some years ago; the API mainly returns events for organisations/venues you specify **[verify]** — may not support "events near me" | ☐ |
-| PredictHQ | Strong global coverage incl. radius search | Commercial product; free trial / limited plan only **[verify]** — may conflict with C-1 long term | ☐ |
-| Meetup API | Good for tech/community meetups in KL | API access may require a paid Meetup Pro subscription **[verify]** | ☐ |
-| SerpApi (Google Events results) | Broad coverage incl. local KL listings | Paid service with a small free monthly quota **[verify]**; relies on a third party's terms | ☐ |
+| Ticketmaster Discovery API | Free developer key; location/radius search; daily and per-second rate limits **[verify]** | Ticketmaster's presence in Malaysia may be small → few KL events | ☑ Spike 2026-11-11: **0 KL events** → not used (W-08) |
+| Eventbrite API | Free key | Eventbrite **removed its public event-search endpoint** some years ago; the API mainly returns events for organisations/venues you specify **[verify]** — may not support "events near me" | ☑ Spike 2026-11-11: no location search; events by organiser works → FR-26, deferred (CR-03) |
+| PredictHQ | Strong global coverage incl. radius search | Commercial product; free trial / limited plan only **[verify]** — may conflict with C-1 long term | ☐ Not checked — FR-27 (Could) stays conditional |
+| Meetup API | Good for tech/community meetups in KL | API access may require a paid Meetup Pro subscription **[verify]** | ☐ Not checked — not used |
+| SerpApi (Google Events results) | Broad coverage incl. local KL listings | Paid service with a small free monthly quota **[verify]**; relies on a third party's terms | ☑ Rejected — scraping-based (W-07) |
 
 **Recommendation — run a data-source "spike" before Phase 2 is approved.** A *spike* is a short,
 time-boxed experiment (≈2 hours) to answer one question. Here: *"Which free API returns enough real
@@ -100,7 +102,7 @@ coverage must be confirmed by the spike.**
 | Code hosting & version control | GitHub (private repo) | RM0 |
 | App hosting + server functions | Vercel Hobby | RM0 **[verify limits]** |
 | Maps | Leaflet + OpenStreetMap | RM0 |
-| Event data | Ticketmaster Discovery (+ others from spike) | RM0 within free quota **[verify]** |
+| Event data | Curated JSON file in the repo (Eventbrite free key if FR-26 is built) — *updated after the spike* | RM0 |
 | Domain | Free `*.vercel.app` subdomain | RM0 |
 | CI | GitHub Actions (free minutes for private repos) | RM0 **[verify limits]** |
 | Development tools | VS Code, Node.js, Git | RM0 |

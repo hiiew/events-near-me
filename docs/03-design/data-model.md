@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Phase | 3 — Design |
-| Version | 1.0 (draft for approval) |
+| Version | 1.0 — approved 2026-11-11 |
 | Date | 2026-11-11 |
 
 > **What is a data model?** It describes the "things" the system deals with, their fields, and how
@@ -64,7 +64,7 @@ them only to show the structure.*
 ## 2. `Event` — the common format (D-09 output)
 
 ```ts
-// src/lib/event-schema.ts (planned)
+// src/lib/event-schema.ts (built in Phase 4; Zod schema is the source of truth)
 type CategoryId =
   | "music" | "food" | "arts" | "sports"
   | "learning" | "tech" | "nightlife" | "other";
@@ -120,13 +120,14 @@ interface EventWithDistance extends Event { distanceKm?: number }
 | `nightlife` | Nightlife | party, club, bar, night |
 | `other` | Other | anything unmapped |
 
-Mapping lives in `src/lib/sources/categories.ts`. Each adapter maps the source's own category
-field first, then falls back to keyword matching on the title, then `other`.
+Labels live in `src/lib/categories.ts`. Curated entries set `category` directly. A live source's
+adapter (none built yet, CR-03) would map the source's own category field first, then fall back to
+keyword matching on the title, then `other`.
 
 ## 4. Curated dataset format (D-10)
 
 File: `data/curated-events.json` — an array of events in the `Event` shape **minus** `sourceId`
-(it's always `curated`), with `id` written as `kl-0001`, `kl-0002`, …
+(it's always `curated`), with `id` written as `kl-0001`, `kl-0002`, … for the Klang Valley and `sb-0001`, … for Sabah (CR-11)
 
 Extra rules for curated entries (validated with Zod, FR-25):
 - `url` is **required** and must point to the organiser's / venue's official page.

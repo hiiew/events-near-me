@@ -3,8 +3,9 @@
 | Field | Value |
 |---|---|
 | Project | Events Near Me |
+| Product name | Written as "Events Near Me"; the product is now **Happening** (CR-01). Title kept as approved. |
 | Phase | 1 — Planning |
-| Version | 1.0 (draft for approval) |
+| Version | 1.0 — approved 2026-11-11 |
 | Date | 2026-11-11 |
 | Owner / developer | Project student (sole developer) |
 | Mentor / reviewer | AI assistant (senior engineer role) |

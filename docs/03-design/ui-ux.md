@@ -278,7 +278,8 @@ light mode uses the same layout with the light tokens.
 ### Map
 - Leaflet + OpenStreetMap tiles (ADR-03). In dark theme the tiles are dimmed with a CSS filter
   so the screen stays dark; attribution "© OpenStreetMap contributors" always visible (FR-32).
-- Pins are labelled chips (event short name), the search point is a lime dot with a halo.
+- Pins are dots; the selected pin shows the event's short name (labels on every pin overlapped
+  where events cluster). The search point is a lime dot with a halo.
 
 ## 5. Content and formatting rules (NFR-18)
 
@@ -286,7 +287,7 @@ light mode uses the same layout with the light tokens.
 |---|---|---|
 | Date | `EEE d MMM` (+ year if not this year) | Sat 5 Dec |
 | Time | 12-hour, Malaysia time | 8:00 PM |
-| Price | `RM 0.00`; free → `FREE` badge; null → "Price not listed" | RM 35.00 |
+| Price | `RM 0.00`; free → `FREE` badge (lime fill; NFR-18's "Free"); null → "Price not listed" | RM 35.00 |
 | Price range | `RM min – RM max` | RM 20.00 – RM 80.00 |
 | Non-MYR | Original currency, no conversion | USD 15.00 |
 | Distance | 1 decimal km | 2.4 km |

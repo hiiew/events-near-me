@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Phase | 3 — Design |
-| Version | 1.0 (draft for approval) |
+| Version | 1.0 — approved 2026-11-11 |
 | Date | 2026-11-11 |
 | Product name | **Happening** (was "Events Near Me", see change log CR-01) |
 
@@ -168,26 +168,35 @@ acceptable: the cache saves calls but correctness never depends on it.
 | Event has no coordinates | Shown in list with label, not on map | FR-09 |
 | Curated entry invalid | Skipped + warning in server log (no user data in log) | FR-25 |
 
-## 8. Project structure (as built, Phase 4)
+## 8. Project structure (as built, Phase 4 — updated 2026-11-24)
 
 ```
 events-near-me/
 ├── data/curated-events.json            # D-10
+├── public/
+│   ├── sw.js                           # D-12 offline shell (FR-40)
+│   └── icons/                          # D-12 app icons (FR-33)
 ├── src/
 │   ├── app/
 │   │   ├── page.tsx                    # Welcome + Explore (map + list sheet) (D-01)
-│   │   ├── event/[id]/page.tsx         # Detail (server lookup per request)
+│   │   ├── event/[id]/page.tsx         # Detail + share preview metadata (FR-37)
 │   │   ├── saved/page.tsx              # Saved (D-04)
 │   │   ├── about/page.tsx              # Privacy & attribution
+│   │   ├── manifest.ts  apple-icon.png # D-12 installable app (FR-33)
+│   │   ├── layout.tsx                  # fonts, theme colours, service-worker registration
 │   │   └── api/events/search/route.ts  # D-06
 │   ├── components/                     # MapView (D-05), FilterSheet, EventRow, TabBar,
-│   │                                   # EventActions (save/share), DistanceFromSearch, icons
+│   │                                   # EventActions (save/share/calendar), QuickChip,
+│   │                                   # SearchBox, ClearSavedData, DistanceFromSearch,
+│   │                                   # ServiceWorkerRegister, icons
 │   └── lib/
 │       ├── event-schema.ts             # Event type, Zod schemas, endTime/isEnded
 │       ├── geo.ts  location.ts         # D-02
-│       ├── filters.ts                  # D-03
+│       ├── filters.ts                  # D-03 (incl. quick chips, search text)
 │       ├── bookmarks.ts  use-bookmarks.ts   # D-04
-│       ├── links.ts                    # D-11
+│       ├── offline-cache.ts            # D-04 last search for offline mode (FR-40)
+│       ├── links.ts                    # D-11 directions, transit, share preview
+│       ├── ics.ts                      # D-11 calendar file + reminders (FR-23, FR-39)
 │       ├── format.ts  categories.ts  search-point.ts
 │       └── sources/                    # types, aggregator (D-07), registry, curated (D-09)
 ├── next.config.ts                      # security headers (§7 of security-privacy.md)
