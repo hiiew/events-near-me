@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Phase | 5 — Testing |
-| Version | 0.1 — first automated run 2026-11-24; results in [`test-report.md`](test-report.md) (cases unchanged) |
+| Version | 0.2 — 2026-11-24: TC-24 step 2 known limitation (DEF-05 accepted); TC-57/TC-61 steps made exact after the first Lighthouse run. Results in [`test-report.md`](test-report.md) |
 | Date | 2026-11-24 |
 | Source | SRS v1.0 §5 user stories US-01 – US-19 (Given/When/Then) and §4 NFR-01 – NFR-19 |
 | Plan | [`test-plan.md`](test-plan.md) — fixtures F-01 – F-09, environments ENV-1 – ENV-4, devices D-1 – D-6 |
@@ -225,6 +225,8 @@
   error page (fallback title "Event — Happening" or a 400/404 page, not a 500). 3: ended only after
   the end time. (The "This event has ended" page is checked by e2e when the curated file has an
   ended entry on the run date.)
+- **Known limitation:** step 2 gets Next.js 16's own plain-text HTTP 500 before any app code runs (DEF-05,
+  accepted by the owner 2026-11-24). Its e2e test stays `test.fail()` so a Next.js fix shows up; steps 1 and 3 decide the case.
 
 #### TC-25 — Data-source and OpenStreetMap attribution
 - **Req:** FR-32, NFR-17 · **Type:** e2e · **Playwright:** Yes (`e2e/detail.spec.ts`)
@@ -486,8 +488,8 @@
 #### TC-57 — Lighthouse Performance ≥ 80 (mobile, home page)
 - **Req:** NFR-02 · **Type:** audit · **Playwright:** No (Lighthouse CLI 13.6 via `npx`)
 - **Pre:** ENV-1, then ENV-2.
-- **Steps:** `npx lighthouse@13.6.0 <url>/ --form-factor=mobile --only-categories=performance --output=json`, 3 runs.
-- **Expected:** Median Performance score ≥ 80; JSON saved in `evidence/`.
+- **Steps:** `CHROME_PATH=<Playwright Chromium> npx lighthouse@13.6.0 <url>/ --form-factor=mobile --only-categories=performance,accessibility,best-practices,seo --chrome-flags="--headless=new --no-sandbox" --output=json`, 3 runs, default (simulated) throttling. The welcome screen loads no map tiles, so a blocked network does not change this score.
+- **Expected:** Median Performance score ≥ 80; JSON (screenshots stripped) or a summary saved in `evidence/lighthouse/`.
 
 #### TC-58 — Usable from 360 px to desktop, no horizontal scrolling
 - **Req:** NFR-03 · **Type:** e2e · **Playwright:** Yes (`e2e/responsive.spec.ts`)
@@ -510,9 +512,9 @@
 
 #### TC-61 — Lighthouse Accessibility ≥ 90
 - **Req:** NFR-05 · **Type:** audit · **Playwright:** No (Lighthouse CLI)
-- **Pre:** ENV-1 then ENV-2; pages `/`, `/about`, `/saved`, `/event/<E.id>`.
-- **Steps:** `--only-categories=accessibility`, mobile.
-- **Expected:** Each page ≥ 90.
+- **Pre:** ENV-1 then ENV-2; pages `/`, `/about`, `/saved`, `/event/<E.id>`, and Explore with results (S-2).
+- **Steps:** `--only-categories=accessibility`, mobile, light and dark (`--chrome-flags="--headless=new --no-sandbox --force-dark-mode --blink-settings=preferredColorScheme=0"`). Explore needs a tap, so use the user flow `evidence/lighthouse/explore-flow.mjs` (navigate `/` → tap Klang Valley → snapshot).
+- **Expected:** Each page ≥ 90. Map-pin `target-size` findings are covered by WCAG 2.5.8's equivalent exception (each pin is also a list row) and are not defects.
 
 #### TC-62 — Manual accessibility checklist (ui-ux.md §6)
 - **Req:** NFR-05 · **Type:** manual · **Playwright:** Partly (target sizes, keyboard reachability and reduced motion in `e2e/a11y.spec.ts`)

@@ -1,0 +1,970 @@
+{
+ "tool": "lighthouse@13.6.0 via npx",
+ "chromium": "Playwright Chromium 1243 (/opt/pw-browsers), --headless=new --no-sandbox",
+ "env": "ENV-1: next build + next start on http://localhost:3456, container with outside hosts blocked",
+ "date": "2026-11-24",
+ "note": "dark-* runs add --force-dark-mode --blink-settings=preferredColorScheme=0 (prefers-color-scheme: dark); all other runs are light",
+ "runs": [
+  {
+   "run": "about-1",
+   "url": "http://localhost:3456/about",
+   "gatherMode": "navigation",
+   "formFactor": "mobile",
+   "throttling": "simulate",
+   "scores": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 96,
+    "seo": 100
+   },
+   "metrics": {
+    "FCP": 760,
+    "LCP": 760,
+    "TBT": 70,
+    "CLS": 0,
+    "SI": 760
+   },
+   "failed": [
+    {
+     "category": "performance",
+     "audit": "total-blocking-time",
+     "score": 0.99,
+     "displayValue": "70 ms",
+     "items": 0,
+     "first": "null"
+    },
+    {
+     "category": "best-practices",
+     "audit": "inspector-issues",
+     "score": 0,
+     "items": 1,
+     "first": "{\"issueType\":\"Content security policy\",\"subItems\":{\"type\":\"subitems\",\"items\":[]}}"
+    }
+   ]
+  },
+  {
+   "run": "about-2",
+   "url": "http://localhost:3456/about",
+   "gatherMode": "navigation",
+   "formFactor": "mobile",
+   "throttling": "simulate",
+   "scores": {
+    "performance": 99,
+    "accessibility": 100,
+    "best-practices": 96,
+    "seo": 100
+   },
+   "metrics": {
+    "FCP": 762,
+    "LCP": 762,
+    "TBT": 139,
+    "CLS": 0,
+    "SI": 762
+   },
+   "failed": [
+    {
+     "category": "performance",
+     "audit": "total-blocking-time",
+     "score": 0.95,
+     "displayValue": "140 ms",
+     "items": 0,
+     "first": "null"
+    },
+    {
+     "category": "best-practices",
+     "audit": "inspector-issues",
+     "score": 0,
+     "items": 1,
+     "first": "{\"issueType\":\"Content security policy\",\"subItems\":{\"type\":\"subitems\",\"items\":[]}}"
+    }
+   ]
+  },
+  {
+   "run": "about-3",
+   "url": "http://localhost:3456/about",
+   "gatherMode": "navigation",
+   "formFactor": "mobile",
+   "throttling": "simulate",
+   "scores": {
+    "performance": 99,
+    "accessibility": 100,
+    "best-practices": 96,
+    "seo": 100
+   },
+   "metrics": {
+    "FCP": 759,
+    "LCP": 759,
+    "TBT": 134,
+    "CLS": 0,
+    "SI": 759
+   },
+   "failed": [
+    {
+     "category": "performance",
+     "audit": "total-blocking-time",
+     "score": 0.96,
+     "displayValue": "130 ms",
+     "items": 0,
+     "first": "null"
+    },
+    {
+     "category": "best-practices",
+     "audit": "inspector-issues",
+     "score": 0,
+     "items": 1,
+     "first": "{\"issueType\":\"Content security policy\",\"subItems\":{\"type\":\"subitems\",\"items\":[]}}"
+    }
+   ]
+  },
+  {
+   "run": "dark-about",
+   "url": "http://localhost:3456/about",
+   "gatherMode": "navigation",
+   "formFactor": "mobile",
+   "throttling": "simulate",
+   "scores": {
+    "accessibility": 100
+   },
+   "metrics": {},
+   "failed": []
+  },
+  {
+   "run": "dark-event",
+   "url": "http://localhost:3456/event/curated:kl-0014",
+   "gatherMode": "navigation",
+   "formFactor": "mobile",
+   "throttling": "simulate",
+   "scores": {
+    "accessibility": 100
+   },
+   "metrics": {},
+   "failed": []
+  },
+  {
+   "run": "dark-home",
+   "url": "http://localhost:3456/",
+   "gatherMode": "navigation",
+   "formFactor": "mobile",
+   "throttling": "simulate",
+   "scores": {
+    "accessibility": 100
+   },
+   "metrics": {},
+   "failed": []
+  },
+  {
+   "run": "dark-saved",
+   "url": "http://localhost:3456/saved",
+   "gatherMode": "navigation",
+   "formFactor": "mobile",
+   "throttling": "simulate",
+   "scores": {
+    "accessibility": 100
+   },
+   "metrics": {},
+   "failed": []
+  },
+  {
+   "run": "event-1",
+   "url": "http://localhost:3456/event/curated:kl-0014",
+   "gatherMode": "navigation",
+   "formFactor": "mobile",
+   "throttling": "simulate",
+   "scores": {
+    "performance": 93,
+    "accessibility": 100,
+    "best-practices": 96,
+    "seo": 90
+   },
+   "metrics": {
+    "FCP": 759,
+    "LCP": 2757,
+    "TBT": 189,
+    "CLS": 0,
+    "SI": 759
+   },
+   "failed": [
+    {
+     "category": "performance",
+     "audit": "largest-contentful-paint",
+     "score": 0.84,
+     "displayValue": "2.8 s",
+     "items": 0,
+     "first": "null"
+    },
+    {
+     "category": "performance",
+     "audit": "total-blocking-time",
+     "score": 0.91,
+     "displayValue": "190 ms",
+     "items": 0,
+     "first": "null"
+    },
+    {
+     "category": "best-practices",
+     "audit": "inspector-issues",
+     "score": 0,
+     "items": 1,
+     "first": "{\"issueType\":\"Content security policy\",\"subItems\":{\"type\":\"subitems\",\"items\":[]}}"
+    },
+    {
+     "category": "seo",
+     "audit": "meta-description",
+     "score": 0,
+     "items": 0,
+     "first": "null"
+    }
+   ]
+  },
+  {
+   "run": "event-2",
+   "url": "http://localhost:3456/event/curated:kl-0014",
+   "gatherMode": "navigation",
+   "formFactor": "mobile",
+   "throttling": "simulate",
+   "scores": {
+    "performance": 98,
+    "accessibility": 100,
+    "best-practices": 96,
+    "seo": 90
+   },
+   "metrics": {
+    "FCP": 757,
+    "LCP": 757,
+    "TBT": 161,
+    "CLS": 0,
+    "SI": 757
+   },
+   "failed": [
+    {
+     "category": "performance",
+     "audit": "total-blocking-time",
+     "score": 0.93,
+     "displayValue": "160 ms",
+     "items": 0,
+     "first": "null"
+    },
+    {
+     "category": "best-practices",
+     "audit": "inspector-issues",
+     "score": 0,
+     "items": 1,
+     "first": "{\"issueType\":\"Content security policy\",\"subItems\":{\"type\":\"subitems\",\"items\":[]}}"
+    },
+    {
+     "category": "seo",
+     "audit": "meta-description",
+     "score": 0,
+     "items": 0,
+     "first": "null"
+    }
+   ]
+  },
+  {
+   "run": "event-3",
+   "url": "http://localhost:3456/event/curated:kl-0014",
+   "gatherMode": "navigation",
+   "formFactor": "mobile",
+   "throttling": "simulate",
+   "scores": {
+    "performance": 98,
+    "accessibility": 100,
+    "best-practices": 96,
+    "seo": 90
+   },
+   "metrics": {
+    "FCP": 762,
+    "LCP": 762,
+    "TBT": 173,
+    "CLS": 0,
+    "SI": 762
+   },
+   "failed": [
+    {
+     "category": "performance",
+     "audit": "total-blocking-time",
+     "score": 0.92,
+     "displayValue": "170 ms",
+     "items": 0,
+     "first": "null"
+    },
+    {
+     "category": "best-practices",
+     "audit": "inspector-issues",
+     "score": 0,
+     "items": 1,
+     "first": "{\"issueType\":\"Content security policy\",\"subItems\":{\"type\":\"subitems\",\"items\":[]}}"
+    },
+    {
+     "category": "seo",
+     "audit": "meta-description",
+     "score": 0,
+     "items": 0,
+     "first": "null"
+    }
+   ]
+  },
+  {
+   "run": "explore-flow-1 / Navigation report (localhost/)",
+   "url": "http://localhost:3456/",
+   "gatherMode": "navigation",
+   "formFactor": "mobile",
+   "throttling": "simulate",
+   "scores": {
+    "performance": 98,
+    "accessibility": 100,
+    "best-practices": 96,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "metrics": {
+    "FCP": 756,
+    "LCP": 756,
+    "TBT": 169,
+    "CLS": 0,
+    "SI": 756
+   },
+   "failed": [
+    {
+     "category": "performance",
+     "audit": "total-blocking-time",
+     "score": 0.93,
+     "displayValue": "170 ms",
+     "items": 0,
+     "first": "null"
+    },
+    {
+     "category": "best-practices",
+     "audit": "inspector-issues",
+     "score": 0,
+     "items": 1,
+     "first": "{\"issueType\":\"Content security policy\",\"subItems\":{\"type\":\"subitems\",\"items\":[]}}"
+    }
+   ]
+  },
+  {
+   "run": "explore-flow-1 / Tap Klang Valley until results",
+   "url": "http://localhost:3456/",
+   "gatherMode": "timespan",
+   "formFactor": "mobile",
+   "throttling": "devtools",
+   "scores": {
+    "performance": 81,
+    "best-practices": 89
+   },
+   "metrics": {
+    "TBT": 217,
+    "CLS": 0.162,
+    "INP": 148
+   },
+   "failed": [
+    {
+     "category": "performance",
+     "audit": "total-blocking-time",
+     "score": 0.88,
+     "displayValue": "220 ms",
+     "items": 0,
+     "first": "null"
+    },
+    {
+     "category": "performance",
+     "audit": "cumulative-layout-shift",
+     "score": 0.72,
+     "displayValue": "0.162",
+     "items": 1,
+     "first": "{\"cumulativeLayoutShiftMainFrame\":0.1618175455691629,\"newEngineResultDiffered\":false}"
+    },
+    {
+     "category": "best-practices",
+     "audit": "errors-in-console",
+     "score": 0,
+     "items": 9,
+     "first": "{\"source\":\"network\",\"description\":\"Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED\",\"sourceLocation\":{\"type\":\"source-location\",\"url\":\"https://tile.openstreetmap.org/9/401/250.png\",\"urlProvider\":\"network\",\"line\":0,\"column\":0}}"
+    },
+    {
+     "category": "best-practices",
+     "audit": "inspector-issues",
+     "score": 0,
+     "items": 1,
+     "first": "{\"issueType\":\"Content security policy\",\"subItems\":{\"type\":\"subitems\",\"items\":[]}}"
+    }
+   ]
+  },
+  {
+   "run": "explore-flow-1 / Explore with results",
+   "url": "http://localhost:3456/",
+   "gatherMode": "snapshot",
+   "formFactor": "mobile",
+   "throttling": "simulate",
+   "scores": {
+    "performance": 0,
+    "accessibility": 96,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "metrics": {},
+   "failed": [
+    {
+     "category": "accessibility",
+     "audit": "target-size",
+     "score": 0,
+     "items": 19,
+     "first": "{\"node\":{\"type\":\"node\",\"lhId\":\"1-27-DIV\",\"path\":\"1,HTML,1,BODY,2,MAIN,0,DIV,0,DIV,0,DIV,3,DIV,1,DIV\",\"selector\":\"div.size-full > div.leaflet-pane > div.leaflet-pane > div.leaflet-marker-icon\",\"boundingRect\":{\"top\":106,\"bottom\":130,\"left\":403,\"right\":427,\"width\":24,\"height\":24},\"snippet\":\"<div class="
+    }
+   ]
+  },
+  {
+   "run": "explore-flow-2 / Navigation report (localhost/)",
+   "url": "http://localhost:3456/",
+   "gatherMode": "navigation",
+   "formFactor": "mobile",
+   "throttling": "simulate",
+   "scores": {
+    "performance": 98,
+    "accessibility": 100,
+    "best-practices": 96,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "metrics": {
+    "FCP": 755,
+    "LCP": 755,
+    "TBT": 158,
+    "CLS": 0,
+    "SI": 755
+   },
+   "failed": [
+    {
+     "category": "performance",
+     "audit": "total-blocking-time",
+     "score": 0.94,
+     "displayValue": "160 ms",
+     "items": 0,
+     "first": "null"
+    },
+    {
+     "category": "best-practices",
+     "audit": "inspector-issues",
+     "score": 0,
+     "items": 1,
+     "first": "{\"issueType\":\"Content security policy\",\"subItems\":{\"type\":\"subitems\",\"items\":[]}}"
+    }
+   ]
+  },
+  {
+   "run": "explore-flow-2 / Tap Klang Valley until results",
+   "url": "http://localhost:3456/",
+   "gatherMode": "timespan",
+   "formFactor": "mobile",
+   "throttling": "devtools",
+   "scores": {
+    "performance": 83,
+    "best-practices": 89
+   },
+   "metrics": {
+    "TBT": 170,
+    "CLS": 0.162,
+    "INP": 85
+   },
+   "failed": [
+    {
+     "category": "performance",
+     "audit": "total-blocking-time",
+     "score": 0.93,
+     "displayValue": "170 ms",
+     "items": 0,
+     "first": "null"
+    },
+    {
+     "category": "performance",
+     "audit": "cumulative-layout-shift",
+     "score": 0.72,
+     "displayValue": "0.162",
+     "items": 1,
+     "first": "{\"cumulativeLayoutShiftMainFrame\":0.1618175455691629,\"newEngineResultDiffered\":false}"
+    },
+    {
+     "category": "best-practices",
+     "audit": "errors-in-console",
+     "score": 0,
+     "items": 9,
+     "first": "{\"source\":\"network\",\"description\":\"Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED\",\"sourceLocation\":{\"type\":\"source-location\",\"url\":\"https://tile.openstreetmap.org/9/401/252.png\",\"urlProvider\":\"network\",\"line\":0,\"column\":0}}"
+    },
+    {
+     "category": "best-practices",
+     "audit": "inspector-issues",
+     "score": 0,
+     "items": 1,
+     "first": "{\"issueType\":\"Content security policy\",\"subItems\":{\"type\":\"subitems\",\"items\":[]}}"
+    }
+   ]
+  },
+  {
+   "run": "explore-flow-2 / Explore with results",
+   "url": "http://localhost:3456/",
+   "gatherMode": "snapshot",
+   "formFactor": "mobile",
+   "throttling": "simulate",
+   "scores": {
+    "performance": 0,
+    "accessibility": 96,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "metrics": {},
+   "failed": [
+    {
+     "category": "accessibility",
+     "audit": "target-size",
+     "score": 0,
+     "items": 19,
+     "first": "{\"node\":{\"type\":\"node\",\"lhId\":\"1-27-DIV\",\"path\":\"1,HTML,1,BODY,2,MAIN,0,DIV,0,DIV,0,DIV,3,DIV,1,DIV\",\"selector\":\"div.size-full > div.leaflet-pane > div.leaflet-pane > div.leaflet-marker-icon\",\"boundingRect\":{\"top\":106,\"bottom\":130,\"left\":403,\"right\":427,\"width\":24,\"height\":24},\"snippet\":\"<div class="
+    }
+   ]
+  },
+  {
+   "run": "explore-flow-3 / Navigation report (localhost/)",
+   "url": "http://localhost:3456/",
+   "gatherMode": "navigation",
+   "formFactor": "mobile",
+   "throttling": "simulate",
+   "scores": {
+    "performance": 96,
+    "accessibility": 100,
+    "best-practices": 96,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "metrics": {
+    "FCP": 771,
+    "LCP": 771,
+    "TBT": 216,
+    "CLS": 0,
+    "SI": 771
+   },
+   "failed": [
+    {
+     "category": "performance",
+     "audit": "total-blocking-time",
+     "score": 0.88,
+     "displayValue": "220 ms",
+     "items": 0,
+     "first": "null"
+    },
+    {
+     "category": "best-practices",
+     "audit": "inspector-issues",
+     "score": 0,
+     "items": 1,
+     "first": "{\"issueType\":\"Content security policy\",\"subItems\":{\"type\":\"subitems\",\"items\":[]}}"
+    }
+   ]
+  },
+  {
+   "run": "explore-flow-3 / Tap Klang Valley until results",
+   "url": "http://localhost:3456/",
+   "gatherMode": "timespan",
+   "formFactor": "mobile",
+   "throttling": "devtools",
+   "scores": {
+    "performance": 80,
+    "best-practices": 89
+   },
+   "metrics": {
+    "TBT": 220,
+    "CLS": 0.162,
+    "INP": 91
+   },
+   "failed": [
+    {
+     "category": "performance",
+     "audit": "total-blocking-time",
+     "score": 0.87,
+     "displayValue": "220 ms",
+     "items": 0,
+     "first": "null"
+    },
+    {
+     "category": "performance",
+     "audit": "cumulative-layout-shift",
+     "score": 0.72,
+     "displayValue": "0.162",
+     "items": 1,
+     "first": "{\"cumulativeLayoutShiftMainFrame\":0.1618175455691629,\"newEngineResultDiffered\":false}"
+    },
+    {
+     "category": "best-practices",
+     "audit": "errors-in-console",
+     "score": 0,
+     "items": 9,
+     "first": "{\"source\":\"network\",\"description\":\"Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED\",\"sourceLocation\":{\"type\":\"source-location\",\"url\":\"https://tile.openstreetmap.org/9/401/250.png\",\"urlProvider\":\"network\",\"line\":0,\"column\":0}}"
+    },
+    {
+     "category": "best-practices",
+     "audit": "inspector-issues",
+     "score": 0,
+     "items": 1,
+     "first": "{\"issueType\":\"Content security policy\",\"subItems\":{\"type\":\"subitems\",\"items\":[]}}"
+    }
+   ]
+  },
+  {
+   "run": "explore-flow-3 / Explore with results",
+   "url": "http://localhost:3456/",
+   "gatherMode": "snapshot",
+   "formFactor": "mobile",
+   "throttling": "simulate",
+   "scores": {
+    "performance": 0,
+    "accessibility": 96,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "metrics": {},
+   "failed": [
+    {
+     "category": "accessibility",
+     "audit": "target-size",
+     "score": 0,
+     "items": 19,
+     "first": "{\"node\":{\"type\":\"node\",\"lhId\":\"1-27-DIV\",\"path\":\"1,HTML,1,BODY,2,MAIN,0,DIV,0,DIV,0,DIV,3,DIV,1,DIV\",\"selector\":\"div.size-full > div.leaflet-pane > div.leaflet-pane > div.leaflet-marker-icon\",\"boundingRect\":{\"top\":106,\"bottom\":130,\"left\":403,\"right\":427,\"width\":24,\"height\":24},\"snippet\":\"<div class="
+    }
+   ]
+  },
+  {
+   "run": "explore-flow-dark / Navigation report (localhost/)",
+   "url": "http://localhost:3456/",
+   "gatherMode": "navigation",
+   "formFactor": "mobile",
+   "throttling": "simulate",
+   "scores": {
+    "performance": 99,
+    "accessibility": 100,
+    "best-practices": 96,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "metrics": {
+    "FCP": 764,
+    "LCP": 764,
+    "TBT": 144,
+    "CLS": 0,
+    "SI": 764
+   },
+   "failed": [
+    {
+     "category": "performance",
+     "audit": "total-blocking-time",
+     "score": 0.95,
+     "displayValue": "140 ms",
+     "items": 0,
+     "first": "null"
+    },
+    {
+     "category": "best-practices",
+     "audit": "inspector-issues",
+     "score": 0,
+     "items": 1,
+     "first": "{\"issueType\":\"Content security policy\",\"subItems\":{\"type\":\"subitems\",\"items\":[]}}"
+    }
+   ]
+  },
+  {
+   "run": "explore-flow-dark / Tap Klang Valley until results",
+   "url": "http://localhost:3456/",
+   "gatherMode": "timespan",
+   "formFactor": "mobile",
+   "throttling": "devtools",
+   "scores": {
+    "performance": 85,
+    "best-practices": 89
+   },
+   "metrics": {
+    "TBT": 141,
+    "CLS": 0.162,
+    "INP": 100
+   },
+   "failed": [
+    {
+     "category": "performance",
+     "audit": "total-blocking-time",
+     "score": 0.95,
+     "displayValue": "140 ms",
+     "items": 0,
+     "first": "null"
+    },
+    {
+     "category": "performance",
+     "audit": "cumulative-layout-shift",
+     "score": 0.72,
+     "displayValue": "0.162",
+     "items": 1,
+     "first": "{\"cumulativeLayoutShiftMainFrame\":0.1618175455691629,\"newEngineResultDiffered\":false}"
+    },
+    {
+     "category": "best-practices",
+     "audit": "errors-in-console",
+     "score": 0,
+     "items": 9,
+     "first": "{\"source\":\"network\",\"description\":\"Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED\",\"sourceLocation\":{\"type\":\"source-location\",\"url\":\"https://tile.openstreetmap.org/9/401/250.png\",\"urlProvider\":\"network\",\"line\":0,\"column\":0}}"
+    },
+    {
+     "category": "best-practices",
+     "audit": "inspector-issues",
+     "score": 0,
+     "items": 1,
+     "first": "{\"issueType\":\"Content security policy\",\"subItems\":{\"type\":\"subitems\",\"items\":[]}}"
+    }
+   ]
+  },
+  {
+   "run": "explore-flow-dark / Explore with results",
+   "url": "http://localhost:3456/",
+   "gatherMode": "snapshot",
+   "formFactor": "mobile",
+   "throttling": "simulate",
+   "scores": {
+    "performance": 0,
+    "accessibility": 96,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "metrics": {},
+   "failed": [
+    {
+     "category": "accessibility",
+     "audit": "target-size",
+     "score": 0,
+     "items": 19,
+     "first": "{\"node\":{\"type\":\"node\",\"lhId\":\"1-27-DIV\",\"path\":\"1,HTML,1,BODY,2,MAIN,0,DIV,0,DIV,0,DIV,3,DIV,1,DIV\",\"selector\":\"div.size-full > div.leaflet-pane > div.leaflet-pane > div.leaflet-marker-icon\",\"boundingRect\":{\"top\":106,\"bottom\":130,\"left\":403,\"right\":427,\"width\":24,\"height\":24},\"snippet\":\"<div class="
+    }
+   ]
+  },
+  {
+   "run": "home-1",
+   "url": "http://localhost:3456/",
+   "gatherMode": "navigation",
+   "formFactor": "mobile",
+   "throttling": "simulate",
+   "scores": {
+    "performance": 92,
+    "accessibility": 100,
+    "best-practices": 96,
+    "seo": 100
+   },
+   "metrics": {
+    "FCP": 802,
+    "LCP": 802,
+    "TBT": 353,
+    "CLS": 0,
+    "SI": 802
+   },
+   "failed": [
+    {
+     "category": "performance",
+     "audit": "total-blocking-time",
+     "score": 0.73,
+     "displayValue": "350 ms",
+     "items": 0,
+     "first": "null"
+    },
+    {
+     "category": "best-practices",
+     "audit": "inspector-issues",
+     "score": 0,
+     "items": 1,
+     "first": "{\"issueType\":\"Content security policy\",\"subItems\":{\"type\":\"subitems\",\"items\":[]}}"
+    }
+   ]
+  },
+  {
+   "run": "home-2",
+   "url": "http://localhost:3456/",
+   "gatherMode": "navigation",
+   "formFactor": "mobile",
+   "throttling": "simulate",
+   "scores": {
+    "performance": 98,
+    "accessibility": 100,
+    "best-practices": 96,
+    "seo": 100
+   },
+   "metrics": {
+    "FCP": 765,
+    "LCP": 765,
+    "TBT": 165,
+    "CLS": 0,
+    "SI": 765
+   },
+   "failed": [
+    {
+     "category": "performance",
+     "audit": "total-blocking-time",
+     "score": 0.93,
+     "displayValue": "170 ms",
+     "items": 0,
+     "first": "null"
+    },
+    {
+     "category": "best-practices",
+     "audit": "inspector-issues",
+     "score": 0,
+     "items": 1,
+     "first": "{\"issueType\":\"Content security policy\",\"subItems\":{\"type\":\"subitems\",\"items\":[]}}"
+    }
+   ]
+  },
+  {
+   "run": "home-3",
+   "url": "http://localhost:3456/",
+   "gatherMode": "navigation",
+   "formFactor": "mobile",
+   "throttling": "simulate",
+   "scores": {
+    "performance": 98,
+    "accessibility": 100,
+    "best-practices": 96,
+    "seo": 100
+   },
+   "metrics": {
+    "FCP": 757,
+    "LCP": 757,
+    "TBT": 155,
+    "CLS": 0,
+    "SI": 757
+   },
+   "failed": [
+    {
+     "category": "performance",
+     "audit": "total-blocking-time",
+     "score": 0.94,
+     "displayValue": "160 ms",
+     "items": 0,
+     "first": "null"
+    },
+    {
+     "category": "best-practices",
+     "audit": "inspector-issues",
+     "score": 0,
+     "items": 1,
+     "first": "{\"issueType\":\"Content security policy\",\"subItems\":{\"type\":\"subitems\",\"items\":[]}}"
+    }
+   ]
+  },
+  {
+   "run": "saved-1",
+   "url": "http://localhost:3456/saved",
+   "gatherMode": "navigation",
+   "formFactor": "mobile",
+   "throttling": "simulate",
+   "scores": {
+    "performance": 98,
+    "accessibility": 100,
+    "best-practices": 96,
+    "seo": 100
+   },
+   "metrics": {
+    "FCP": 760,
+    "LCP": 760,
+    "TBT": 166,
+    "CLS": 0,
+    "SI": 760
+   },
+   "failed": [
+    {
+     "category": "performance",
+     "audit": "total-blocking-time",
+     "score": 0.93,
+     "displayValue": "170 ms",
+     "items": 0,
+     "first": "null"
+    },
+    {
+     "category": "best-practices",
+     "audit": "inspector-issues",
+     "score": 0,
+     "items": 1,
+     "first": "{\"issueType\":\"Content security policy\",\"subItems\":{\"type\":\"subitems\",\"items\":[]}}"
+    }
+   ]
+  },
+  {
+   "run": "saved-2",
+   "url": "http://localhost:3456/saved",
+   "gatherMode": "navigation",
+   "formFactor": "mobile",
+   "throttling": "simulate",
+   "scores": {
+    "performance": 99,
+    "accessibility": 100,
+    "best-practices": 96,
+    "seo": 100
+   },
+   "metrics": {
+    "FCP": 758,
+    "LCP": 758,
+    "TBT": 99,
+    "CLS": 0,
+    "SI": 758
+   },
+   "failed": [
+    {
+     "category": "performance",
+     "audit": "total-blocking-time",
+     "score": 0.98,
+     "displayValue": "100 ms",
+     "items": 0,
+     "first": "null"
+    },
+    {
+     "category": "best-practices",
+     "audit": "inspector-issues",
+     "score": 0,
+     "items": 1,
+     "first": "{\"issueType\":\"Content security policy\",\"subItems\":{\"type\":\"subitems\",\"items\":[]}}"
+    }
+   ]
+  },
+  {
+   "run": "saved-3",
+   "url": "http://localhost:3456/saved",
+   "gatherMode": "navigation",
+   "formFactor": "mobile",
+   "throttling": "simulate",
+   "scores": {
+    "performance": 96,
+    "accessibility": 100,
+    "best-practices": 96,
+    "seo": 100
+   },
+   "metrics": {
+    "FCP": 761,
+    "LCP": 761,
+    "TBT": 214,
+    "CLS": 0,
+    "SI": 761
+   },
+   "failed": [
+    {
+     "category": "performance",
+     "audit": "total-blocking-time",
+     "score": 0.88,
+     "displayValue": "210 ms",
+     "items": 0,
+     "first": "null"
+    },
+    {
+     "category": "best-practices",
+     "audit": "inspector-issues",
+     "score": 0,
+     "items": 1,
+     "first": "{\"issueType\":\"Content security policy\",\"subItems\":{\"type\":\"subitems\",\"items\":[]}}"
+    }
+   ]
+  }
+ ]
+}

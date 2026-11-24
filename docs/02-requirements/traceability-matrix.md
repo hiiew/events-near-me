@@ -5,7 +5,7 @@
 | Phase | 2 — Requirements (living document — filled in during Phases 3–5) |
 | Version | 1.1 |
 | Product name | Written as "Events Near Me"; the product is now **Happening** (CR-01). Title kept as approved. |
-| Date | 2026-11-11 (last updated 2026-11-24: first Phase 5 run — ✅ set only for rows whose every linked test case passed with no manual/phone/ENV-2/UAT part left, see `docs/05-testing/test-report.md` §4; before that, Phase 5 test case IDs linked from `docs/05-testing/test-cases.md`; earlier the same day: user stories US-12–US-18 linked, screen IDs corrected — CR-13) |
+| Date | 2026-11-11 (last updated 2026-11-24: DEF-05 accepted by the owner → FR-05 and FR-17 ✅; Lighthouse TC-57/TC-61 pass on ENV-1 but NFR-02/NFR-05 wait for ENV-2 and TC-62's manual part; earlier: first Phase 5 run — ✅ set only for rows whose every linked test case passed with no manual/phone/ENV-2/UAT part left, see `docs/05-testing/test-report.md` §4; before that, Phase 5 test case IDs linked from `docs/05-testing/test-cases.md`; earlier the same day: user stories US-12–US-18 linked, screen IDs corrected — CR-13) |
 
 > **What is an RTM?** A table that links every requirement forward to the design element that
 > handles it, the code that builds it and the test that proves it. It answers two questions an
@@ -21,7 +21,7 @@
 | FR-03 | M | The user shall be able to change the search point at any time by using their… | US-02 | D-02, S-2/S-3 | `page.tsx` (tap map / Search this map area / Use my location; **Change** button in the top bar reopens these from the results, CR-14) | TC-09, TC-10, TC-55 | ✅ |
 | FR-41 | C | Area shortcuts: tap "Klang Valley" or "Kota Kinabalu" to see its events, with the count on the button (CR-12) | US-19 | S-1 and S-3 pick-a-spot (buttons under "Or browse an area"), ui-ux.md §4 | `src/lib/areas.ts` (+ test), `AreaShortcuts.tsx`, `page.tsx` | TC-52, TC-53, TC-54, TC-55 | ✅ |
 | FR-04 | M | The app shall show upcoming events within the selected radius of the search… | US-01 | D-03, D-06, D-07 | `src/lib/filters.ts`, `src/lib/geo.ts`, `src/app/api/events/search/route.ts` (+ tests) | TC-02, TC-06, TC-15 | ✅ |
-| FR-05 | M | The app shall hide events that have already ended | US-01 | D-09, D-03 | `src/lib/sources/curated.ts` (+ test) | TC-05, TC-24 | 🛠 |
+| FR-05 | M | The app shall hide events that have already ended | US-01 | D-09, D-03 | `src/lib/sources/curated.ts` (+ test) | TC-05, TC-24 | ✅ |
 | FR-06 | M | The app shall show results in a list, sorted by start date (soonest first)… | US-01 | D-01 S-2, D-03 (sort) | `src/lib/filters.ts` sort soonest/nearest (+ test), `EventRow.tsx` | TC-02, TC-03, TC-04 | ✅ |
 | FR-07 | M | The app shall show results on a map with one marker per event; tapping a… | US-03 | D-05, S-3 | `MapView.tsx` pins; selected pin highlights its row | TC-11, TC-12 | ✅ |
 | FR-08 | M | The user shall be able to switch between list and map view without losing… | US-03 | D-01, S-2 + S-3 on one Explore screen (DC-01) | Map and list shown together on Explore (Night Map); filters shared | TC-11, TC-13 | ✅ |
@@ -36,7 +36,7 @@
 | FR-34 | C | "Free this week" quick chip: one tap sets Free only + Next 7 days; tap again resets those two (CR-04) | US-04, US-12 | S-2 (chip under the list heading), ui-ux.md §4 | `filters.ts` `isFreeThisWeek`/`toggleFreeThisWeek` (+ test), `QuickChip.tsx`, `page.tsx` | TC-42 | ✅ |
 | FR-35 | C | Search box: type words to narrow the list by title, venue, address or category (CR-05) | US-13 | S-2 (search field under the list heading), ui-ux.md §4 | `filters.ts` `matchesQuery` + `query` filter (+ test), `SearchBox.tsx`, `FilterSheet.tsx` (Reset keeps the search), `page.tsx` | TC-43 | ✅ |
 | FR-36 | C | "Today" quick chip: one tap sets Date = Today; tap again resets only the date (CR-06) | US-14 | S-2 (chip row under the search box), ui-ux.md §4 | `filters.ts` `isToday`/`toggleToday` (+ test), `QuickChip.tsx` (shared with FR-34), `page.tsx` | TC-44 | ✅ |
-| FR-17 | M | The event detail view shall show: title, start (and end if known) date/time… | US-05 | D-01 S-4, data-model Event | `src/app/event/[id]/page.tsx` (incl. image), `DistanceFromSearch.tsx`, `formatEventWhen` (+ test) | TC-21, TC-23, TC-24 | 🛠 |
+| FR-17 | M | The event detail view shall show: title, start (and end if known) date/time… | US-05 | D-01 S-4, data-model Event | `src/app/event/[id]/page.tsx` (incl. image), `DistanceFromSearch.tsx`, `formatEventWhen` (+ test) | TC-21, TC-23, TC-24 | ✅ |
 | FR-18 | M | The detail view shall have a button that opens the official event / ticket… | US-05 | D-01 S-4 | Detail page "View official page"; row link in `EventRow.tsx` | TC-22 | ✅ |
 | FR-19 | M | The detail view shall have a Directions button that opens Google Maps or… | US-06 | D-11, S-4 | `src/lib/links.ts` Google Maps + Waze (+ test), detail page | TC-26 | 🛠 |
 | FR-38 | C | "By public transport" button: Google Maps directions in transit mode (CR-08) | US-16 | S-4 (button under Directions) | `links.ts` `googleMapsTransitUrl` (+ test), `icons.tsx` `TransitIcon`, `event/[id]/page.tsx` | TC-27 | 🛠 |
@@ -81,7 +81,7 @@
 
 | Priority | Total | Designed | Built | Tested ✅ |
 |---|---|---|---|---|
-| Must | 39 (24 FR + 15 NFR) | 39 | 31 built + 2 partial (NFR-03, NFR-05); 6 NFRs shown in Phase 5/6 (NFR-01, 04, 07, 13, 16, 17) | **24** (2026-11-24 e2e run + DEF-01–06 fix re-run; open: FR-01, 02, 05, 17, 19, 31, NFR-01, 04, 05, 07, 10, 13, 14, 16, 17 — reasons in test-report §4) |
+| Must | 39 (24 FR + 15 NFR) | 39 | 31 built + 2 partial (NFR-03, NFR-05); 6 NFRs shown in Phase 5/6 (NFR-01, 04, 07, 13, 16, 17) | **26** (2026-11-24 e2e run + DEF-01–06 fix re-run + DEF-05 accepted; open: FR-01, 02, 19, 31, NFR-01, 04, 05, 07, 10, 13, 14, 16, 17 — reasons in test-report §4) |
 | Should | 9 (5 FR + 4 NFR) | 9 | 3 built (FR-21, FR-22, NFR-11); FR-26 deferred (CR-03); FR-29/FR-30 only needed with a 2nd source; NFR-02/15/19 in Phases 5–7 | **2** (FR-21, NFR-11) |
 | Could | 12 | 11 (FR-23, FR-27 conditional, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38, FR-39, FR-40, FR-41); FR-16 deferred | 10 built (FR-23, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38, FR-39, FR-40, FR-41) | **5** (FR-34, FR-35, FR-36, FR-40, FR-41) |
 
