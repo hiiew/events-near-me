@@ -1,0 +1,22 @@
+# Dependabot (security-privacy.md T-11, supply chain): opens pull requests for outdated packages.
+# Each PR runs CI (.github/workflows/ci.yml) before anyone merges it.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      timezone: Asia/Kuala_Lumpur
+    open-pull-requests-limit: 5
+    groups:
+      # One PR for all minor and patch bumps instead of one per package; major versions stay separate.
+      npm-minor-and-patch:
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions # keeps actions/checkout etc. in ci.yml up to date
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      timezone: Asia/Kuala_Lumpur
