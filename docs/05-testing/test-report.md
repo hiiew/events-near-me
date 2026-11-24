@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Phase | 5 — Testing |
-| Version | 0.1 — first automated run (Playwright e2e on ENV-1). UAT, Lighthouse and real-device results follow |
+| Version | 0.2 — first automated run, then a re-run after the DEF-01 – DEF-06 fixes (§1.1). UAT, Lighthouse and real-device results follow |
 | Run date | 2026-11-24 |
 | Commit under test | branch `claude/kind-gates-6ijzwm` = `main` after PR #21, plus the test files of this step (no app code changed) |
 | Standard | Structure based on IEEE 829 / ISO/IEC/IEEE 29119-3 (test completion report) |
@@ -31,6 +31,25 @@
 
 **Playwright totals:** 69 tests in 18 files — **64 passed, 5 failed, 0 skipped.** The 5 failures are 4 test
 cases (TC-60 fails in dark and light) and are all app defects (§3); no failure was a test bug at the end.
+
+### 1.1 Re-run after the defect fixes (2026-11-24)
+
+The owner asked for all six defects to be fixed. Changes (one PR with the suites): `globals.css` lifts Leaflet's
+bottom controls 26 px above the list sheet and gives the credit theme colours (DEF-01); `MapView.tsx` adds
+`keyboard={false}` to the decorative search-point marker (DEF-02); the details page `<dl>` keeps each `dt`/`dd`
+group directly in one `div`, laid out with grid placement (DEF-03, looks the same); the "Filters" text button gets
+`min-w-11` (DEF-04); `generateMetadata` awaits `connection()` before `isEnded` (DEF-06).
+
+**DEF-05 could not be fixed in the app.** Next.js 16 fails while decoding the malformed `[id]` parameter and
+answers with its own plain-text 500 before any app code runs: neither the page, `generateMetadata` nor a
+`proxy.ts` (tried, then removed) is reached. Other malformed paths (`/%E0%A4%A`, `/about/%E0%A4%A`) already give
+a normal 404. TC-24 is split: the missing-event part passes; the malformed-link part is marked
+`test.fail()` with DEF-05 in its title, so a Next.js upgrade that fixes it shows up as "unexpectedly passed".
+
+**Re-run result:** `npm run test:e2e` **70 passed** (69 + the split TC-24; the DEF-05 test counts as an expected
+failure), 0 failed, ≈ 28 s. `npm test` 156 passed, `npm run lint` 0 problems (generated `coverage/`,
+`playwright-report/` and `test-results/` folders are now in ESLint's ignore list), server log 0 `Date.now()`
+lines. Visual check at 360 px, dark and light: credit readable above the sheet; details page unchanged.
 
 Test bugs found and fixed while writing the suites (the app was right): link names needed `exact: true`
 (the row's external-link button's name also contains the title); the details page and the welcome screen
@@ -71,8 +90,8 @@ scans ran too early and gave different results from run to run).
 | TC-21 | FR-17, FR-32, NFR-18, US-05 | detail | Pass | Real event: title, long day, time "(Malaysia time)", venue + address, category, price, description, "Source: Curated by Happening", no image (none in data, Q-2); after a search "x.x km from your search" |
 | TC-22 | FR-18, US-05 | detail | Pass | New tab at exactly `E.url` (https); `target=_blank`, `rel="noopener noreferrer"` on the button and the row link |
 | TC-23 | FR-17, FR-13, US-05 | detail | Pass | A real upcoming event with `price: null` exists (2 today); shows "Price not listed" |
-| TC-24 | FR-05, FR-17 | detail (+ unit) | **Fail** | Missing id → "This event isn't available" + link to `/` ✓. Malformed `/event/%E0%A4%A` → **HTTP 500** "Internal Server Error" → **DEF-05**. Unit `isEnded` ✓ |
-| TC-25 | FR-32, NFR-17 | detail | **Fail** | OSM attribution is **covered by the list sheet** at 360 px → **DEF-01** ([screenshot](evidence/TC-25-attribution-hidden-360px.png)). About links to the OSM copyright page ✓ |
+| TC-24 | FR-05, FR-17 | detail (+ unit) | **Partly** (missing link: Pass; malformed link: known failure DEF-05) | Missing id → "This event isn't available" + link to `/` ✓. Malformed `/event/%E0%A4%A` → **HTTP 500** "Internal Server Error" → **DEF-05**. Unit `isEnded` ✓ |
+| TC-25 | FR-32, NFR-17 | detail | **Pass** (re-run, DEF-01 fixed; first run: Fail) | OSM attribution is **covered by the list sheet** at 360 px → **DEF-01** ([screenshot](evidence/TC-25-attribution-hidden-360px.png)). About links to the OSM copyright page ✓ |
 | TC-26 | FR-19, US-06 | detail (+ unit) | Pass (auto part) | Google Maps `dir/?api=1&destination=lat,lon`, Waze `ll=lat,lon&navigate=yes`, both new tab + noopener. Opening the apps on a phone: open |
 | TC-27 | FR-38, US-16 | detail (+ unit) | Pass (auto part) | Same destination + `travelmode=transit`, new tab. App part on a phone: open |
 | TC-28 | FR-20, US-07 | saved | Pass | `aria-pressed` true/false, label "Saved — remove from Saved", listed on Saved, then "Nothing saved yet" |
@@ -101,8 +120,8 @@ scans ran too early and gave different results from run to run).
 | TC-56 | NFR-01 | perf | Pass (ENV-1) | Real API, Fast 4G (165 ms RTT, 8.1 / 1.35 Mbit/s = DevTools preset) + 4× CPU: runs 461, 557, 382, 462, 488 ms; **median 462 ms, max 557 ms** (≤ 3000). Final figure on ENV-2 still to take |
 | TC-58 | NFR-03 | responsive | Pass | 360/768/1280 px × dark/light × S-1, S-2/3, S-7, S-4, S-5, S-6 = 36 checks: no sideways scroll, main button visible and clickable, "Change" in view; screenshots attached to the run for a manual glance |
 | TC-59 | NFR-04 | explore | Pass (auto part) | Row title → details = 1 action; pin → row title = 2 actions. UAT part: open |
-| TC-60 | NFR-05 | a11y | **Fail** | 9 screens × dark/light. 0 colour-contrast findings. Serious: unnamed focusable search-point pin (**DEF-02**), invalid `<dl>` on details (**DEF-03**). No moderate/minor. [findings JSON](evidence/TC-60-axe-findings.json) |
-| TC-62 | NFR-05 | a11y | **Fail** (auto part) | Keyboard-only walk (area → pin + Enter → Filters, Esc returns focus → row → Save → Back) with visible focus ring ✓; reduced motion stops the sheet animation ✓; **target size: "Filters" text button 42 × 44 px** (**DEF-04**). Screen reader, 200 % zoom, contrast spot-check: open (owner) |
+| TC-60 | NFR-05 | a11y | **Pass** (re-run, DEF-02/03 fixed; first run: Fail) | 9 screens × dark/light. 0 colour-contrast findings. Serious: unnamed focusable search-point pin (**DEF-02**), invalid `<dl>` on details (**DEF-03**). No moderate/minor. [findings JSON](evidence/TC-60-axe-findings.json) |
+| TC-62 | NFR-05 | a11y | **Pass** (auto part, re-run, DEF-04 fixed; first run: Fail) | Keyboard-only walk (area → pin + Enter → Filters, Esc returns focus → row → Save → Back) with visible focus ring ✓; reduced motion stops the sheet animation ✓; **target size: "Filters" text button 42 × 44 px** (**DEF-04**). Screen reader, 200 % zoom, contrast spot-check: open (owner) |
 | TC-63 | NFR-06 | security + shell | Pass | Browser: no request header/body in a full flow matches key/token/bearer/secret patterns. Static: full `git log -p --all` has only the placeholder `EVENTBRITE_TOKEN=replace-me`; the only committed `.env*` is `.env.example`; no `NEXT_PUBLIC_` in `src/`; `.next/static` matches only Next's own `…TAG_TOKEN_HEADER` constant |
 | TC-65 | NFR-08 | api (+ unit) | Pass | lat 90.0001, lon −180.0001, lat as string, missing lon, extra `radius`, not JSON → 400 `invalid_request` naming the field, values never echoed; empty → 400; 2 KB → 413; GET → 405; all `no-store`; valid 6-dp point → 200 |
 | TC-70 | NFR-18 | explore (+ unit) | Pass | Browser in New York: F-01 still "Thu 17 Dec · 8:00 PM"; prices in RM |
@@ -137,12 +156,12 @@ again if the defect comes back, so the fix PR can be checked with `npm run test:
 
 | ID | Severity | TC | Req | Summary | Status |
 |---|---|---|---|---|---|
-| **DEF-01** | **S2 High** | TC-25 | FR-32 (M), NFR-17 (M) | OpenStreetMap attribution hidden behind the list sheet on Explore | Open |
-| **DEF-02** | S3 Medium | TC-60 | NFR-05 (M) | Search-point pin is a focusable "button" with no name | Open |
-| **DEF-03** | S3 Medium | TC-60 | NFR-05 (M), FR-17 | Details page `<dl>` has invalid structure | Open |
-| **DEF-04** | S4 Low | TC-62 | NFR-05 (M) | "Filters" text button is 42 × 44 px (target ≥ 44 × 44) | Open |
-| **DEF-05** | S4 Low | TC-24 | FR-17 (M), FR-05 (M) | Malformed event link returns a bare HTTP 500 | Open |
-| **DEF-06** | S4 Low | TC-40 (log review) | FR-37 (C) | Server logs a Next.js "unstable value `Date.now()`" error on every details request | Open |
+| **DEF-01** | **S2 High** | TC-25 | FR-32 (M), NFR-17 (M) | OpenStreetMap attribution hidden behind the list sheet on Explore | **Fixed** (re-test pass) |
+| **DEF-02** | S3 Medium | TC-60 | NFR-05 (M) | Search-point pin is a focusable "button" with no name | **Fixed** (re-test pass) |
+| **DEF-03** | S3 Medium | TC-60 | NFR-05 (M), FR-17 | Details page `<dl>` has invalid structure | **Fixed** (re-test pass) |
+| **DEF-04** | S4 Low | TC-62 | NFR-05 (M) | "Filters" text button is 42 × 44 px (target ≥ 44 × 44) | **Fixed** (re-test pass) |
+| **DEF-05** | S4 Low | TC-24 | FR-17 (M), FR-05 (M) | Malformed event link returns a bare HTTP 500 | **Open — cannot fix in the app** (Next.js limitation, §1.1); owner to accept or wait for a Next.js fix |
+| **DEF-06** | S4 Low | TC-40 (log review) | FR-37 (C) | Server logs a Next.js "unstable value `Date.now()`" error on every details request | **Fixed** (0 such log lines on re-run) |
 
 **DEF-01 — OSM attribution hidden behind the list sheet (S2).**
 Steps: open `/` at 360 × 740 → Use my location → results show. Look at the bottom-right corner of the map.
@@ -205,7 +224,7 @@ blocks FR-01 but not FR-04/FR-06.
 
 | Priority | Rows | ✅ now | Rows ✅ |
 |---|---|---|---|
-| **Must** | 39 (24 FR + 15 NFR) | **23** | FR-03, FR-04, FR-06 – FR-15, FR-18, FR-20, FR-24, FR-25, FR-28; NFR-03, NFR-06, NFR-08, NFR-09, NFR-12, NFR-18 |
+| **Must** | 39 (24 FR + 15 NFR) | **24** | FR-03, FR-04, FR-06 – FR-15, FR-18, FR-20, FR-24, FR-25, FR-28, FR-32; NFR-03, NFR-06, NFR-08, NFR-09, NFR-12, NFR-18 |
 | **Should** | 9 (5 FR + 4 NFR) | **2** | FR-21, NFR-11 |
 | **Could** (built) | 11 (FR-16 deferred) | **5** | FR-34, FR-35, FR-36, FR-40, FR-41 |
 | **Must + Should** | **48** | **25** | |
@@ -216,13 +235,13 @@ Must rows **not** ✅ and what they wait for:
 |---|---|
 | FR-01 | TC-02 phone part (real permission prompt over HTTPS, TC-66 / ENV-2) |
 | FR-02 | TC-08 real-phone note (Q-6) |
-| FR-05, FR-17 | **DEF-05** (TC-24) |
+| FR-05, FR-17 | **DEF-05** (TC-24 malformed-link part; Next.js limitation — owner to accept) |
 | FR-19 | TC-26 app part on a phone |
 | FR-31 | TC-38 owner's read of the wording |
-| FR-32, NFR-17 | **DEF-01** (TC-25); NFR-17 also TC-69 audit |
+| NFR-17 | TC-69 audit (DEF-01 fixed, FR-32 now ✅) |
 | NFR-01 | TC-56 final figure on ENV-2 (passes on ENV-1) |
 | NFR-04 | TC-73 UAT (TC-59 e2e part passes) |
-| NFR-05 | **DEF-02, DEF-03, DEF-04** (TC-60, TC-62); TC-61 Lighthouse; TC-62 manual part |
+| NFR-05 | TC-61 Lighthouse; TC-62 manual part (DEF-02 – DEF-04 fixed, TC-60 and TC-62 auto part now pass) |
 | NFR-07 | TC-64 on ENV-2 |
 | NFR-10 | TC-40 unit step (console spy in `route.test.ts`) missing |
 | NFR-13 | TC-66 device matrix |
@@ -238,12 +257,12 @@ NFR-19 (TC-71 process check); **FR-26, FR-29, FR-30 are gaps — not built** (CR
 
 | # | Criterion | Status |
 |---|---|---|
-| 1 | Every Must row ✅ | ❌ 23 / 39 |
+| 1 | Every Must row ✅ | ❌ 24 / 39 |
 | 2 | Every built Should row ✅; FR-26/29/30 listed as gaps | ❌ 2 of 6 built; gaps listed ✅ |
-| 3 | No open Critical/High defects | ❌ DEF-01 (S2) open |
+| 3 | No open Critical/High defects | ✅ DEF-01 fixed; only DEF-05 (S4) open |
 | 4 | UAT done (owner + Testers A–C), NFR-04 met | ❌ not started (23–29 Dec; needs refreshed data, RT-01) |
 | 5 | `test-report.md` written | 🟡 this v0.1 |
 | 6 | Core logic line coverage ≥ 70 % | ✅ 90.7 % |
 
-**Next:** developer fixes DEF-01 – DEF-06 (owner decides on the S3/S4 ones) and re-runs `npm run test:e2e`;
+**Next:** owner accepts DEF-05 (or not);
 add the TC-40 console-spy unit test; Lighthouse TC-57/TC-61; owner's real-device cases and UAT (test-plan §7).

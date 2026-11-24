@@ -54,7 +54,7 @@
 | FR-29 | S | The system shall remove obvious duplicates (same title, same start date,… | — | D-07 dedupe | | — (not built) | 🎨 |
 | FR-30 | S | The system shall cache each source's responses on the server for a… | — | D-08 | | — (not built) | 🎨 |
 | FR-31 | M | The app shall have a Privacy page explaining what location data is used,… | US-10 | S-6, security-privacy §5 | `src/app/about/page.tsx` (About & privacy) | TC-38 | 🛠 |
-| FR-32 | M | The app shall show data-source attribution and OpenStreetMap attribution | US-05 | D-05, S-6 | OSM attribution on map + About; source name on detail page | TC-21, TC-25 | 🛠 |
+| FR-32 | M | The app shall show data-source attribution and OpenStreetMap attribution | US-05 | D-05, S-6 | OSM attribution on map + About; source name on detail page | TC-21, TC-25 | ✅ |
 | FR-33 | C | The app shall be installable to the home screen (PWA manifest) | US-18 | D-12 | `src/app/manifest.ts` + `manifest.test.ts`, `public/icons/*`, `src/app/apple-icon.png`, `layout.tsx` (`appleWebApp`) | TC-51 | 🛠 |
 | FR-40 | C | Offline mode: pages open offline; last search's events shown with a "saved on" notice when the server is unreachable (CR-10) | US-18 | D-04, D-12; S-2 (notice under the chips); S-6 (privacy text) | `public/sw.js`, `ServiceWorkerRegister.tsx`, `src/lib/offline-cache.ts` (+ test), `page.tsx`, `ClearSavedData.tsx`, `about/page.tsx`, `layout.tsx` | TC-31, TC-49, TC-50 | ✅ |
 | NFR-01 | M | Performance: First results appear within 3 s of the search point being set,… | — | ADR-06, D-08 | | TC-56 | 🎨 |
@@ -81,7 +81,7 @@
 
 | Priority | Total | Designed | Built | Tested ✅ |
 |---|---|---|---|---|
-| Must | 39 (24 FR + 15 NFR) | 39 | 31 built + 2 partial (NFR-03, NFR-05); 6 NFRs shown in Phase 5/6 (NFR-01, 04, 07, 13, 16, 17) | **23** (2026-11-24 e2e run; open: FR-01, 02, 05, 17, 19, 31, 32, NFR-01, 04, 05, 07, 10, 13, 14, 16, 17 — reasons in test-report §4) |
+| Must | 39 (24 FR + 15 NFR) | 39 | 31 built + 2 partial (NFR-03, NFR-05); 6 NFRs shown in Phase 5/6 (NFR-01, 04, 07, 13, 16, 17) | **24** (2026-11-24 e2e run + DEF-01–06 fix re-run; open: FR-01, 02, 05, 17, 19, 31, NFR-01, 04, 05, 07, 10, 13, 14, 16, 17 — reasons in test-report §4) |
 | Should | 9 (5 FR + 4 NFR) | 9 | 3 built (FR-21, FR-22, NFR-11); FR-26 deferred (CR-03); FR-29/FR-30 only needed with a 2nd source; NFR-02/15/19 in Phases 5–7 | **2** (FR-21, NFR-11) |
 | Could | 12 | 11 (FR-23, FR-27 conditional, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38, FR-39, FR-40, FR-41); FR-16 deferred | 10 built (FR-23, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38, FR-39, FR-40, FR-41) | **5** (FR-34, FR-35, FR-36, FR-40, FR-41) |
 

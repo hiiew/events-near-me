@@ -350,7 +350,7 @@ export default function Home() {
                 <h1 id="sheet-title" className="font-display text-2xl font-bold tracking-tight">
                   {visible.length} {visible.length === 1 ? "event" : "events"} nearby
                 </h1>
-                <button type="button" onClick={() => setFiltersOpen(true)} className="min-h-11 shrink-0 text-sm font-semibold text-accent-text">
+                <button type="button" onClick={() => setFiltersOpen(true)} className="min-h-11 min-w-11 shrink-0 text-sm font-semibold text-accent-text" /* 44 × 44 target, DEF-04 (NFR-05) */>
                   Filters
                 </button>
               </div>
