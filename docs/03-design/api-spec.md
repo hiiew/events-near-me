@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Phase | 3 — Design |
-| Version | 1.0 (draft for approval) |
+| Version | 1.0 — approved 2026-11-11 |
 | Date | 2026-11-11 |
 
 > **What is an API spec?** It's the contract between the frontend and the backend: which URLs
@@ -184,6 +184,6 @@ interface SourceAdapter {
 
 | Adapter | Call | Notes |
 |---|---|---|
-| eventbrite | For each ID in `EVENTBRITE_ORGANIZER_IDS`: list the organiser's live events with venue details **[exact endpoint and params to be confirmed in the Eventbrite spike]** | Server filters by distance/date after mapping |
+| eventbrite | For each ID in `EVENTBRITE_ORGANIZER_IDS`: `GET /v3/organizers/{id}/events/?status=live&expand=venue,ticket_availability,category` — confirmed in the spike 2026-11-11 (no `page_size`). **Not built (CR-03)** | Server filters by distance/date after mapping |
 | predicthq | Events search by point + radius + date range **[verify]** | Only if a free plan is confirmed |
 | curated | Read `data/curated-events.json` | No network |

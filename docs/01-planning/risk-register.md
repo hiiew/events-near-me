@@ -2,8 +2,9 @@
 
 | Field | Value |
 |---|---|
-| Phase | 1 — Planning (living document — last reviewed 2026-11-11, Phase 4 audit) |
+| Phase | 1 — Planning (living document — last reviewed 2026-11-24, Phase 1–3 review) |
 | Version | 1.0 |
+| Product name | Written as "Events Near Me"; the product is now **Happening** (CR-01). Title kept as approved. |
 | Date | 2026-11-11 |
 
 > **What is a risk register?** A table of things that *might* go wrong, how likely and how bad
@@ -23,11 +24,14 @@
 | R-07 | Third-party API rate limit exceeded | Technical | 2 | 3 | 6 🟡 | Server-side cache; debounce filter changes | Show cached results with "last updated" notice | Developer | Low — only the curated file is used, so no external API calls; revisit if a live source is added |
 | R-08 | Third-party API changes or goes down | Technical | 2 | 3 | 6 🟡 | Wrap each provider behind an adapter; graceful error messages | Disable that provider; rely on others | Developer | Mitigated — adapters + 5 s timeout + partial results (aggregator tests) |
 | R-09 | User denies location permission or device has poor GPS | Usability | 4 | 2 | 8 🟠 | Manual area picker (e.g. KL neighbourhoods) as fallback | — (fallback is the design) | Developer | Mitigated — drop-a-pin and "Search this map area" (FR-02) |
-| R-10 | Scope creep (adding accounts, submissions, notifications) | Schedule | 3 | 3 | 9 🟠 | MoSCoW in Phase 2; change log after Phase 2 approval | Defer to maintenance backlog | Developer | **Occurred** — redesign (DC-01), Instagram scraping request, Eventbrite; all handled through change log / grill decisions |
+| R-10 | Scope creep (adding accounts, submissions, notifications) | Schedule | 3 | 3 | 9 🟠 | MoSCoW in Phase 2; change log after Phase 2 approval | Defer to maintenance backlog | Developer | **Occurred** — redesign (DC-01), Instagram scraping request, Eventbrite, 7 Could features (CR-04–CR-10) and Sabah coverage (CR-11); all handled through change log / grill decisions |
 | R-11 | Event data incomplete (no price, no coordinates, vague category) | Data quality | 4 | 2 | 8 🟠 | Handle missing fields in design ("Price not listed"); category mapping table | Hide events without coordinates from the map but keep them in the list | Developer | Mitigated — no-coordinate events stay in list (FR-09); "Price not listed" |
 | R-12 | Single developer unavailable (exams, illness) | Schedule | 3 | 3 | 9 🟠 | 6 h buffer; keep work committed and documented so it's easy to resume | Reduce to Must-have only | Developer | Open — ~6 weeks of buffer remaining |
 
-## Top risks to act on now
-1. **R-01 (20)** — do the data-source spike before Phase 2 is approved.
-2. **R-03 (16)** — keep the MVP minimal in Phase 2.
-3. **R-04 / R-02 (12)** — set up secret handling before any key exists; read ToS during the spike.
+## Top risks to act on now (reviewed 2026-11-24)
+1. **R-02 (12)** — verify the OSM tile usage policy and Vercel Hobby terms before deploying (Phase 6).
+2. **R-04 (12)** — turn on GitHub secret scanning and push protection (Phase 6).
+3. **R-10 (9)** — scope creep: 7 Could features added since 12 Nov; freeze features until Phase 5 is done.
+4. **R-12 (9)** — keep the remaining buffer for testing and deployment.
+
+*R-01 and R-03 (the original top two) are closed.*

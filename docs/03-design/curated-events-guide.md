@@ -16,7 +16,9 @@ Skip anything dated next year, even if it is already on sale. Review this rule a
 
 ## Steps for each event
 1. Copy one entry from [`curated-events-template.json`](curated-events-template.json).
-2. Give it the next ID: `kl-0004`, `kl-0005`, … (Klang Valley) or `sb-0007`, … (Sabah, CR-11).
+2. Give it the next free ID: look at the highest existing number in `data/curated-events.json` and add 1
+   (`kl-` for Klang Valley, `sb-` for Sabah, CR-11). As of 2026-11-24 the next ones are `kl-0052` and `sb-0006`.
+   Never reuse an ID, even after deleting an event: saved bookmarks and shared links point to it.
 3. Fill in `title`, a short `description`, `start` (and `end` if known) as
    `YYYY-MM-DDTHH:MM:SS+08:00`.
 4. **Coordinates:** open openstreetmap.org, search the venue, right-click the spot →
@@ -25,8 +27,10 @@ Skip anything dated next year, even if it is already on sale. Review this rule a
 6. `price`: free → `{ "min": 0, "currency": "MYR" }`; one price → `{ "min": 35, "currency": "MYR" }`;
    range → add `"max"`; unknown → `null`.
 7. `url`: the official page (`https://` only).
-8. Save. In Phase 4 the file lives at `data/curated-events.json`; a validation script will tell you
-   if anything is wrong.
+8. Save `data/curated-events.json` and check it: run `npm run dev`, search near the venue and make sure
+   the event appears. Every entry is checked against the event schema when the file loads; an invalid
+   entry is **skipped** (not shown) and the terminal prints
+   `[curated] skipped invalid entry: <id>`. There is no separate validation script.
 
 ## Weekly upkeep (~30 min, NFR-19)
 - Add new upcoming events; ended ones are hidden automatically (you can delete them monthly).

@@ -3,7 +3,8 @@
 | Field | Value |
 |---|---|
 | Phase | 2 — Requirements |
-| Version | 1.0 (draft for approval) |
+| Product name | Written as "Events Near Me"; the product is now **Happening** (CR-01). Title kept as approved. |
+| Version | 1.0 — approved 2026-11-11 |
 | Date | 2026-11-11 |
 | Standard | Structure based on IEEE 830 / ISO/IEC/IEEE 29148 |
 
@@ -37,10 +38,14 @@ See project charter §4 for out-of-scope items.
 | Source | Where event data comes from (curated dataset, Eventbrite, …) |
 | Adapter | Code that converts one source's data into the app's common `Event` format |
 | Curated dataset | A JSON file of real events entered by the developer, each linking to its official page |
-| Search point | The location results are measured from: the device's location or a dropped pin |
+| Search point | The location results are measured from: the device's location, a dropped pin, or an area's centre |
+| Area | A named place with a public centre point (Klang Valley, Kota Kinabalu) that can be used as the search point without sharing location (FR-41) |
 | MVP | Minimum Viable Product — the Must-have requirements |
 | PWA | Progressive Web App — a website that behaves like an installable app |
 | MoSCoW | Must / Should / Could / Won't (this time) prioritisation |
+| Explore screen | The main screen: the map and the results list shown together (Night Map, DC-01) |
+| Quick chip | A one-tap shortcut that sets one or more filters to a preset ("Today", "Free this week") |
+| Last search | The public events returned by the most recent successful search, kept on the device for offline use (FR-40); never includes the search point |
 
 ### 1.4 References
 `docs/01-planning/project-charter.md`, `feasibility.md`, `risk-register.md`, `data-source-spike.md`.
@@ -58,7 +63,7 @@ flowchart LR
     U[User on phone browser] -->|location / pin, filters| APP[Events Near Me web app]
     APP -->|search| SRV[App server functions]
     SRV --> CUR[(Curated KL events JSON)]
-    SRV --> EB[Eventbrite API - by organiser]
+    SRV -.deferred, CR-03.-> EB[Eventbrite API - by organiser]
     SRV -.optional.-> PHQ[PredictHQ API - if free tier confirmed]
     APP --> OSM[OpenStreetMap tiles]
     APP -->|directions link| GM[Google Maps / Waze]
@@ -169,7 +174,7 @@ Priority uses MoSCoW. **M** = Must (MVP), **S** = Should, **C** = Could, **W** =
 |---|---|---|
 | W-01 | User accounts / login | Not needed for MVP; adds privacy and security work |
 | W-02 | User-submitted events, moderation | Out of scope (charter) |
-| W-03 | Push notifications / reminders | Time |
+| W-03 | Push notifications (web push) | Time; needs a server and stored subscriptions. Event reminders are covered by calendar alarms instead (FR-39, CR-09) |
 | W-04 | Bahasa Melayu interface | English-only decided 2026-11-11 |
 | W-05 | Ticket purchase / payments | Out of scope |
 | W-06 | Native app-store apps | PWA chosen |
@@ -222,9 +227,11 @@ Priority uses MoSCoW. **M** = Must (MVP), **S** = Should, **C** = Could, **W** =
 
 ### US-03 — See events on a map (FR-07, FR-08, FR-09)
 *As a user, I want to see events on a map so that I can judge how close they are.*
-- **Given** results exist, **when** I switch to Map view, **then** each event with coordinates has a marker, and my search point is shown.
-- **When** I tap a marker, **then** a card shows title, date and price with a "View details" button.
-- **When** I switch back to List view, **then** my filters are unchanged.
+*(Updated for Night Map, DC-01: the map and the list are on one Explore screen, so there is no List/Map switch.)*
+- **Given** results exist, **when** the Explore screen shows, **then** the map shows one pin per event with coordinates and my search point, and the list below shows the same events.
+- **When** I tap a pin, **then** it is highlighted and its event is highlighted in the list, from where I can open the details.
+- **When** I change a filter, **then** the map pins and the list change together.
+- **Given** an event has no coordinates, **then** it is in the list with "not on map" and has no pin.
 
 ### US-04 — Filter results (FR-10 – FR-15)
 *As a student on a budget, I want to filter by distance, date, category and price so that I only see events I can attend and afford.*
@@ -269,6 +276,54 @@ Priority uses MoSCoW. **M** = Must (MVP), **S** = Should, **C** = Could, **W** =
 - **Given** I add a valid event to the curated JSON file and deploy, **then** it appears in results.
 - **Given** an entry is missing a required field (e.g. official link), **then** it is skipped and a warning is logged.
 
+### US-12 — Free events this week (FR-34)
+*As a student on a budget, I want one tap to see free events this week so that I don't have to set two filters.*
+- **When** I tap "Free this week", **then** the price filter is Free only, the date filter is Next 7 days, the chip shows as on (check mark), and only free events in the next 7 days are listed.
+- **When** I tap it again, **then** only the price and date filters go back to All and Next 30 days; my other filters stay.
+- **Given** I set Free only and Next 7 days in the filter sheet myself, **then** the chip also shows as on.
+
+### US-13 — Find an event by name (FR-35)
+*As a user, I want to type a word and see matching events so that I can find one I heard about.*
+- **When** I type "jazz bukit", **then** only events whose title, venue, address or category contain both words are listed (upper/lower case and accents ignored).
+- **Given** a search is typed, **when** I change other filters, **then** both apply together.
+- **When** I tap Reset in the filter sheet, **then** my search text stays; **when** I empty the box, **then** the search stops applying.
+- **Given** nothing matches, **then** the empty state suggests a different search.
+
+### US-14 — What's on today (FR-36)
+*As a student, I want one tap to see what is on today so that I can decide what to do tonight.*
+- **When** I tap "Today", **then** only events still to come before midnight (Malaysia time) are listed and the chip shows as on.
+- **When** I tap it again, **then** the date filter goes back to Next 30 days and nothing else changes.
+- **Given** "Today" and "Free this week" are both tapped, **then** both chips can be on together.
+
+### US-15 — Good-looking shared links (FR-37)
+*As a user sharing an event, I want the link to show the event's details in the chat so that friends know what it is before opening it.*
+- **Given** I share an event link in a chat app, **then** the preview shows "<event title> — Happening", a line with date, venue and price, and the event image if it has one.
+- **Given** the link is for an ended or missing event, **then** the preview shows the plain title "Event — Happening".
+
+### US-16 — Directions by public transport (FR-38)
+*As a student without a car, I want directions by LRT/MRT or bus so that I know how to get there.*
+- **When** I tap "By public transport" on the details page, **then** Google Maps opens in a new tab with the venue as destination in public-transport mode.
+
+### US-17 — Calendar reminders (FR-23, FR-39)
+*As a user, I want the event in my calendar with reminders so that I don't forget it.*
+- **When** I tap "Add to calendar", **then** an `.ics` file downloads with the event's title, time (Malaysia time), venue and official link.
+- **Given** the event starts more than a day from now, **then** the file has a reminder one day before and one hour before.
+- **Given** a reminder time has already passed, **then** that reminder is left out (no instant alerts).
+
+### US-18 — Use the app with no signal (FR-33, FR-40)
+*As a student with patchy mobile data, I want the app to keep working offline so that I can still check events I looked at.*
+- **Given** I visited the app before, **when** I open it with no connection, **then** the pages open.
+- **Given** a search can't reach the server, **then** the events from my last successful search are shown with "Showing events saved on <date>" and a Try again button.
+- **Then** my location or pin is not stored on the device; **when** I tap "Clear saved data", **then** the saved events are removed too.
+- **Given** I use Chrome on Android or Safari on iOS, **then** I can add the app to my home screen (FR-33).
+
+### US-19 — Browse an area without sharing location (FR-41)
+*As a visitor who doesn't want to share location or pick a spot, I want to tap an area name so that I can still see what's on there.*
+- **Given** I am on the welcome screen or the pick-a-spot screen, **then** I see "Or browse an area" with a button for each area showing how many events it has ("No events yet" when none).
+- **When** I tap "Kota Kinabalu", **then** the list shows exactly that many events, the distance is 50 km, every other filter is at its default, and the top bar says "Kota Kinabalu".
+- **Then** my own location is never requested or sent; only the area's public centre is used.
+- **Given** the counts can't be loaded (offline or server error), **then** the buttons still work and show no number.
+- **When** I then tap the map and search there, **then** the top bar says "Pinned spot" again.
 ---
 
 ## 6. MVP definition

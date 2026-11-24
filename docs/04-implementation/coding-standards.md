@@ -106,3 +106,9 @@ To update: review the new tag's diff first, then change `ref` in `.claude/settin
 They were reviewed on 2026-11-11: Markdown guidance only, except one script in `ui-taste` (`scripts/verify-visual-evidence.mjs`) — read in full; it only checks local screenshot hashes and makes no network calls, installs or writes. Don't run it without a reason. Claude now writes the slices (changed 2026-11-11), using these skills.
 `.claude/CLAUDE.md` tells every Claude session to check these skills before each change.
 Update later with `npx skills update -p` and review the diff before committing.
+
+## 7. Subagents (role prompts)
+
+Eight SDLC role agents live in `.claude/agents/` — see the table in `.claude/CLAUDE.md`. Each prompt
+has Role, Context (files to read first), Task, Reasoning, Stop conditions and Output. They follow the
+same rules as this document; the owner stays the decision maker at every stop condition.
