@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { z } from "zod";
 import {
   CuratedEventSchema,
   EventSchema,
@@ -86,5 +87,12 @@ describe("FR-05 / FR-21 isEnded", () => {
   });
   it("falls back to the start time", () => {
     expect(isEnded({ start: "2026-11-11T11:00:00+08:00" }, now)).toBe(true);
+  });
+});
+
+describe("Zod settings (DEF-07)", () => {
+  it("turns off Zod's eval check so the CSP never reports a blocked eval", () => {
+    // Loading event-schema.ts (imported above) must have switched jitless on.
+    expect(z.config().jitless).toBe(true);
   });
 });

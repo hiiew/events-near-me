@@ -3,9 +3,9 @@
 | Field | Value |
 |---|---|
 | Phase | 5 — Testing |
-| Version | 0.2 — first automated run, then a re-run after the DEF-01 – DEF-06 fixes (§1.1). UAT, Lighthouse and real-device results follow |
+| Version | 0.4 — adds the DEF-07 fix and the owner's acceptance of DEF-08 (§1.3). Before: 0.3 — Lighthouse on ENV-1 and DEF-05 accepted; 0.2 — re-run after DEF-01 – DEF-06; 0.1 — first run. UAT, ENV-2 and real-device results follow |
 | Run date | 2026-11-24 |
-| Commit under test | branch `claude/kind-gates-6ijzwm` = `main` after PR #21, plus the test files of this step (no app code changed) |
+| Commit under test | branch `claude/kind-gates-6ijzwm` = `main` after PR #21, plus the test files of this step (no app code changed). Lighthouse (§1.2): `main` after PR #22, no app code changed |
 | Standard | Structure based on IEEE 829 / ISO/IEC/IEEE 29119-3 (test completion report) |
 | Plan / cases | [`test-plan.md`](test-plan.md) · [`test-cases.md`](test-cases.md) |
 
@@ -50,6 +50,36 @@ a normal 404. TC-24 is split: the missing-event part passes; the malformed-link 
 failure), 0 failed, ≈ 28 s. `npm test` 156 passed, `npm run lint` 0 problems (generated `coverage/`,
 `playwright-report/` and `test-results/` folders are now in ESLint's ignore list), server log 0 `Date.now()`
 lines. Visual check at 360 px, dark and light: credit readable above the sheet; details page unchanged.
+
+### 1.2 Lighthouse run and DEF-05 decision (2026-11-24)
+
+**DEF-05 accepted by the owner on 2026-11-24** as a known Next.js limitation (§3). The TC-24 malformed-link
+test stays `test.fail()`, so a Next.js upgrade that fixes it shows up as "unexpectedly passed".
+
+**Lighthouse 13.6.0** (`npx` only, not in `package.json`), Playwright's Chromium 1243
+(`/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`, `--headless=new --no-sandbox`), against `npm run build` +
+`npm start -p 3456` (ENV-1). Mobile form factor, default throttling (simulated: 150 ms RTT, 1.6 Mbit/s, 4× CPU),
+all four categories, **3 runs per page** (median reported, RT-08). Light theme by default; one extra
+Accessibility run per screen in dark (`--force-dark-mode`, checked to make `prefers-color-scheme: dark` match).
+The Explore screen needs a tap first, so it was measured with a **Lighthouse user flow**
+(`evidence/lighthouse/explore-flow.mjs`): navigate to `/` → timespan "tap Klang Valley until the 26 result rows
+show" → snapshot of Explore with results; 3 runs light + 1 dark. Details page: `/event/curated:kl-0014` (real
+upcoming event, Fri 27 Nov). Results and findings: §2.4; evidence: [`evidence/lighthouse/`](evidence/lighthouse/)
+(`summary.json` = every run's scores, metrics and failed audits; the median home and details reports and one
+Explore flow, with screenshots stripped to keep them small).
+
+### 1.3 DEF-07 fixed, DEF-08 accepted (2026-11-24)
+
+**DEF-07:** `src/lib/event-schema.ts` now calls `z.config({ jitless: true })`, so Zod 4 no longer tries `new Function`
+(which our CSP blocks) to decide whether it can compile faster parsers. A unit test checks the setting stays on.
+Proof with the same tool that found it: Lighthouse 13.6.0 Best Practices on `/` and `/about` was **96 without the fix
+and 100 with it** (same build steps, same machine). A page-level `securitypolicyviolation` listener and the DevTools
+Audits issue stream did not show the report in either version, so Lighthouse is the check of record.
+After the change: `npm test` 157 passed, `npm run test:e2e` 70 passed, lint clean.
+
+**DEF-08:** accepted by the owner. Next.js 16 streams `generateMetadata` output to normal browsers, so the
+details page's description arrives in `<body>` (Lighthouse SEO 90). Bots on Next's list still get it in `<head>`, so
+share previews work (TC-45). Forcing blocking metadata for everyone (`htmlLimitedBots`) would slow that page.
 
 Test bugs found and fixed while writing the suites (the app was right): link names needed `exact: true`
 (the row's external-link button's name also contains the title); the details page and the welcome screen
@@ -140,11 +170,51 @@ scans ran too early and gave different results from run to run).
 
 | TC | Why |
 |---|---|
-| TC-57, TC-61 | Lighthouse (`npx lighthouse@13.6.0`) is the next step of this phase; not part of the Playwright run |
 | TC-64 | Needs the Vercel URL (ENV-2) |
 | TC-66 | Device/browser matrix needs real phones and other browsers; row D-1 (headless Chromium) = this whole run |
 | TC-35, TC-48, TC-73 and the manual parts of TC-08, TC-26, TC-27, TC-38, TC-45, TC-51, TC-59, TC-62 | Need a real phone, a calendar/chat app, a screen reader or UAT testers (owner; test-plan §9) |
 | TC-37, TC-68, TC-69, TC-71 | Review/process audits planned with the owner (design walk-through, Vercel dashboard, source-terms check, curated-data history) |
+
+### 2.4 Lighthouse (TC-57, TC-61) — ENV-1, mobile
+
+| TC | Requirements | Result | Evidence / notes |
+|---|---|---|---|
+| TC-57 | NFR-02 | **Pass (ENV-1)** | Home page Performance runs **92, 98, 98 → median 98** (≥ 80). Final figure on ENV-2 still to take (test-plan RT-08, TC-57 Pre) |
+| TC-61 | NFR-05 | **Pass (ENV-1)** | Accessibility `/`, `/about`, `/saved`, `/event/<id>` = **100** in light and dark; Explore with results (flow snapshot) = **96** light and dark (only `target-size` on crowded map pins — not a defect, see below). ENV-2 run still to take (TC-61 Pre) |
+
+**Scores per page** (P = Performance, A = Accessibility, BP = Best Practices, SEO; median of 3 runs, light; A also run in dark):
+
+| Page | P (3 runs) | A | BP | SEO | Key metrics (median run) |
+|---|---|---|---|---|---|
+| `/` welcome (S-1) | **98** (92, 98, 98) | 100 (dark 100) | 96 | 100 | FCP/LCP 0.77 s, TBT 165 ms, CLS 0 |
+| Explore with results (S-2), user flow | navigation of `/` 98 (98, 98, 96); timespan "tap → results" **81** (81, 83, 80) | snapshot **96** (dark 96) | timespan 89 · snapshot 100 | snapshot 100 | timespan: TBT ≈ 220 ms, INP 148 ms, CLS 0.162 (see below) |
+| `/event/curated:kl-0014` (S-4) | **98** (93, 98, 98) | 100 (dark 100) | 96 | **90** | LCP 0.76 s (2.8 s on the first, cold run), TBT 161 ms |
+| `/saved` (S-5) | **98** (98, 99, 96) | 100 (dark 100) | 96 | 100 | LCP 0.76 s, TBT 99–214 ms |
+| `/about` (S-6) | **99** (100, 99, 99) | 100 (dark 100) | 96 | 100 | LCP 0.76 s, TBT 70–139 ms |
+
+A snapshot has no Performance score (Lighthouse shows "0"/not applicable for it). Lighthouse 13 also reports an
+"Agentic browsing" category (100 everywhere); it is not part of any requirement.
+
+**Failed audit items and what they are:**
+
+| Audit | Where | Cause | Counted as |
+|---|---|---|---|
+| `inspector-issues` (BP −4) | every page | Chrome logs a CSP issue: `script-src` blocks an `eval`-type call at `/_next/static/chunks/3k1xh3mk2iqet.js` col 12129 — Zod 4's feature probe `try { Function("") }` (it falls back to normal mode, nothing breaks). Zod runs in the browser for bookmarks and the offline cache | **DEF-07** (S4) |
+| `meta-description` (SEO −10) | details page only | Next.js 16 streams `generateMetadata` output for normal browsers: `<meta name="description">` (and `<title>`) arrive inside `<body>`, so Lighthouse finds no description in `<head>`. Bots on Next's limited-HTML list still get it in `<head>` (TC-45 passes) | **DEF-08** (S4) |
+| `errors-in-console` (BP, timespan 89) | Explore flow only | 20+ `net::ERR_TUNNEL_CONNECTION_FAILED` for `tile.openstreetmap.org` — this container blocks outside hosts | **Environment only**, not a defect |
+| `target-size` (A 96) | Explore snapshot | 19 map pins 24 × 24 px overlap each other around central KL at the 50 km zoom (WCAG 2.2 2.5.8 check) | **Not a defect**: 2.5.8's "equivalent" exception — every pin's event is also a full-size row in the list (ui-ux §6 "map is never the only way"; same rule as the TC-62 target-size check). Note for UAT: with real data the central-KL pins are hard to tap one by one |
+| `cumulative-layout-shift` 0.162 | Explore timespan | The welcome panel turns into the 62 px top bar 72 ms after the tap. Chrome's Layout Instability API marks this shift `hadRecentInput: true` (checked in a separate Playwright run), so real-user CLS excludes it; Lighthouse's timespan counts it | **Not a defect** (expected change in response to the tap) |
+| `total-blocking-time`, first-run LCP | all | TBT 70–350 ms (scores 0.73–0.99); one cold details-page run with LCP 2.8 s | Within the ≥ 80 target; no action |
+
+**How much the blocked hosts change the scores:** `/`, `/about`, `/saved` and the details page request **nothing**
+outside localhost on load (Lighthouse network list: 16–17 requests, all local), so their scores are **not**
+affected by the block. Only Explore loads OSM tiles: in the container they fail at once, so the timespan's
+Performance (81) **leaves out the tile download and decode** that a real phone does — reality may be a little
+worse — and its Best Practices (89) is **lowered** by the tile errors; with tiles loading it would most likely be 96 like
+the other pages (only DEF-07 left). Other environment effects: localhost has no real network distance, TLS or CDN
+(simulated throttling models some of it), and `is-on-https` passes only because Chrome treats localhost as secure.
+That is why the plan keeps the final NFR-02 figure and the TC-61 re-run on ENV-2. A Lighthouse score is not WCAG
+conformance: the manual part of TC-62 is still open.
 
 ---
 
@@ -160,8 +230,10 @@ again if the defect comes back, so the fix PR can be checked with `npm run test:
 | **DEF-02** | S3 Medium | TC-60 | NFR-05 (M) | Search-point pin is a focusable "button" with no name | **Fixed** (re-test pass) |
 | **DEF-03** | S3 Medium | TC-60 | NFR-05 (M), FR-17 | Details page `<dl>` has invalid structure | **Fixed** (re-test pass) |
 | **DEF-04** | S4 Low | TC-62 | NFR-05 (M) | "Filters" text button is 42 × 44 px (target ≥ 44 × 44) | **Fixed** (re-test pass) |
-| **DEF-05** | S4 Low | TC-24 | FR-17 (M), FR-05 (M) | Malformed event link returns a bare HTTP 500 | **Open — cannot fix in the app** (Next.js limitation, §1.1); owner to accept or wait for a Next.js fix |
+| **DEF-05** | S4 Low | TC-24 | FR-17 (M), FR-05 (M) | Malformed event link returns a bare HTTP 500 | **Accepted by owner 2026-11-24 — Next.js limitation** (§1.1; TC-24 malformed-link test stays `test.fail()`) |
 | **DEF-06** | S4 Low | TC-40 (log review) | FR-37 (C) | Server logs a Next.js "unstable value `Date.now()`" error on every details request | **Fixed** (0 such log lines on re-run) |
+| **DEF-07** | S4 Low | TC-61 (Lighthouse BP) | security-privacy §7 CSP (TC-72), T-03 | Zod's `Function("")` probe trips the CSP on every page (Chrome "issue", Best Practices 96) | **Fixed 2026-11-24** — `z.config({ jitless: true })` in `event-schema.ts`; Lighthouse Best Practices 96 → **100** on `/` and `/about` (same Lighthouse 13.6.0, with vs without the fix) |
+| **DEF-08** | S4 Low | TC-61 (Lighthouse SEO) | FR-37 (C) | Details page `<meta name="description">` is streamed into `<body>` for normal browsers (SEO 90) | **Accepted by owner 2026-11-24** — Next.js 16 streams metadata to normal browsers; bots still get it in `<head>` (TC-45 passes). Not fixed: `htmlLimitedBots` for everyone would slow the details page |
 
 **DEF-01 — OSM attribution hidden behind the list sheet (S2).**
 Steps: open `/` at 360 × 740 → Use my location → results show. Look at the bottom-right corner of the map.
@@ -202,6 +274,9 @@ the server log. `/event/%25` and well-formed ids work. Only reachable by hand-ed
 The comment in `event/[id]/page.tsx` assumes Next.js rejects malformed `%` itself — it does, but with a 500;
 `decodeURIComponent` in `EventPage` is not inside a `try` (as it is in `generateMetadata`). Developer to confirm where the 500 comes from.
 
+**DEF-05 decision:** accepted by the owner on 2026-11-24 as a known limitation of Next.js 16; no app change.
+FR-05 and FR-17 no longer wait for it (§4).
+
 **DEF-06 — Next.js error logged on every details request (S4).**
 Steps: start the production server, open any `/event/<id>`, read the server output.
 Expected: no error output for a normal page view. Actual: `Error: Route "/event/[id]": Next.js encountered
@@ -209,6 +284,30 @@ the unstable value Date.now() while prerendering`, stack in `generateMetadata` (
 `generateMetadata` calls `isEnded()` (→ `Date.now()`) before any dynamic data access; `EventDetail` awaits
 `connection()` but `generateMetadata` does not. No visible effect: the preview metadata is correct (TC-45
 passes). Risk: the noise hides real errors in the Vercel logs. Likely fix: `await connection()` at the top of `generateMetadata`.
+
+**DEF-07 — Zod's eval probe trips the CSP on every page (S4).**
+Steps: `npm run build && npm start`; open any page (`/`, `/about`, `/saved`, `/event/<id>`) in Chrome with
+DevTools → Issues (or run Lighthouse Best Practices).
+Expected: no Content Security Policy issue on a normal page view (the CSP of §7 is meant to block `eval`, and
+nothing in the app should try it). Actual: one "Content security policy" issue per page,
+`violatedDirective: script-src`, `kEvalViolation`, source `/_next/static/chunks/3k1xh3mk2iqet.js` col 12129 =
+Zod 4's `try { Function(""), !0 } catch { !1 }` JIT check. Nothing breaks (Zod falls back) and no console error is
+shown; Lighthouse `inspector-issues` fails → Best Practices 96 on every page. Why S4: no effect on use; it adds
+noise that could hide real CSP problems (and CSP reports, if added later). Evidence:
+[`summary.json`](evidence/lighthouse/summary.json) (`inspector-issues` in every run). Likely fix (developer to decide):
+`z.config({ jitless: true })` once in the shared client code before any schema runs; do **not** add `'unsafe-eval'`.
+
+**DEF-08 — Details page meta description not in `<head>` (S4).**
+Steps: open `/event/curated:kl-0014` with a normal mobile Chrome user agent; run Lighthouse SEO, or
+`curl -A "Mozilla/5.0 (Linux; Android 11) Chrome/140 Mobile" <url>` and look for `<meta name="description"`.
+Expected: the description from `generateMetadata` (FR-37) in `<head>`, so every client reads it.
+Actual: `</head>` ends at byte ≈ 1 160; the `<meta name="description">` (and the `<title>`) appear at byte
+≈ 17 500, inside `<body>` — Next.js 16 streams metadata to non-bot user agents. Lighthouse `meta-description`
+fails → SEO 90 on this page only. Bots on Next's limited-HTML list (TC-45 used one) get it in `<head>`, so share
+previews work; only clients not on that list that read `<head>` only would miss it. No SRS requirement fails.
+Evidence: [`event-details-mobile-median.json`](evidence/lighthouse/event-details-mobile-median.json). Options
+(developer/owner): accept; or set Next's `htmlLimitedBots` so more agents get blocking metadata (costs streaming
+time on the details page — measure TC-57/56 again after).
 
 **Observation (not a defect, for TC-62's manual part):** after choosing an area or "Use my location" with the
 keyboard, the pressed button disappears and focus falls back to the page start, so a keyboard user Tabs
@@ -224,10 +323,14 @@ blocks FR-01 but not FR-04/FR-06.
 
 | Priority | Rows | ✅ now | Rows ✅ |
 |---|---|---|---|
-| **Must** | 39 (24 FR + 15 NFR) | **24** | FR-03, FR-04, FR-06 – FR-15, FR-18, FR-20, FR-24, FR-25, FR-28, FR-32; NFR-03, NFR-06, NFR-08, NFR-09, NFR-12, NFR-18 |
+| **Must** | 39 (24 FR + 15 NFR) | **26** | FR-03 – FR-15, FR-17, FR-18, FR-20, FR-24, FR-25, FR-28, FR-32; NFR-03, NFR-06, NFR-08, NFR-09, NFR-12, NFR-18 |
 | **Should** | 9 (5 FR + 4 NFR) | **2** | FR-21, NFR-11 |
 | **Could** (built) | 11 (FR-16 deferred) | **5** | FR-34, FR-35, FR-36, FR-40, FR-41 |
-| **Must + Should** | **48** | **25** | |
+| **Must + Should** | **48** | **28** | |
+
+**v0.3 changes:** FR-05 (TC-05 ✓, TC-24 missing-link part ✓) and FR-17 (TC-21 ✓, TC-23 ✓, TC-24 missing-link part ✓)
+had only DEF-05 open and no manual part; with DEF-05 accepted by the owner they are ✅. NFR-02 and NFR-05 stay open
+(below) although TC-57 and TC-61 pass on ENV-1.
 
 Must rows **not** ✅ and what they wait for:
 
@@ -235,20 +338,19 @@ Must rows **not** ✅ and what they wait for:
 |---|---|
 | FR-01 | TC-02 phone part (real permission prompt over HTTPS, TC-66 / ENV-2) |
 | FR-02 | TC-08 real-phone note (Q-6) |
-| FR-05, FR-17 | **DEF-05** (TC-24 malformed-link part; Next.js limitation — owner to accept) |
 | FR-19 | TC-26 app part on a phone |
 | FR-31 | TC-38 owner's read of the wording |
 | NFR-17 | TC-69 audit (DEF-01 fixed, FR-32 now ✅) |
 | NFR-01 | TC-56 final figure on ENV-2 (passes on ENV-1) |
 | NFR-04 | TC-73 UAT (TC-59 e2e part passes) |
-| NFR-05 | TC-61 Lighthouse; TC-62 manual part (DEF-02 – DEF-04 fixed, TC-60 and TC-62 auto part now pass) |
+| NFR-05 | TC-62 manual part (screen reader, 200 % zoom, contrast spot-check); TC-61 re-run on ENV-2 (TC-60, TC-62 auto part and TC-61 on ENV-1 pass) |
 | NFR-07 | TC-64 on ENV-2 |
 | NFR-10 | TC-40 unit step (console spy in `route.test.ts`) missing |
 | NFR-13 | TC-66 device matrix |
 | NFR-14 | TC-37 design walk-through |
 | NFR-16 | TC-68 Vercel dashboard |
 
-Should rows not ✅: FR-22 (TC-35 phone share sheet), NFR-02 (TC-57 Lighthouse), NFR-15 (CI part of TC-67),
+Should rows not ✅: FR-22 (TC-35 phone share sheet), NFR-02 (TC-57 passes on ENV-1 with median 98; final figure on ENV-2, RT-08), NFR-15 (CI part of TC-67),
 NFR-19 (TC-71 process check); **FR-26, FR-29, FR-30 are gaps — not built** (CR-03; need a second source).
 
 ---
@@ -257,12 +359,12 @@ NFR-19 (TC-71 process check); **FR-26, FR-29, FR-30 are gaps — not built** (CR
 
 | # | Criterion | Status |
 |---|---|---|
-| 1 | Every Must row ✅ | ❌ 24 / 39 |
+| 1 | Every Must row ✅ | ❌ 26 / 39 |
 | 2 | Every built Should row ✅; FR-26/29/30 listed as gaps | ❌ 2 of 6 built; gaps listed ✅ |
-| 3 | No open Critical/High defects | ✅ DEF-01 fixed; only DEF-05 (S4) open |
+| 3 | No open Critical/High defects | ✅ No open defects: DEF-01 – DEF-04, DEF-06, DEF-07 fixed; DEF-05 and DEF-08 (S4) accepted by owner |
 | 4 | UAT done (owner + Testers A–C), NFR-04 met | ❌ not started (23–29 Dec; needs refreshed data, RT-01) |
-| 5 | `test-report.md` written | 🟡 this v0.1 |
+| 5 | `test-report.md` written | 🟡 this v0.3 (UAT, ENV-2 and real-device results to add) |
 | 6 | Core logic line coverage ≥ 70 % | ✅ 90.7 % |
 
-**Next:** owner accepts DEF-05 (or not);
-add the TC-40 console-spy unit test; Lighthouse TC-57/TC-61; owner's real-device cases and UAT (test-plan §7).
+**Next:** add the TC-40 console-spy unit test; ENV-2
+(Vercel URL) for TC-57/TC-61 final runs, TC-56, TC-64; owner's real-device cases, TC-62 manual part and UAT (test-plan §7).
