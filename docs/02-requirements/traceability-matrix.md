@@ -3,8 +3,8 @@
 | Field | Value |
 |---|---|
 | Phase | 2 — Requirements (living document — filled in during Phases 3–5) |
-| Version | 1.0 |
-| Date | 2026-11-11 |
+| Version | 1.1 |
+| Date | 2026-11-11 (last updated 2026-11-24: user stories US-12–US-18 linked, screen IDs corrected — CR-13) |
 
 > **What is an RTM?** A table that links every requirement forward to the design element that
 > handles it, the code that builds it and the test that proves it. It answers two questions an
@@ -22,7 +22,7 @@
 | FR-05 | M | The app shall hide events that have already ended | US-01 | D-09, D-03 | `src/lib/sources/curated.ts` (+ test) | | 🛠 |
 | FR-06 | M | The app shall show results in a list, sorted by start date (soonest first)… | US-01 | D-01 S-2, D-03 (sort) | `src/lib/filters.ts` sort soonest/nearest (+ test), `EventRow.tsx` | | 🛠 |
 | FR-07 | M | The app shall show results on a map with one marker per event; tapping a… | US-03 | D-05, S-3 | `MapView.tsx` pins; selected pin highlights its row | | 🛠 |
-| FR-08 | M | The user shall be able to switch between list and map view without losing… | US-03 | D-01 (Explore toggle) | Map and list shown together on Explore (Night Map); filters shared | | 🛠 |
+| FR-08 | M | The user shall be able to switch between list and map view without losing… | US-03 | D-01, S-2 + S-3 on one Explore screen (DC-01) | Map and list shown together on Explore (Night Map); filters shared | | 🛠 |
 | FR-09 | M | Events without coordinates shall appear in the list (labelled "Location on… | US-03 | D-05, S-2 label | `filters.ts` keeps no-coordinate events in list (+ test); `EventRow` says "not on map" | | 🛠 |
 | FR-10 | M | Distance filter: 2, 5, 10 (default), 25 or 50 km | US-04 | D-03, S-7 | `filters.ts` (+ test), `FilterSheet.tsx` | | 🛠 |
 | FR-11 | M | Date filter: Today, This weekend, Next 7 days, Next 30 days (default) | US-04 | D-03, S-7 | `filters.ts` `whenWindow` in Malaysia time (+ tests), `FilterSheet.tsx` | | 🛠 |
@@ -31,19 +31,19 @@
 | FR-14 | M | Filters shall combine (AND) and update results without a full page reload | US-04 | D-03 (client-side, ADR-06) | `applyFilters` runs on the device, no reload (ADR-06) | | 🛠 |
 | FR-15 | M | The app shall show a clear empty state when no events match, suggesting a… | US-04 | D-01 S-2 empty state | `page.tsx` empty state with "Widen to N km" | | 🛠 |
 | FR-16 | C | Custom date range picker | — | S-7 (deferred) | | | ⏸ |
-| FR-34 | C | "Free this week" quick chip: one tap sets Free only + Next 7 days; tap again resets those two (CR-04) | US-04 | S-3 (chip under the list heading), ui-ux.md §4 | `filters.ts` `isFreeThisWeek`/`toggleFreeThisWeek` (+ test), `QuickChip.tsx`, `page.tsx` | | 🛠 |
-| FR-35 | C | Search box: type words to narrow the list by title, venue, address or category (CR-05) | — | S-3 (search field under the list heading), ui-ux.md §4 | `filters.ts` `matchesQuery` + `query` filter (+ test), `SearchBox.tsx`, `FilterSheet.tsx` (Reset keeps the search), `page.tsx` | | 🛠 |
-| FR-36 | C | "Today" quick chip: one tap sets Date = Today; tap again resets only the date (CR-06) | — | S-3 (chip row under the search box), ui-ux.md §4 | `filters.ts` `isToday`/`toggleToday` (+ test), `QuickChip.tsx` (shared with FR-34), `page.tsx` | | 🛠 |
+| FR-34 | C | "Free this week" quick chip: one tap sets Free only + Next 7 days; tap again resets those two (CR-04) | US-04, US-12 | S-2 (chip under the list heading), ui-ux.md §4 | `filters.ts` `isFreeThisWeek`/`toggleFreeThisWeek` (+ test), `QuickChip.tsx`, `page.tsx` | | 🛠 |
+| FR-35 | C | Search box: type words to narrow the list by title, venue, address or category (CR-05) | US-13 | S-2 (search field under the list heading), ui-ux.md §4 | `filters.ts` `matchesQuery` + `query` filter (+ test), `SearchBox.tsx`, `FilterSheet.tsx` (Reset keeps the search), `page.tsx` | | 🛠 |
+| FR-36 | C | "Today" quick chip: one tap sets Date = Today; tap again resets only the date (CR-06) | US-14 | S-2 (chip row under the search box), ui-ux.md §4 | `filters.ts` `isToday`/`toggleToday` (+ test), `QuickChip.tsx` (shared with FR-34), `page.tsx` | | 🛠 |
 | FR-17 | M | The event detail view shall show: title, start (and end if known) date/time… | US-05 | D-01 S-4, data-model Event | `src/app/event/[id]/page.tsx` (incl. image), `DistanceFromSearch.tsx`, `formatEventWhen` (+ test) | | 🛠 |
 | FR-18 | M | The detail view shall have a button that opens the official event / ticket… | US-05 | D-01 S-4 | Detail page "View official page"; row link in `EventRow.tsx` | | 🛠 |
 | FR-19 | M | The detail view shall have a Directions button that opens Google Maps or… | US-06 | D-11, S-4 | `src/lib/links.ts` Google Maps + Waze (+ test), detail page | | 🛠 |
-| FR-38 | C | "By public transport" button: Google Maps directions in transit mode (CR-08) | — | S-4 (button under Directions) | `links.ts` `googleMapsTransitUrl` (+ test), `icons.tsx` `TransitIcon`, `event/[id]/page.tsx` | | 🛠 |
+| FR-38 | C | "By public transport" button: Google Maps directions in transit mode (CR-08) | US-16 | S-4 (button under Directions) | `links.ts` `googleMapsTransitUrl` (+ test), `icons.tsx` `TransitIcon`, `event/[id]/page.tsx` | | 🛠 |
 | FR-20 | M | The user shall be able to bookmark and un-bookmark an event; bookmarks are… | US-07 | D-04, S-4/S-5 | `src/lib/bookmarks.ts` (+ test), `use-bookmarks.ts`, `EventActions.tsx`, `/saved` | | 🛠 |
 | FR-21 | S | Bookmarked events that have ended shall be marked "Ended" on the Saved screen | US-07 | D-04, S-5 | `/saved` "Ended" label via `isEnded` (+ test) | | 🛠 |
 | FR-22 | S | Share an event using the phone's share sheet, or copy its link where sharing… | US-08 | D-11, S-4 | `EventActions.tsx` share sheet / copy link, `shareData` (+ test) | | 🛠 |
-| FR-37 | C | Share previews: link preview shows event title, date/venue/price and image (CR-07) | — | S-4 (page metadata only, no visible change) | `links.ts` `sharePreview` (+ test), `event/[id]/page.tsx` `generateMetadata` | | 🛠 |
-| FR-23 | C | Add an event to the phone's calendar (`.ics` download) | — | D-11, S-4 (button on the details page; file made on the device) | `src/lib/ics.ts` (+ test), `EventActions.tsx` `CalendarButton`, `event/[id]/page.tsx` | | 🛠 |
-| FR-39 | C | Calendar reminders: the .ics has a day-before and an hour-before alarm (CR-09) | — | S-4 (same button as FR-23; no new UI) | `ics.ts` `alarms` (+ tests), `EventActions.tsx` (status message) | | 🛠 |
+| FR-37 | C | Share previews: link preview shows event title, date/venue/price and image (CR-07) | US-15 | S-4 (page metadata only, no visible change) | `links.ts` `sharePreview` (+ test), `event/[id]/page.tsx` `generateMetadata` | | 🛠 |
+| FR-23 | C | Add an event to the phone's calendar (`.ics` download) | US-17 | D-11, S-4 (button on the details page; file made on the device) | `src/lib/ics.ts` (+ test), `EventActions.tsx` `CalendarButton`, `event/[id]/page.tsx` | | 🛠 |
+| FR-39 | C | Calendar reminders: the .ics has a day-before and an hour-before alarm (CR-09) | US-17 | S-4 (same button as FR-23; no new UI) | `ics.ts` `alarms` (+ tests), `EventActions.tsx` (status message) | | 🛠 |
 | FR-24 | M | The system shall get events from all enabled sources through adapters that… | US-09 | D-06, D-07, D-09 (ADR-05) | `src/lib/sources/{types,aggregator,registry}.ts` (+ test) | | 🛠 |
 | FR-25 | M | The system shall load events from a curated dataset file in the repo | US-09, US-11 | D-09 curated, D-10, Zod | `src/lib/sources/curated.ts`, `data/curated-events.json` (+ test) | | 🛠 |
 | FR-26 | S | The system shall load events from Eventbrite for a configured list of KL… | — | D-09 eventbrite | Deferred to backlog — CR-03 (no organiser IDs by cut-off) | | ⏸ |
@@ -53,8 +53,8 @@
 | FR-30 | S | The system shall cache each source's responses on the server for a… | — | D-08 | | | 🎨 |
 | FR-31 | M | The app shall have a Privacy page explaining what location data is used,… | US-10 | S-6, security-privacy §5 | `src/app/about/page.tsx` (About & privacy) | | 🛠 |
 | FR-32 | M | The app shall show data-source attribution and OpenStreetMap attribution | US-05 | D-05, S-6 | OSM attribution on map + About; source name on detail page | | 🛠 |
-| FR-33 | C | The app shall be installable to the home screen (PWA manifest) | — | D-12 | `src/app/manifest.ts` + `manifest.test.ts`, `public/icons/*`, `src/app/apple-icon.png`, `layout.tsx` (`appleWebApp`) | | 🛠 |
-| FR-40 | C | Offline mode: pages open offline; last search's events shown with a "saved on" notice when the server is unreachable (CR-10) | — | D-04, D-12; S-3 (notice under the chips); S-6 (privacy text) | `public/sw.js`, `ServiceWorkerRegister.tsx`, `src/lib/offline-cache.ts` (+ test), `page.tsx`, `ClearSavedData.tsx`, `about/page.tsx`, `layout.tsx` | | 🛠 |
+| FR-33 | C | The app shall be installable to the home screen (PWA manifest) | US-18 | D-12 | `src/app/manifest.ts` + `manifest.test.ts`, `public/icons/*`, `src/app/apple-icon.png`, `layout.tsx` (`appleWebApp`) | | 🛠 |
+| FR-40 | C | Offline mode: pages open offline; last search's events shown with a "saved on" notice when the server is unreachable (CR-10) | US-18 | D-04, D-12; S-2 (notice under the chips); S-6 (privacy text) | `public/sw.js`, `ServiceWorkerRegister.tsx`, `src/lib/offline-cache.ts` (+ test), `page.tsx`, `ClearSavedData.tsx`, `about/page.tsx`, `layout.tsx` | | 🛠 |
 | NFR-01 | M | Performance: First results appear within 3 s of the search point being set,… | — | ADR-06, D-08 | | | 🎨 |
 | NFR-02 | S | Performance: Lighthouse Performance score ≥ 80 on mobile for the home page | — | ADR-06, D-08 | | | 🎨 |
 | NFR-03 | M | Usability / responsive: Fully usable from 360 px wide screens up to desktop;… | — | ui-ux wireframes (360 px) | Checked at 360 px and 390 px (no horizontal scroll) — Phase 5 to test 768/1280 | | 🛠 partial |

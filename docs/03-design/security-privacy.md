@@ -27,18 +27,18 @@
 flowchart LR
     subgraph Device["📱 User's device (trusted by user)"]
         GEO[Precise location] -->|round to 3 dp| RP[Rounded point]
-        LS[(localStorage:<br/>bookmarks, prefs)]
+        LS[(localStorage:<br/>bookmarks, last search events)]
     end
     subgraph Vercel["☁️ Our server (trust boundary 1)"]
         API[/api/events/search/]
         ENV[(Env vars:<br/>API tokens)]
     end
     subgraph ThirdParty["🌐 Third parties (trust boundary 2)"]
-        EB[Eventbrite]
+        EB[Eventbrite<br/>deferred, CR-03]
         OSM[OSM tiles]
     end
     RP -->|HTTPS POST body| API
-    API -->|token in header| EB
+    API -.->|token in header, when enabled| EB
     Device -->|tile requests| OSM
     GEO -.->|never leaves device| X((✗))
 ```
@@ -92,9 +92,10 @@ sequenceDiagram
 
 1. What we use: your location **or** a spot you pick, rounded to about 100 m.
 2. Why: only to find events near that point.
-3. What we keep: nothing on our servers. Your bookmarks and filter choices stay on this device.
-4. Who else: event sources (Eventbrite etc.) are queried by our server, not with your location
-   details; map images come from OpenStreetMap, which sees your IP address like any website.
+3. What we keep: nothing on our servers. On this device only: your bookmarks, and the events from
+   your last search so the app works offline (FR-40). Your location and filter choices are not saved.
+4. Who else: event data comes from our curated list (live sources such as Eventbrite, if added later,
+   are queried by our server, not with your location details); map images come from OpenStreetMap, which sees your IP address like any website.
 5. Control: "Clear saved data" button; you can turn off location in your browser at any time.
 6. Contact: project repository link.
 
