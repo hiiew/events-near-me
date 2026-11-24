@@ -106,14 +106,13 @@
 #### TC-10 — Change the search point at any time
 - **Req:** FR-03, US-02 · **Type:** e2e · **Playwright:** Yes (`e2e/location.spec.ts`)
 - **Pre:** PRE-A, PRE-B, PRE-C; started with **Pick a spot on the map**.
-- **Steps:** 1. Pan the map, tap **Search this map area**. 2. Set Category Music. 3. Tap the map at another spot. 4. Without reloading, use my location again.
+- **Steps:** 1. Pan the map, tap **Search this map area**. 2. Set Category Music. 3. Tap the map at another spot. 4. Without reloading, tap **Change** in the top bar, then **Cancel, back to results**. 5. Tap **Change**, then **Use my location**.
 - **Expected:** 1 and 3 each send one new search whose body is the new point (3 dp); top bar "Pinned
-  spot"; Music is still applied after 3. 4: a way to use the device location is available on the
-  results screen; after using it the top bar says "Your location" and filters are kept.
-- **Predicted to fail at step 4 (from reading `page.tsx`, not yet run):** **Use my location** is
-  only rendered in the welcome and pick-a-spot states; once results are shown the only way to change
-  the point is tapping the map (or reloading, which resets filters). FR-03 says "at any time by using
-  their location again or moving the pin". If confirmed: defect against a **Must** (S2, workaround = reload).
+  spot"; Music is still applied after 3. 4: the choose-a-spot panel opens; Cancel shows the same
+  results with Music still on and sends no request. 5: top bar says "Your location"; Music is still on.
+- *History:* written as "predicted to fail" (Q-8): there was no way back to the location from the
+  results. Fixed before execution by the **Change** button (CR-14); pre-checked in the browser
+  2026-11-24 (360 px, dark + light, keyboard), still to be run as this case.
 
 ### US-03 — See events on a map
 
@@ -383,12 +382,9 @@
 - **Pre:** PRE-A, PRE-B, PRE-C; browser clock Thu 17 Dec 10:00 MYT; second run at 21:00 MYT with an extra fixture event that ended at 19:00 today.
 - **Steps:** 1. Tap **Today**. 2. Tap **Today** again. 3. Set Category Music, tap **Today**, then **Today** again. 4. Tap **Today**, then **Free this week**.
 - **Expected:** 1: only F-01; chip `aria-pressed="true"`. 2: date back to Next 30 days; 6 rows.
-  3: Music stays selected throughout (only the date changes). 4 (US-14 third criterion): **both chips
-  pressed together**. Second run: the event that ended at 19:00 is not listed.
-- **Predicted to fail at step 4 (from reading the code, not yet run):** both chips are worked out
-  from the one date filter (`isToday` = date is Today; `isFreeThisWeek` = date is Next 7 days + Free),
-  so tapping **Free this week** switches Today off. Either US-14's third criterion or the code is
-  wrong — see Q-7. Not counted as a defect until the case is run.
+  3: Music stays selected throughout (only the date changes). 4 (US-14 third criterion, CR-14):
+  **Free this week** pressed, **Today** not pressed (only one date chip can be on). Second run: the
+  event that ended at 19:00 is not listed.
 
 ### US-15 — Good-looking shared links
 
@@ -693,11 +689,11 @@ that have no own NFR row.
 
 | # | Question | Where |
 |---|---|---|
-| Q-1 | Kota Kinabalu in UAT scope? (CR-11) | test-plan §1.3 |
+| Q-1 | ~~Kota Kinabalu in UAT scope?~~ **Answered 2026-11-24: no** — Klang Valley only (option A) | test-plan §1.3 |
 | Q-2 | No curated event has an image, so the FR-17 image and the FR-37 preview image can only be unit-tested. Add one event with an organiser image during the data refresh? | TC-21, TC-45 |
 | Q-3 | Wording differs between SRS and app: US-04 "No events match your filters" vs app "No events match"; FR-09 "Location on map not available" vs app "not on map" (US-03 already says "not on map"); FR-07 "summary card" vs the built pin-highlights-row (US-03 updated by CR-13, FR-07 text not). Accept the app wording (doc fix via the change log) or change the app? Tests assert the app wording until decided | TC-14, TC-20, TC-12 |
 | Q-4 | **Max price:** an event priced RM 20 – RM 80 is shown under "Max RM 50" (the app compares the *lowest* price). US-04 says "events above RM 50 are hidden". Is "from RM 20" acceptable? **This weekend:** an event that started Friday and is still running on Saturday is shown, while US-04 says "starting this Saturday or Sunday". Accept the built behaviour? | TC-16, TC-18 |
 | Q-5 | NFR-08 lists radius and dates as server inputs, but since ADR-06 the server only takes lat/lon and the device filters. TC-65 tests what exists; a CR could update the NFR wording | TC-65 |
 | Q-6 | FR-02 "takes longer than 10 s": the browser timeout starts only after the permission prompt is answered, and the "Finding your location…" state has no way out. To verify on a real phone (TC-08) | TC-08 |
-| Q-7 | US-14 says "Today" and "Free this week" can both be on together; in the code they cannot (both depend on the single date filter, so the second tap replaces the first). Which is intended? If the story is right this is a defect in FR-34/FR-36 (Could, S3); if the code is right US-14 needs a CR wording fix | TC-44 |
-| Q-8 | FR-03 (**Must**): once results are shown there is no **Use my location** button (and no area buttons); only tapping the map changes the point. If TC-10 confirms this, it is an S2 defect for the developer (likely a small change: show the button in the results state) | TC-10, TC-53 |
+| Q-7 | **Answered 2026-11-24: fix the docs** (CR-14, US-14 now says only one chip can be on). Original question: US-14 says "Today" and "Free this week" can both be on together; in the code they cannot (both depend on the single date filter, so the second tap replaces the first). Which is intended? If the story is right this is a defect in FR-34/FR-36 (Could, S3); if the code is right US-14 needs a CR wording fix | TC-44 |
+| Q-8 | **Fixed 2026-11-24** (CR-14: **Change** button in the top bar). Original finding: FR-03 (**Must**): once results are shown there is no **Use my location** button (and no area buttons); only tapping the map changes the point. If TC-10 confirms this, it is an S2 defect for the developer (likely a small change: show the button in the results state) | TC-10, TC-53 |

@@ -240,7 +240,10 @@ flowchart LR
 - **By public transport (FR-38, CR-08):** an outlined 50 px button (bus icon) directly under the lime
   Directions button on S-4. Opens in a new tab like the other links.
 - **Chip row (FR-36, CR-06):** "Today" and "Free this week" sit side by side (wrapping on narrow phones, 8 px
-  gap) and use the same chip style. They can be on together; "Today" only sets the date.
+  gap) and use the same chip style. Only one can be on at a time: both set the date filter, so tapping one turns the other off (CR-14). "Today" only sets the date.
+- **Change search area (FR-03, CR-14):** once results are shown, the place pill in the top bar ("Your location · 10 km")
+  is a button with a lime "Change" label (`--accent-text`). It reopens the choose-a-spot panel (Search this map area, Use my
+  location, area shortcuts) with a "Cancel, back to results" link; filters are kept. Accessible name "… Change search area".
 - **Search box (FR-35, CR-05):** a full-width field under the heading (`--surface` fill, `--line` border, 14 px
   radius, 44 px tall, search icon on the left, a visually hidden "Search events" label). Typing narrows the list
   live; the empty state suggests "a different search". The filter sheet's Reset does not clear it.

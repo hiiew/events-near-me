@@ -37,7 +37,7 @@
 | Penetration testing | No accounts or admin UI (T-09); headers, input validation and XSS are tested instead |
 | Third-party apps themselves (Google Maps, Waze, calendar apps, chat apps) | We test the link or file we hand over, and on a real phone that the app accepts it |
 
-### 1.3 Open scope question for the owner
+### 1.3 Scope question — decided
 **Is Kota Kinabalu (Sabah) in UAT scope?** CR-11 added 5 Sabah events and left this to the owner;
 FR-41 now shows a Kota Kinabalu button on the first screen, so testers *will* see it.
 - *Option A — Klang Valley only (current plan).* Automated tests still cover the Kota Kinabalu button
@@ -45,7 +45,7 @@ FR-41 now shows a Kota Kinabalu button on the first screen, so testers *will* se
 - *Option B — include Sabah.* Add one UAT task "browse Kota Kinabalu". Needs Sabah events dated in
   the UAT window (there are none today, see risk RT-01).
 
-Not decided here.
+**Decided by the owner 2026-11-24: option A, Klang Valley only.**
 
 ---
 
@@ -129,7 +129,7 @@ is the KK area centre (FR-41 tests).
 | `@vitest/coverage-v8` | Not installed | Add (matching Vitest 5.1) for NFR-15 |
 | CI | No `.github/workflows` yet | NFR-15's "linting passes in CI" is checked after Phase 6 sets up CI; until then `npm run lint` is run locally |
 
-Adding these four devDependencies is the first task of the execution step (owner OK requested, §10).
+**Done 2026-11-24 (owner OK):** added as exact-version devDependencies `@playwright/test@1.63.0` (matches the installed browser; smoke test passed, no `playwright install`), `@axe-core/playwright@4.14.0` (brings `axe-core` 4.14 explicitly) and `@vitest/coverage-v8@5.1.0` (first run: 97.6 % lines, 92.7 % branches on the unit-tested files). Lighthouse stays `npx` only. Plain `npm test` works in this container.
 
 ### 3.2 Device and browser matrix (NFR-13)
 NFR-13 asks for the **latest two major versions** of Chrome (Android) and Safari (iOS) plus desktop
@@ -248,10 +248,10 @@ Phase 4 finished early, so automated testing can start well before the original 
 | TC-66 | NFR-13 device/browser matrix | Real browsers and versions |
 
 ## 10. Decisions needed from the owner
-1. Kota Kinabalu in UAT scope — A or B (§1.3)?
-2. OK to add four devDependencies: `@playwright/test`, `axe-core` (or `@axe-core/playwright`), `@vitest/coverage-v8`; Lighthouse via `npx` only (§3.1)?
+1. ~~Kota Kinabalu in UAT scope?~~ **Answered: A, Klang Valley only.**
+2. ~~OK to add devDependencies?~~ **Answered: yes** (added 2026-11-24, see §3.1). Original question: OK to add four devDependencies: `@playwright/test`, `axe-core` (or `@axe-core/playwright`), `@vitest/coverage-v8`; Lighthouse via `npx` only (§3.1)?
 3. Does the Vercel URL exist yet (ENV-2)? If not, can the Phase 6 deploy happen before 18 Dec?
-4. Who refreshes the curated events for 23 Dec onwards, and by when (RT-01)?
+4. ~~Who refreshes the curated events?~~ **Answered:** the owner sends late-December event pages, the events-curator agent adds them; target 18 Dec (RT-01).
 5. Does any tester have an iPhone and/or an older Chrome (NFR-13)?
 6. The interpretation questions listed at the end of `test-cases.md` (max price on price ranges,
    "This weekend" for events already running, wording differences).

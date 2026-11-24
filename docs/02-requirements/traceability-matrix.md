@@ -18,7 +18,7 @@
 |---|---|---|---|---|---|---|---|
 | FR-01 | M | The app shall explain why it needs location and then request the device's… | US-01, US-10 | D-02, S-1 | `src/lib/location.ts`, `src/app/page.tsx` | TC-01, TC-02 | 🛠 |
 | FR-02 | M | If location is denied, unavailable or takes longer than 10 s, the app shall… | US-02 | D-02, D-05, S-3 | `src/app/page.tsx` (pick-a-spot state), `src/components/MapView.tsx` (tap to pin) | TC-07, TC-08, TC-09 | 🛠 |
-| FR-03 | M | The user shall be able to change the search point at any time by using their… | US-02 | D-02, S-2/S-3 | `page.tsx` (tap map / Search this map area / Use my location) | TC-09, TC-10, TC-55 | 🛠 |
+| FR-03 | M | The user shall be able to change the search point at any time by using their… | US-02 | D-02, S-2/S-3 | `page.tsx` (tap map / Search this map area / Use my location; **Change** button in the top bar reopens these from the results, CR-14) | TC-09, TC-10, TC-55 | 🛠 |
 | FR-41 | C | Area shortcuts: tap "Klang Valley" or "Kota Kinabalu" to see its events, with the count on the button (CR-12) | US-19 | S-1 and S-3 pick-a-spot (buttons under "Or browse an area"), ui-ux.md §4 | `src/lib/areas.ts` (+ test), `AreaShortcuts.tsx`, `page.tsx` | TC-52, TC-53, TC-54, TC-55 | 🛠 |
 | FR-04 | M | The app shall show upcoming events within the selected radius of the search… | US-01 | D-03, D-06, D-07 | `src/lib/filters.ts`, `src/lib/geo.ts`, `src/app/api/events/search/route.ts` (+ tests) | TC-02, TC-06, TC-15 | 🛠 |
 | FR-05 | M | The app shall hide events that have already ended | US-01 | D-09, D-03 | `src/lib/sources/curated.ts` (+ test) | TC-05, TC-24 | 🛠 |
