@@ -21,7 +21,7 @@ requirements first, code later.
 | 2 | Requirements | [`docs/02-requirements`](docs/02-requirements) | ✅ Approved 2026-11-11 |
 | 3 | Design | [`docs/03-design`](docs/03-design) | ✅ Approved 2026-11-11 |
 | 4 | Implementation | [`docs/04-implementation`](docs/04-implementation) | ✅ Slices 1–3 done |
-| 5 | Testing | [`docs/05-testing`](docs/05-testing) | ⏳ Not started |
+| 5 | Testing | [`docs/05-testing`](docs/05-testing) | ⏳ In progress (test plan drafted) |
 | 6 | Deployment | [`docs/06-deployment`](docs/06-deployment) | ⏳ Not started |
 | 7 | Maintenance | [`docs/07-maintenance`](docs/07-maintenance) | ⏳ Not started |
 

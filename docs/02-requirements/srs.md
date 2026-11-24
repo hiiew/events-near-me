@@ -224,6 +224,7 @@ Priority uses MoSCoW. **M** = Must (MVP), **S** = Should, **C** = Could, **W** =
 - **Given** I deny location permission, **when** the app loads, **then** I see a map of KL with the message "Tap the map to choose an area".
 - **Given** the map is shown, **when** I tap a point, **then** a pin appears there and events within the selected radius of that pin are shown.
 - **Given** location takes longer than 10 s, **then** the pin option is offered automatically.
+- **Given** results are shown, **when** I tap **Change** in the top bar, **then** I can use my location again, search the map area, tap the map or pick an area; my filters are kept (except an area, which resets them, FR-41), and **Cancel** returns to the results unchanged (FR-03, CR-14).
 
 ### US-03 — See events on a map (FR-07, FR-08, FR-09)
 *As a user, I want to see events on a map so that I can judge how close they are.*
@@ -293,7 +294,7 @@ Priority uses MoSCoW. **M** = Must (MVP), **S** = Should, **C** = Could, **W** =
 *As a student, I want one tap to see what is on today so that I can decide what to do tonight.*
 - **When** I tap "Today", **then** only events still to come before midnight (Malaysia time) are listed and the chip shows as on.
 - **When** I tap it again, **then** the date filter goes back to Next 30 days and nothing else changes.
-- **Given** "Today" and "Free this week" are both tapped, **then** both chips can be on together.
+- **Given** "Today" is on, **when** I tap "Free this week", **then** "Free this week" turns on and "Today" turns off: both set the date filter, so only one of them can be on at a time (CR-14).
 
 ### US-15 — Good-looking shared links (FR-37)
 *As a user sharing an event, I want the link to show the event's details in the chat so that friends know what it is before opening it.*

@@ -1,5 +1,5 @@
 "use client";
-// S-1 Welcome + S-2/S-3 Explore (Night Map: map + list sheet) — FR-01–FR-15, FR-28, FR-34, FR-35, FR-36, FR-40, FR-41, NFR-05, NFR-09.
+// S-1 Welcome + S-2/S-3 Explore (Night Map: map + list sheet) — FR-01–FR-15 (FR-03: Change button), FR-28, FR-34, FR-35, FR-36, FR-40, FR-41, NFR-05, NFR-09.
 import dynamic from "next/dynamic";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { AreaShortcuts } from "@/components/AreaShortcuts";
@@ -156,6 +156,17 @@ export default function Home() {
     void searchFrom(area.center, "pin", area.name);
   }
 
+  // FR-03: change the search point from the results without losing the filters. Opens the choose-a-spot panel
+  // (Use my location, Search this map area, areas); Cancel goes back to the results that were showing.
+  const statusBeforeChange = useRef<Status>("ready");
+  function changeSpot() {
+    statusBeforeChange.current = status;
+    setLocError(null);
+    setSelectedId(null);
+    setExpanded(false);
+    setStatus("idle");
+  }
+
   function selectFromMap(id: string) {
     setSelectedId(id);
     setExpanded(false);
@@ -205,6 +216,7 @@ export default function Home() {
 
   const placeLabel = point ? (areaName ?? (pointKind === "device" ? "Your location" : "Pinned spot")) : "Choose a spot";
   const wider = widerRadius(filters.radiusKm);
+  const canChangeSpot = point !== null && (status === "ready" || status === "fetch-error");
 
   return (
     <main className="relative mx-auto h-dvh max-w-xl overflow-hidden">
@@ -225,13 +237,29 @@ export default function Home() {
       </div>
 
       <div className="absolute inset-x-4 top-4 z-[1000] flex gap-2">
-        <p className="flex min-h-[46px] min-w-0 grow items-center gap-2 rounded-2xl border border-line bg-bg/95 px-4 text-[15px] shadow-md">
-          <PinIcon className="shrink-0 text-accent-text" />
-          <span className="truncate">
-            {placeLabel}
-            {point ? ` · ${filters.radiusKm} km` : ""}
-          </span>
-        </p>
+        {canChangeSpot ? (
+          <button
+            type="button"
+            onClick={changeSpot}
+            className="flex min-h-[46px] min-w-0 grow items-center gap-2 rounded-2xl border border-line bg-bg/95 px-4 text-left text-[15px] shadow-md"
+          >
+            <PinIcon className="shrink-0 text-accent-text" />
+            <span className="min-w-0 grow truncate">
+              {placeLabel} · {filters.radiusKm} km
+            </span>
+            <span className="shrink-0 text-[13px] font-semibold text-accent-text">
+              Change<span className="sr-only"> search area</span>
+            </span>
+          </button>
+        ) : (
+          <p className="flex min-h-[46px] min-w-0 grow items-center gap-2 rounded-2xl border border-line bg-bg/95 px-4 text-[15px] shadow-md">
+            <PinIcon className="shrink-0 text-accent-text" />
+            <span className="truncate">
+              {placeLabel}
+              {point ? ` · ${filters.radiusKm} km` : ""}
+            </span>
+          </p>
+        )}
         <button
           type="button"
           onClick={() => setFiltersOpen(true)}
@@ -290,6 +318,15 @@ export default function Home() {
               <div className="mt-2">
                 <AreaShortcuts areas={AREAS} counts={areaCounts} onPick={pickArea} />
               </div>
+              {point ? (
+                <button
+                  type="button"
+                  onClick={() => setStatus(statusBeforeChange.current)}
+                  className="min-h-11 self-center px-4 font-semibold text-accent-text underline"
+                >
+                  Cancel, back to results
+                </button>
+              ) : null}
             </div>
           ) : null}
 
