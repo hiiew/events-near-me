@@ -25,6 +25,24 @@ every skill that matches the task (table below), load it with the Skill tool (or
 The list of installed skills is in `skills-lock.json`; plugins are in `.claude/settings.json`. If a skill is added or removed, update this
 table and `docs/04-implementation/coding-standards.md` §6 in the same commit.
 
+## Subagents — one specialist per SDLC role
+
+Role prompts live in `.claude/agents/` (Role · Context · Task · Reasoning · Stop conditions · Output).
+Hand a phase's work to its agent; each reads the live docs first, so none hard-codes project status.
+
+| Phase / job | Agent | Writes to |
+|---|---|---|
+| 1 Planning — status, risks, timeline, impact of a change | `sdlc-planner` | `docs/01-planning/` |
+| 2 Requirements — new/changed FR/NFR, CRs, traceability | `requirements-engineer` | `docs/02-requirements/` |
+| 3 Design — architecture, data, API, screens, ADR/DC | `solution-architect` | `docs/03-design/` |
+| 4 Implementation — build/fix with tests, PR | `developer` | `src/`, `docs/04-implementation/` |
+| 5 Testing — test plan/cases, Playwright, audits, UAT, report | `qa-engineer` | `docs/05-testing/`, `e2e/` |
+| 6 Deployment — Vercel, env, CI, headers, guides | `devops-engineer` | `docs/06-deployment/` |
+| 7 Maintenance — upkeep, bugs, updates, backlog | `maintenance-engineer` | `docs/07-maintenance/` |
+| Event data — add/check curated events | `events-curator` | `data/curated-events.json` |
+
+Example: *"Use the qa-engineer agent to write docs/05-testing/test-plan.md."*
+
 ## Rule 2 — Project conventions beat skill defaults
 
 If a skill's advice conflicts with this project, the project wins:
