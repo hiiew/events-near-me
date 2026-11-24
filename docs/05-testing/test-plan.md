@@ -153,8 +153,8 @@ Chrome/Edge/Firefox. Record the exact version shown in each browser's "About" pa
 | E-1 | Phase 4 merged to `main`; this plan approved by the owner | Merged ✅ · plan awaiting review |
 | E-2 | `npm run lint`, `npm test` and `npm run build` pass on the commit under test | Tests ✅ (156), build ✅ (per handover) |
 | E-3 | Test cases written and linked in the traceability matrix | ✅ (this step) |
-| E-4 | Test tooling added (§3.1) | ⏳ next step |
-| E-5 | ENV-1 starts and serves `/`, `/about`, `/saved`, `/event/<id>` | ⏳ |
+| E-4 | Test tooling added (§3.1) | ✅ 2026-11-24 (`playwright.config.ts`, `npm run test:e2e`) |
+| E-5 | ENV-1 starts and serves `/`, `/about`, `/saved`, `/event/<id>` | ✅ 2026-11-24 (Playwright `webServer`) |
 | E-6 | **Curated data has upcoming events on the test date**: ≥ 1 for automated detail-page tests; for UAT (23–29 Dec) ≥ 10 Klang Valley events dated in or after the UAT window, incl. ≥ 1 free, ≥ 1 "price not listed", ≥ 3 categories, ≥ 1 within 10 km of a typical tester's campus/home area, and ideally ≥ 1 with an image (FR-17/FR-37) | ❌ **Not met for UAT** — see RT-01 |
 | E-7 | Vercel URL live (for real-phone and HTTPS cases) | ❓ owner to confirm |
 
