@@ -2,6 +2,12 @@
 // Zod schemas validate data at runtime; `z.infer` turns them into TypeScript types.
 import { z } from "zod";
 
+// DEF-07 (NFR-06, security headers): Zod 4 checks once whether `new Function` is allowed, to speed up parsing.
+// Our Content-Security-Policy blocks eval, so Chrome reported a CSP violation on every page even though Zod
+// caught it and carried on. jitless skips that check. This file is loaded before anything parses data
+// (bookmarks.ts and offline-cache.ts import EventSchema from here), so the setting is in place in time.
+z.config({ jitless: true });
+
 export const CATEGORY_IDS = [
   "music",
   "food",

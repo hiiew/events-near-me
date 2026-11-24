@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Phase | 5 — Testing |
-| Version | 0.3 — first automated run, a re-run after the DEF-01 – DEF-06 fixes (§1.1), then Lighthouse on ENV-1 and the owner's decision on DEF-05 (§1.2, §2.4). UAT, ENV-2 and real-device results follow |
+| Version | 0.4 — adds the DEF-07 fix and the owner's acceptance of DEF-08 (§1.3). Before: 0.3 — Lighthouse on ENV-1 and DEF-05 accepted; 0.2 — re-run after DEF-01 – DEF-06; 0.1 — first run. UAT, ENV-2 and real-device results follow |
 | Run date | 2026-11-24 |
 | Commit under test | branch `claude/kind-gates-6ijzwm` = `main` after PR #21, plus the test files of this step (no app code changed). Lighthouse (§1.2): `main` after PR #22, no app code changed |
 | Standard | Structure based on IEEE 829 / ISO/IEC/IEEE 29119-3 (test completion report) |
@@ -67,6 +67,19 @@ show" → snapshot of Explore with results; 3 runs light + 1 dark. Details page:
 upcoming event, Fri 27 Nov). Results and findings: §2.4; evidence: [`evidence/lighthouse/`](evidence/lighthouse/)
 (`summary.json` = every run's scores, metrics and failed audits; the median home and details reports and one
 Explore flow, with screenshots stripped to keep them small).
+
+### 1.3 DEF-07 fixed, DEF-08 accepted (2026-11-24)
+
+**DEF-07:** `src/lib/event-schema.ts` now calls `z.config({ jitless: true })`, so Zod 4 no longer tries `new Function`
+(which our CSP blocks) to decide whether it can compile faster parsers. A unit test checks the setting stays on.
+Proof with the same tool that found it: Lighthouse 13.6.0 Best Practices on `/` and `/about` was **96 without the fix
+and 100 with it** (same build steps, same machine). A page-level `securitypolicyviolation` listener and the DevTools
+Audits issue stream did not show the report in either version, so Lighthouse is the check of record.
+After the change: `npm test` 157 passed, `npm run test:e2e` 70 passed, lint clean.
+
+**DEF-08:** accepted by the owner. Next.js 16 streams `generateMetadata` output to normal browsers, so the
+details page's description arrives in `<body>` (Lighthouse SEO 90). Bots on Next's list still get it in `<head>`, so
+share previews work (TC-45). Forcing blocking metadata for everyone (`htmlLimitedBots`) would slow that page.
 
 Test bugs found and fixed while writing the suites (the app was right): link names needed `exact: true`
 (the row's external-link button's name also contains the title); the details page and the welcome screen
@@ -219,8 +232,8 @@ again if the defect comes back, so the fix PR can be checked with `npm run test:
 | **DEF-04** | S4 Low | TC-62 | NFR-05 (M) | "Filters" text button is 42 × 44 px (target ≥ 44 × 44) | **Fixed** (re-test pass) |
 | **DEF-05** | S4 Low | TC-24 | FR-17 (M), FR-05 (M) | Malformed event link returns a bare HTTP 500 | **Accepted by owner 2026-11-24 — Next.js limitation** (§1.1; TC-24 malformed-link test stays `test.fail()`) |
 | **DEF-06** | S4 Low | TC-40 (log review) | FR-37 (C) | Server logs a Next.js "unstable value `Date.now()`" error on every details request | **Fixed** (0 such log lines on re-run) |
-| **DEF-07** | S4 Low | TC-61 (Lighthouse BP) | security-privacy §7 CSP (TC-72), T-03 | Zod's `Function("")` probe trips the CSP on every page (Chrome "issue", Best Practices 96) | **Open** — to developer |
-| **DEF-08** | S4 Low | TC-61 (Lighthouse SEO) | FR-37 (C) | Details page `<meta name="description">` is streamed into `<body>` for normal browsers (SEO 90) | **Open** — to developer / owner to accept |
+| **DEF-07** | S4 Low | TC-61 (Lighthouse BP) | security-privacy §7 CSP (TC-72), T-03 | Zod's `Function("")` probe trips the CSP on every page (Chrome "issue", Best Practices 96) | **Fixed 2026-11-24** — `z.config({ jitless: true })` in `event-schema.ts`; Lighthouse Best Practices 96 → **100** on `/` and `/about` (same Lighthouse 13.6.0, with vs without the fix) |
+| **DEF-08** | S4 Low | TC-61 (Lighthouse SEO) | FR-37 (C) | Details page `<meta name="description">` is streamed into `<body>` for normal browsers (SEO 90) | **Accepted by owner 2026-11-24** — Next.js 16 streams metadata to normal browsers; bots still get it in `<head>` (TC-45 passes). Not fixed: `htmlLimitedBots` for everyone would slow the details page |
 
 **DEF-01 — OSM attribution hidden behind the list sheet (S2).**
 Steps: open `/` at 360 × 740 → Use my location → results show. Look at the bottom-right corner of the map.
@@ -348,10 +361,10 @@ NFR-19 (TC-71 process check); **FR-26, FR-29, FR-30 are gaps — not built** (CR
 |---|---|---|
 | 1 | Every Must row ✅ | ❌ 26 / 39 |
 | 2 | Every built Should row ✅; FR-26/29/30 listed as gaps | ❌ 2 of 6 built; gaps listed ✅ |
-| 3 | No open Critical/High defects | ✅ DEF-01 fixed; DEF-05 (S4) accepted by owner; open: DEF-07, DEF-08 (both S4) |
+| 3 | No open Critical/High defects | ✅ No open defects: DEF-01 – DEF-04, DEF-06, DEF-07 fixed; DEF-05 and DEF-08 (S4) accepted by owner |
 | 4 | UAT done (owner + Testers A–C), NFR-04 met | ❌ not started (23–29 Dec; needs refreshed data, RT-01) |
 | 5 | `test-report.md` written | 🟡 this v0.3 (UAT, ENV-2 and real-device results to add) |
 | 6 | Core logic line coverage ≥ 70 % | ✅ 90.7 % |
 
-**Next:** developer looks at DEF-07/DEF-08 (S4, backlog allowed); add the TC-40 console-spy unit test; ENV-2
+**Next:** add the TC-40 console-spy unit test; ENV-2
 (Vercel URL) for TC-57/TC-61 final runs, TC-56, TC-64; owner's real-device cases, TC-62 manual part and UAT (test-plan §7).
