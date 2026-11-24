@@ -17,9 +17,9 @@
 
 | ID | Screen | Purpose | Requirements |
 |---|---|---|---|
-| S-1 | Welcome / location prompt | Explain why location is needed, then ask | FR-01, US-10 |
+| S-1 | Welcome / location prompt | Explain why location is needed, then ask; area shortcuts | FR-01, FR-41, US-10 |
 | S-2 | Explore — list sheet | Results list, search box, quick chips, offline notice, empty state | FR-04–06, FR-08, FR-10–15, FR-34, FR-35, FR-36, FR-40 |
-| S-3 | Explore — map | Pins, pin dropping, "Search this map area"; same screen as S-2 (DC-01) | FR-02, FR-03, FR-07, FR-08, FR-09 |
+| S-3 | Explore — map | Pins, pin dropping, "Search this map area", area shortcuts in the pick-a-spot state; same screen as S-2 (DC-01) | FR-02, FR-03, FR-07, FR-08, FR-09, FR-41 |
 | S-4 | Event detail | All details + actions (save, share, calendar, directions, public transport) | FR-17–20, FR-22, FR-23, FR-37, FR-38, FR-39 |
 | S-5 | Saved | Bookmarked events | FR-20, FR-21 |
 | S-6 | About & Privacy | Privacy notice, attribution, clear data | FR-31, FR-32, FR-40, NFR-11 |
@@ -235,6 +235,7 @@ flowchart LR
 - **Quick chip (FR-34, CR-04):** a "Free this week" chip sits under the list heading. Off = outlined
   (`--line` border on `--surface`); on = lime fill with ink text **plus a check icon** (state is never
   colour alone) and `aria-pressed`. Button radius 14 px, at least 44 px tall.
+- **Area shortcuts (FR-41, CR-12):** under the two buttons on the welcome screen and under the buttons of the pick-a-spot sheet, a small "OR BROWSE AN AREA" label, then a 2-column grid of outlined cards (`--surface` fill, `--line` border, 16 px radius, 56 px tall): area name in semibold and "N events" in `--muted`. The count is left blank (height kept) until it loads or when offline. A hint line says "Events in the next 30 days, within 50 km of the centre." After choosing, the top bar shows the area name (for example "Klang Valley · 50 km"). To make room, the welcome screen's map graphic is shorter (32 dvh instead of 46) and its top padding smaller (24 dvh instead of 38), so both cards fit on a 390 × 844 phone without scrolling; shorter phones scroll.
 - **Offline notice (FR-40, CR-10):** an amber-bordered `--warning` box under the chips: "Can't reach the server. Showing events saved on <date>; they may be out of date." with a Try again button (44 px). It uses `role="status"`. The map shows no tiles offline.
 - **By public transport (FR-38, CR-08):** an outlined 50 px button (bus icon) directly under the lime
   Directions button on S-4. Opens in a new tab like the other links.

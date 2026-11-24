@@ -38,7 +38,8 @@ See project charter §4 for out-of-scope items.
 | Source | Where event data comes from (curated dataset, Eventbrite, …) |
 | Adapter | Code that converts one source's data into the app's common `Event` format |
 | Curated dataset | A JSON file of real events entered by the developer, each linking to its official page |
-| Search point | The location results are measured from: the device's location or a dropped pin |
+| Search point | The location results are measured from: the device's location, a dropped pin, or an area's centre |
+| Area | A named place with a public centre point (Klang Valley, Kota Kinabalu) that can be used as the search point without sharing location (FR-41) |
 | MVP | Minimum Viable Product — the Must-have requirements |
 | PWA | Progressive Web App — a website that behaves like an installable app |
 | MoSCoW | Must / Should / Could / Won't (this time) prioritisation |
@@ -103,6 +104,7 @@ Priority uses MoSCoW. **M** = Must (MVP), **S** = Should, **C** = Could, **W** =
 | FR-01 | The app shall explain why it needs location and then request the device's location using the browser permission prompt. | M |
 | FR-02 | If location is denied, unavailable or takes longer than 10 s, the app shall let the user **drop a pin on the map** to set the search point. | M |
 | FR-03 | The user shall be able to change the search point at any time by using their location again or moving the pin. | M |
+| FR-41 | **Area shortcuts.** The welcome screen and the pick-a-spot screen shall offer buttons for named areas (Klang Valley, Kota Kinabalu), each showing how many upcoming events it has. Choosing one searches from the area's centre at 50 km with all other filters at their defaults, so the list matches the number shown. No location of the visitor is used (CR-12). | C |
 
 ### 3.2 Finding events
 
@@ -314,6 +316,14 @@ Priority uses MoSCoW. **M** = Must (MVP), **S** = Should, **C** = Could, **W** =
 - **Given** a search can't reach the server, **then** the events from my last successful search are shown with "Showing events saved on <date>" and a Try again button.
 - **Then** my location or pin is not stored on the device; **when** I tap "Clear saved data", **then** the saved events are removed too.
 - **Given** I use Chrome on Android or Safari on iOS, **then** I can add the app to my home screen (FR-33).
+
+### US-19 — Browse an area without sharing location (FR-41)
+*As a visitor who doesn't want to share location or pick a spot, I want to tap an area name so that I can still see what's on there.*
+- **Given** I am on the welcome screen or the pick-a-spot screen, **then** I see "Or browse an area" with a button for each area showing how many events it has ("No events yet" when none).
+- **When** I tap "Kota Kinabalu", **then** the list shows exactly that many events, the distance is 50 km, every other filter is at its default, and the top bar says "Kota Kinabalu".
+- **Then** my own location is never requested or sent; only the area's public centre is used.
+- **Given** the counts can't be loaded (offline or server error), **then** the buttons still work and show no number.
+- **When** I then tap the map and search there, **then** the top bar says "Pinned spot" again.
 ---
 
 ## 6. MVP definition
@@ -325,7 +335,7 @@ and all NFRs marked M.
 |---|---|---|
 | Must | 24 FR + 15 NFR | FR as listed above; NFR-01, 03–10, 12–14, 16–18 |
 | Should | 5 FR + 4 NFR | FR-21, FR-22, FR-26, FR-29, FR-30; NFR-02, NFR-11, NFR-15, NFR-19 |
-| Could | 11 FR | FR-16, FR-23, FR-27, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38, FR-39, FR-40 |
+| Could | 12 FR | FR-16, FR-23, FR-27, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38, FR-39, FR-40, FR-41 |
 | Won't | 8 | W-01 – W-08 |
 
 **Rule:** Should items are built only after every Must passes its tests. If Phase 4 overruns,
