@@ -22,7 +22,7 @@ requirements first, code later.
 | 3 | Design | [`docs/03-design`](docs/03-design) | ✅ Approved 2026-11-11 |
 | 4 | Implementation | [`docs/04-implementation`](docs/04-implementation) | ✅ Slices 1–3 done |
 | 5 | Testing | [`docs/05-testing`](docs/05-testing) | ⏳ In progress (test plan drafted) |
-| 6 | Deployment | [`docs/06-deployment`](docs/06-deployment) | ⏳ In progress (early deploy prepared — owner imports the repo on Vercel, see [deployment guide](docs/06-deployment/deployment-guide.md)) |
+| 6 | Deployment | [`docs/06-deployment`](docs/06-deployment) | ⏳ In progress (early deploy prepared — owner imports the repo on Vercel, see [deployment guide](docs/06-deployment/deployment-guide.md); [user manual](docs/06-deployment/user-manual.md) drafted) |
 | 7 | Maintenance | [`docs/07-maintenance`](docs/07-maintenance) | ⏳ Not started |
 
 ## Run it on your computer
