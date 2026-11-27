@@ -7,7 +7,7 @@
 | Date | 2026-11-24 |
 | Standard | Structure based on IEEE 829 / ISO/IEC/IEEE 29119-3 (test plan) |
 | Inputs | SRS v1.0 (+ CR-01–CR-13), traceability matrix v1.1, ui-ux.md §6, security-privacy.md, dev-log |
-| Related | [`test-cases.md`](test-cases.md) (TC-01 – TC-73) · `uat-script.md` and `test-report.md` follow in the next step |
+| Related | [`test-cases.md`](test-cases.md) (TC-01 – TC-73) · [`uat-script.md`](uat-script.md) (UAT sessions 23–29 Dec, written 2026-11-27) · [`test-report.md`](test-report.md) |
 
 > **What is a test plan?** It says *what* will be tested, *how*, *where*, *by whom* and *when*,
 > and what "finished" means. The test cases then say exactly which steps prove each requirement.
@@ -59,7 +59,7 @@ FR-41 now shows a Kota Kinabalu button on the first screen, so testers *will* se
 | **Accessibility audit** | WCAG 2.1 AA checks a tool can find, on every screen, dark and light | axe-core 4.14 inside Playwright; Lighthouse Accessibility | Claude | `e2e/a11y.spec.ts`; Lighthouse JSON in `docs/05-testing/evidence/` |
 | **Performance audit** | NFR-01 (≤ 3 s to first results on Fast 4G) and NFR-02 (Lighthouse mobile ≥ 80) | Playwright + Chrome DevTools Protocol throttling; Lighthouse CLI | Claude | `e2e/perf.spec.ts`; Lighthouse JSON |
 | **Manual / real device** | What a headless browser cannot prove: real permission prompt, share sheet, calendar import, PWA install, screen reader, Safari | A phone, a laptop | **Owner** | Steps in `test-cases.md`; results in `test-report.md` |
-| **UAT** | Real users can do the core tasks (NFR-04) and find the app useful | `uat-script.md` | Owner runs; Tester A, B, C | `test-report.md` §UAT |
+| **UAT** | Real users can do the core tasks (NFR-04) and find the app useful | [`uat-script.md`](uat-script.md) (tasks T1–T10, ratings, recording sheet) | Owner runs; Tester A, B, C | `test-report.md` §UAT |
 | **Review / audit** | Requirements a test can't execute: NFR-14 design, NFR-16 cost, NFR-17 compliance, NFR-06 secret scan | Checklists, `git log -p` scan | Claude + owner | `test-report.md` |
 
 ### 2.1 Rules for every automated test
@@ -172,7 +172,7 @@ Chrome/Edge/Firefox. Record the exact version shown in each browser's "About" pa
 | D-1 | Linux container | Chrome (headless) | Installed version | All Playwright suites | Claude | 360, 768, 1280 px; dark + light |
 | D-3a | GitHub Actions runner (Linux) | WebKit (headless, Playwright's build) | The WebKit build pinned by `@playwright/test` | All Playwright suites, project `webkit-iphone` (CI only; locally with `E2E_WEBKIT=1` after `npx playwright install webkit`) | CI | `devices["iPhone 15"]`: 393 × 659 viewport, touch, mobile, iPhone user agent; dark + light. **Partial evidence for D-3 only** — see below |
 | D-2 | Android phone | Chrome | Latest **and** previous major | TC-66 smoke + real-device cases | Owner / a tester with Android | Previous major: a second phone or a tester whose Chrome is one version behind; if none is available, report it as a gap |
-| D-3 | iPhone | Safari | Latest and previous iOS major | TC-66 smoke + real-device cases | A tester with an iPhone (owner to confirm someone has one) | iOS-only checks: Add to Home Screen, `.ics` in Calendar, share sheet |
+| D-3 | iPhone | Safari | Latest and previous iOS major | TC-66 smoke + real-device cases | **Nobody in the UAT group has an iPhone** (owner, 2026-11-27): out of UAT scope, gap unless accepted (D-3a is the partial substitute) | iOS-only checks: Add to Home Screen, `.ics` in Calendar, share sheet |
 | D-4 | Windows laptop | Chrome | Latest | TC-66 smoke | Owner | 1280 px and 200 % zoom |
 | D-5 | Windows laptop | Edge | Latest | TC-66 smoke | Owner | |
 | D-6 | Windows laptop | Firefox | Latest | TC-66 smoke | Owner | No PWA install in Firefox desktop (expected) |
@@ -307,7 +307,7 @@ Phase 4 finished early, so automated testing can start well before the original 
 2. ~~OK to add devDependencies?~~ **Answered: yes** (added 2026-11-24, see §3.1). Original question: OK to add four devDependencies: `@playwright/test`, `axe-core` (or `@axe-core/playwright`), `@vitest/coverage-v8`; Lighthouse via `npx` only (§3.1)?
 3. Does the Vercel URL exist yet (ENV-2)? If not, can the Phase 6 deploy happen before 18 Dec?
 4. ~~Who refreshes the curated events?~~ **Answered:** the owner sends late-December event pages, the events-curator agent adds them; target 18 Dec (RT-01).
-5. Does any tester have an iPhone and/or an older Chrome (NFR-13)?
+5. Does any tester have an iPhone and/or an older Chrome (NFR-13)? **iPhone answered 2026-11-27: no** (iOS out of UAT scope, `uat-script.md` §1.3). Older Chrome: recorded per tester during UAT (`uat-script.md` P-9).
 6. The interpretation questions listed at the end of `test-cases.md` (max price on price ranges,
    "This weekend" for events already running, wording differences).
 
