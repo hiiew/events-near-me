@@ -53,7 +53,7 @@ jobs:
       # Screenshots of failed tests and results.json. Traces and videos are off (test-plan §2.1 rule 8).
       - name: Upload Playwright results (only when something failed)
         if: failure()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-results
           path: test-results/
