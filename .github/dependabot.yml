@@ -1,5 +1,7 @@
 # Dependabot (security-privacy.md T-11, supply chain): opens pull requests for outdated packages.
 # Each PR runs CI (.github/workflows/ci.yml) before anyone merges it.
+# How Claude triages these PRs, and why each ignore rule exists: docs/07-maintenance/dependency-updates.md.
+# Ignore rules only stop version-update PRs; Dependabot security alerts still cover these packages.
 version: 2
 updates:
   - package-ecosystem: npm
@@ -9,8 +11,24 @@ updates:
       day: monday
       timezone: Asia/Kuala_Lumpur
     open-pull-requests-limit: 5
+    ignore:
+      # Types must match the Node version the app runs on (Node 22: README, ci.yml, Vercel setting).
+      # Revisit when the runtime moves to a newer Node LTS.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      # TypeScript 7: typescript-eslint (inside eslint-config-next) refuses to load (peer typescript <6.1.0).
+      # Revisit monthly: `npm view typescript-eslint peerDependencies`.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      # ESLint 10: eslint-config-next's react, jsx-a11y and import plugins only declare ESLint <=9.
+      # Revisit monthly: `npm view eslint-plugin-react peerDependencies` (and the other two).
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
     groups:
-      # One PR for all minor and patch bumps instead of one per package; major versions stay separate.
+      # Next.js and its lint config share a version number; move them together, majors included.
+      nextjs:
+        patterns: ["next", "eslint-config-next", "@next/*"]
+      # One PR for all other minor and patch bumps instead of one per package; major versions stay separate.
       npm-minor-and-patch:
         update-types: [minor, patch]
 
@@ -20,3 +38,7 @@ updates:
       interval: weekly
       day: monday
       timezone: Asia/Kuala_Lumpur
+    groups:
+      # All action bumps in one PR: they only touch ci.yml and are checked by the same CI run.
+      github-actions:
+        patterns: ["*"]
