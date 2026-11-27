@@ -1,6 +1,6 @@
 // Shared set-up for the browser tests (test-plan.md §2.1). Every test imports `test` and `expect` from here
 // instead of from @playwright/test, so the "no outside hosts" rule can't be forgotten.
-import { test as base, expect, type APIRequestContext, type Locator, type Page } from "@playwright/test";
+import { test as base, expect, type Locator, type Page } from "@playwright/test";
 import type { Event } from "@/lib/event-schema";
 import { KK_CENTER, KK_EVENTS, MAIN_EVENTS, NOW, searchResponse } from "./fixtures/events";
 
@@ -13,12 +13,13 @@ export const test = base.extend({
   context: async ({ context }, provide) => {
     // (Playwright calls this callback `use`; renamed so the React-hooks lint rule does not mistake it for a hook.)
     // Rule 4: no map tiles are downloaded (OSM tile policy, and this container blocks them anyway).
-    // Any other outside address — organiser pages, Google Maps, Waze — gets a stub page, so a test that
-    // follows a link sees where it went without visiting the real site.
+    // Organisers' event images (server fixture S-1) get the same blank PNG. Any other outside address —
+    // organiser pages, Google Maps, Waze — gets a stub page, so a test that follows a link sees where it went
+    // without visiting the real site.
     await context.route(
       (url) => url.hostname !== "localhost",
       (route) =>
-        route.request().url().includes("tile.openstreetmap.org")
+        route.request().url().includes("tile.openstreetmap.org") || route.request().resourceType() === "image"
           ? route.fulfill({ contentType: "image/png", body: BLANK_PNG })
           : route.fulfill({ contentType: "text/html", body: "<title>outside stub</title>" }),
     );
@@ -110,17 +111,6 @@ export async function clickMapAt(page: Page, target: { lat: number; lon: number 
 export async function clickMapCorner(page: Page, dx = 40, dy = 110) {
   const box = (await page.locator(".leaflet-container").boundingBox())!;
   await page.mouse.click(box.x + dx, box.y + dy);
-}
-
-/**
- * PRE-D: a real upcoming curated event, read from the unmocked API at run time (the details page reads the
- * real file on the server). Picks the first event matching `where`, or skips the test if there is none.
- */
-export async function realEvent(request: APIRequestContext, where: (e: Event) => boolean = () => true): Promise<Event | undefined> {
-  const res = await request.post("/api/events/search", { data: { lat: 3.139, lon: 101.687 } }); // public KL centre
-  expect(res.ok()).toBe(true);
-  const { events } = (await res.json()) as { events: Event[] };
-  return events.find(where);
 }
 
 // Expected texts written independently of src/lib/format.ts, straight from NFR-18 (Malaysia time, RM).

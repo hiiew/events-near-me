@@ -1,46 +1,48 @@
 // US-05, US-06, US-16: the event details page (FR-17 – FR-19, FR-32, FR-38).
-// PRE-D: the details page reads the real curated file on the server, so these tests use a real upcoming
-// event chosen at run time and the real clock, and check facts relative to that event.
+// PRE-D: the details page reads the curated events on the server, so these tests use the server fixtures
+// S-1 – S-4 (e2e/fixtures/server-events.ts, test-plan §2.3): always upcoming, whatever the real file and date.
 import { F } from "./fixtures/events";
-import { CATEGORY_LABEL, expect, mytLongDay, mytTime, openResults, plain, priceText, realEvent, resultsHeading, row, test } from "./helpers";
+import { eventPath as path, S } from "./fixtures/server-events";
+import { CATEGORY_LABEL, expect, mytLongDay, mytTime, openResults, plain, priceText, resultsHeading, row, test } from "./helpers";
 
-const path = (id: string) => `/event/${encodeURIComponent(id)}`;
-
-test("TC-21 FR-17 FR-32 NFR-18 US-05: details show every field, in Malaysia time, with the source", async ({ page, request }) => {
-  const e = (await realEvent(request))!;
-  test.skip(!e, "no upcoming curated event (entry criterion E-6)");
-  await page.goto(path(e.id));
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText(e.title);
-  const main = page.getByRole("main");
-  const time = e.end ? `${mytTime(e.start)} – ${mytTime(e.end)}` : mytTime(e.start);
-  expect(plain(await main.innerText())).toContain(plain(`${mytLongDay(e.start)}`));
-  expect(plain(await main.innerText())).toContain(plain(`${time} (Malaysia time)`));
-  await expect(main).toContainText(e.venue.name);
-  if (e.venue.address) await expect(main).toContainText(e.venue.address);
-  await expect(main).toContainText(CATEGORY_LABEL[e.category]);
-  await expect(main).toContainText(priceText(e.price));
-  if (e.description) expect(plain(await main.innerText())).toContain(plain(e.description).slice(0, 60));
-  await expect(main).toContainText("Source: Curated by Happening");
-  if (e.imageUrl) await expect(page.getByRole("img", { name: e.title })).toBeVisible();
-  else await expect(main.locator("img")).toHaveCount(0);
-  // A shared link has no search point, so no distance.
-  await expect(main).not.toContainText("from your search");
-});
+// S-1 every field + image, S-2 no price / no end / no address / no image, S-3 free, S-4 Sabah.
+for (const [variant, e] of Object.entries(S)) {
+  test(`TC-21 FR-17 FR-32 NFR-18 US-05: details show every field, in Malaysia time, with the source (${variant})`, async ({ page }) => {
+    await page.goto(path(e));
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(e.title);
+    const main = page.getByRole("main");
+    const time = e.end ? `${mytTime(e.start)} – ${mytTime(e.end)}` : mytTime(e.start);
+    expect(plain(await main.innerText())).toContain(plain(`${mytLongDay(e.start)}`));
+    expect(plain(await main.innerText())).toContain(plain(`${time} (Malaysia time)`));
+    await expect(main).toContainText(e.venue.name);
+    if (e.venue.address) await expect(main).toContainText(e.venue.address);
+    await expect(main).toContainText(CATEGORY_LABEL[e.category]);
+    await expect(main).toContainText(priceText(e.price));
+    if (e.description) expect(plain(await main.innerText())).toContain(plain(e.description).slice(0, 60));
+    await expect(main).toContainText("Source: Curated by Happening");
+    if (e.imageUrl) {
+      const img = page.getByRole("img", { name: e.title });
+      await expect(img).toBeVisible();
+      await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0), "image loaded (CSP allows it)").toBe(true);
+    } else await expect(main.locator("img")).toHaveCount(0);
+    // A shared link has no search point, so no distance.
+    await expect(main).not.toContainText("from your search");
+  });
+}
 
 test("TC-21 FR-17 US-05: after a search, details show the distance from the search point", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: /^Klang Valley/ }).click(); // real search from the public KL centre
   await expect(resultsHeading(page)).toBeVisible();
   const first = page.locator("#sheet-body article h2 a").first();
-  test.skip((await first.count()) === 0, "no upcoming events (E-6)");
+  await expect(first).toBeVisible(); // the server fixtures always give Klang Valley upcoming events
   await first.click();
   await expect(page.getByText(/^\d+\.\d km from your search$/)).toBeVisible();
 });
 
-test("TC-22 FR-18 US-05: 'View official page' opens the source page in a new tab", async ({ page, context, request }) => {
-  const e = (await realEvent(request))!;
-  test.skip(!e, "no upcoming curated event (E-6)");
-  await page.goto(path(e.id));
+test("TC-22 FR-18 US-05: 'View official page' opens the source page in a new tab", async ({ page, context }) => {
+  const e = S.full;
+  await page.goto(path(e));
   const link = page.getByRole("link", { name: "View official page" });
   await expect(link).toHaveAttribute("target", "_blank");
   await expect(link).toHaveAttribute("rel", "noopener noreferrer");
@@ -58,11 +60,11 @@ test("TC-22 FR-18 US-05: 'View official page' opens the source page in a new tab
   await expect(rowLink).toHaveAttribute("rel", "noopener noreferrer");
 });
 
-test("TC-23 FR-17 FR-13 US-05: an event with no price says 'Price not listed'", async ({ page, request }) => {
-  const e = await realEvent(request, (x) => x.price === null);
-  test.skip(!e, "no upcoming curated event without a price — recorded as a gap");
-  await page.goto(path(e!.id));
+test("TC-23 FR-17 FR-13 US-05: an event with no price says 'Price not listed'", async ({ page }) => {
+  expect(S.noPrice.price).toBeNull();
+  await page.goto(path(S.noPrice));
   await expect(page.getByRole("main")).toContainText("Price not listed");
+  await expect(page.getByRole("main")).not.toContainText(/FREE|RM \d/);
 });
 
 test("TC-24 FR-05 FR-17: a missing event link gets the friendly not-available page", async ({ page }) => {
@@ -98,10 +100,9 @@ test("TC-25 FR-32 NFR-17: OpenStreetMap attribution is visible on the map and li
   await expect(page.getByRole("link", { name: /OpenStreetMap contributors/ })).toHaveAttribute("href", "https://www.openstreetmap.org/copyright");
 });
 
-test("TC-26 TC-27 FR-19 FR-38 US-06 US-16: directions links open Google Maps (driving and transit) and Waze at the venue", async ({ page, request }) => {
-  const e = (await realEvent(request, (x) => x.venue.lat !== undefined))!;
-  test.skip(!e, "no upcoming curated event (E-6)");
-  await page.goto(path(e.id));
+test("TC-26 TC-27 FR-19 FR-38 US-06 US-16: directions links open Google Maps (driving and transit) and Waze at the venue", async ({ page }) => {
+  const e = S.full;
+  await page.goto(path(e));
   const dest = `${e.venue.lat},${e.venue.lon}`;
 
   const links = {

@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import curatedData from "../../../data/curated-events.json";
 import { CuratedEventSchema } from "../event-schema";
-import { curatedAdapter, filterCurated, getCuratedEvent } from "./curated";
+import { curatedAdapter, curatedEntries, filterCurated, getCuratedEvent } from "./curated";
 import type { SourceQuery } from "./types";
 
 const base = {
@@ -96,5 +96,32 @@ describe("FR-17 getCuratedEvent", () => {
 
   it("returns null for an invalid entry instead of throwing", () => {
     expect(getCuratedEvent("curated:bad", [{ id: "bad", url: "http://x" }])).toBeNull();
+  });
+});
+
+describe("FR-05 / FR-17 curatedEntries test seam (E2E_CURATED_EVENTS, test-plan §2.3)", () => {
+  const fixture = JSON.stringify([{ ...base, id: "e2e-x", start: "2026-11-20T10:00:00+08:00" }]);
+
+  it("uses the real file when the variable is unset or empty", () => {
+    expect(curatedEntries({})).toBe(curatedData);
+    expect(curatedEntries({ E2E_CURATED_EVENTS: "" })).toBe(curatedData);
+  });
+
+  it("serves the test events instead of the real file when set, and says so in the log", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const entries = curatedEntries({ E2E_CURATED_EVENTS: fixture });
+    expect(entries).toEqual(JSON.parse(fixture));
+    expect(getCuratedEvent("curated:e2e-x", entries)?.title).toBe(base.title);
+    expect(getCuratedEvent("curated:kl-0011", entries)).toBeNull(); // the real file is not mixed in
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("E2E_CURATED_EVENTS is set"));
+  });
+
+  it("is ignored on Vercel, so production can never be switched to test events", () => {
+    expect(curatedEntries({ E2E_CURATED_EVENTS: fixture, VERCEL: "1" })).toBe(curatedData);
+  });
+
+  it("throws on a broken value instead of silently falling back to the real file", () => {
+    expect(() => curatedEntries({ E2E_CURATED_EVENTS: "{not json" })).toThrow();
+    expect(() => curatedEntries({ E2E_CURATED_EVENTS: '{"id":"x"}' })).toThrow("must be a JSON array");
   });
 });
