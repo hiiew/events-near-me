@@ -55,6 +55,8 @@ GitHub Actions updates are grouped into one PR (`github-actions` group).
 | 2026-11-27 | #30 | @types/node 22 → 26 | Close, ignore majors | Must match Node 22 runtime. |
 | 2026-11-27 | #31 | eslint 9.39.5 → 10.15.0 | Close, ignore majors | The red e2e run was **not** ESLint: it was TC-60's flaky OSM-credit contrast (DEF-09, also failed on PR #32; passes locally on this branch, 69 + 1 skipped). Lint itself works on ESLint 10, but three Next.js lint plugins don't support it yet. |
 
+**Done 2026-11-27 (owner: "yes to all"):** #25, #26, #27 and #28 squash-merged into `main` in that order (all three actions now `@v7` in `ci.yml`); #29, #30 and #31 closed. The owner accepted staying on ESLint 9 until Next.js's lint plugins support ESLint 10 (dev-only tool; revisit monthly). The ignore rules above land with this doc's PR.
+
 ## 3. Local Playwright after a version bump (cloud container only)
 
 The container's Chromium is the build for Playwright 1.63 (`/opt/pw-browsers/chromium_headless_shell`). Do **not** run
