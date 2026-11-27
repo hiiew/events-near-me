@@ -3,13 +3,24 @@
 | Field | Value |
 |---|---|
 | Phase | 5 — Testing (user acceptance test) |
-| Version | 1.0 — 2026-11-27, ready for the owner to review before the sessions |
+| Version | 1.1 — 2026-11-27, owner's decisions recorded (below); 1.0 — first draft |
 | Sessions | Wed 23 – Tue 29 Dec 2026 (avoid 24–25 Dec), about 20 minutes each, in person |
 | Participants | The owner + 3 classmates, anonymous as **Tester A, B, C**, each on **their own Android phone** |
 | Live URL | **`https://________________________`** ← owner fills in (planned `happening-kl.vercel.app`; the Vercel project may be renamed) |
 | Test cases | [`test-cases.md`](test-cases.md) **TC-73** (core tasks) and **TC-59** (NFR-04, details within 3 taps); extra evidence for TC-27, TC-35, TC-44, TC-45, TC-48, TC-53, TC-66 |
 | Plan | [`test-plan.md`](test-plan.md) — UAT row (§2), device matrix (§3.2), E-6 data criterion (§4), exit criterion 4 (§5), severity scale (§6.1), RT-01/RT-04/RT-05/RT-09 (§8) |
 | Results go to | [`test-report.md`](test-report.md), new section **UAT** (§9 of this script says what to copy) |
+
+**Owner decisions (2026-11-27, "agree with all"):**
+
+| # | Question | Decision |
+|---|---|---|
+| OD-1 | How testers open the app | **QR code** for the live URL on the printed sheet (P-10); no contacts exchanged |
+| OD-2 | The owner's own run | Recorded, but **reported separately** from Testers A–C (§2.3, §9); NFR-04 is judged on Testers A–C, with the owner's taps shown beside them |
+| OD-3 | Data-check thresholds (§3.1) | As proposed: ≥ 10 Klang Valley events, ≥ 5 in the next 7 days within 10 km of the start point, ≥ 1 free this week, ≥ 1 music this weekend; **postpone** if free, music or a working details page is missing |
+| OD-4 | Calendar task T6 | **Optional**; if the phone's calendar app won't open the `.ics`, it is TC-48 evidence about the phone, not a tester failure |
+| OD-5 | Remote sessions | **In person only** (no screen sharing: notifications and locations could show) |
+| OD-6 | O-1 ("Today" keeps "Free only") | Raise an **S3** issue if **even one** tester answers (b) or (c) |
 
 > **What is UAT?** User acceptance testing: people who did not build the app try to do real
 > things with it while you watch. Automated tests prove the app does what the SRS says; UAT shows
@@ -380,7 +391,7 @@ privacy steps (§4), thank them.
 
 | Item | Owner | A | B | C | Result |
 |---|---|---|---|---|---|
-| T1 result / taps after list | | | | | NFR-04: A–C ≤ 3 taps? owner ≤ 3? |
+| T1 result / taps after list | | | | | NFR-04: A–C ≤ 3 taps? (owner shown, not counted, OD-2) |
 | T2 free this week | | | | | |
 | T3 today | | | | | (extra, US-14) |
 | T4 music this weekend | | | | | |
@@ -416,9 +427,10 @@ privacy steps (§4), thank them.
      **backlog** item with the owner's decision, listed in the UAT section and handed to the
      `maintenance-engineer` (Phase 7). If it changes a requirement it needs a change request in
      `docs/02-requirements/change-log.md` first.
-3. **NFR-04 / TC-59 (UAT part):** **pass** only if **every participant (owner, Tester A, B, C)** opened
-   an event's details in **≤ 3 taps** after the results appeared in T1 (TC-59 expected result). One
-   participant over 3 taps = fail: record a defect (S2: Must fails, with a workaround) and look at what
+3. **NFR-04 / TC-59 (UAT part):** **pass** only if **every new user (Tester A, B, C)** opened
+   an event's details in **≤ 3 taps** after the results appeared in T1 (TC-59 expected result). The
+   owner's taps are reported beside them but don't decide it: NFR-04 is about *new* users (OD-2). One
+   tester over 3 taps = fail: record a defect (S2: Must fails, with a workaround) and look at what
    caused the extra taps.
 4. **TC-73:** **pass** only if **every participant completed every core task (T1, T2, T4, T5, T7, T8, T10)
    without help** and NFR-04 passed (TC-73 expected result). Any **H** or **✗** on a core task = TC-73 fails
