@@ -62,3 +62,8 @@ GitHub Actions updates are grouped into one PR (`github-actions` group).
 The container's Chromium is the build for Playwright 1.63 (`/opt/pw-browsers/chromium_headless_shell`). Do **not** run
 `playwright install`. After #28 the suite ran correctly with a scratch config that adds
 `use.launchOptions.executablePath: "/opt/pw-browsers/chromium_headless_shell"`; CI is unaffected.
+
+**Since 2026-11-27** no scratch config is needed: `playwright.config.ts` reads `PW_CHROMIUM_PATH` for the
+`chromium` project only, so run `PW_CHROMIUM_PATH=/opt/pw-browsers/chromium_headless_shell npm run test:e2e`.
+Leave it unset in CI and on the owner's machine. The `webkit-iphone` project is added only when `CI` or
+`E2E_WEBKIT` is set, so local runs here stay Chromium-only (WebKit isn't installed in the container).

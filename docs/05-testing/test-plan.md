@@ -155,7 +155,7 @@ is still checked by Vitest (`curated.test.ts`: every entry valid, ids unique); w
 | Tool | Status | Plan |
 |---|---|---|
 | Vitest 5.1.0 | Installed. **`npm test` works here with the default pool: 13 files, 156 tests pass in ~0.7 s.** The dev-log's "default pool crashes" was on the owner's machine | Use `npm test`; on the owner's machine fall back to `npx vitest run --pool=vmThreads` and record which was used |
-| Playwright 1.63.0 | Test runner `@playwright/test@1.63.0` is a devDependency (added 2026-11-24). **In Claude's container** Chromium is pre-installed, so `playwright install` is not run there. **In CI** (GitHub Actions, `.github/workflows/ci.yml`) the workflow runs `npx playwright install --with-deps chromium`, which is the normal set-up on a fresh runner | Only Chromium is automated (here and in CI); Firefox and WebKit (Safari engine) are covered manually (TC-66) |
+| Playwright 1.63.0 | Test runner `@playwright/test@1.63.0` is a devDependency (added 2026-11-24). **In Claude's container** Chromium is pre-installed, so `playwright install` is not run there. **In CI** (GitHub Actions, `.github/workflows/ci.yml`) the workflow runs `npx playwright install --with-deps chromium`, which is the normal set-up on a fresh runner | Chromium is automated here and in CI. **Since 2026-11-27 CI also runs the whole suite on WebKit** (Safari's engine) as an emulated iPhone 15 (project `webkit-iphone`, row D-3a in §3.2); it is not installed or run in Claude's container. Firefox is covered manually (TC-66) |
 | axe-core 4.14.0 | Present only as a dependency of `eslint-plugin-jsx-a11y` | Add `axe-core` (or `@axe-core/playwright`) as an explicit devDependency so the audit does not break when ESLint updates |
 | Lighthouse CLI | Not installed; `lighthouse@13.6.0` is reachable on the npm registry from here | Run `npx lighthouse@13.6.0` against ENV-1 and ENV-2 with the local Chrome. Runs entirely on this machine — no Lighthouse service |
 | `@vitest/coverage-v8` | Not installed | Add (matching Vitest 5.1) for NFR-15 |
@@ -170,11 +170,34 @@ Chrome/Edge/Firefox. Record the exact version shown in each browser's "About" pa
 | # | Platform | Browser | Versions to cover | How | Who | Viewport / notes |
 |---|---|---|---|---|---|---|
 | D-1 | Linux container | Chrome (headless) | Installed version | All Playwright suites | Claude | 360, 768, 1280 px; dark + light |
+| D-3a | GitHub Actions runner (Linux) | WebKit (headless, Playwright's build) | The WebKit build pinned by `@playwright/test` | All Playwright suites, project `webkit-iphone` (CI only; locally with `E2E_WEBKIT=1` after `npx playwright install webkit`) | CI | `devices["iPhone 15"]`: 393 × 659 viewport, touch, mobile, iPhone user agent; dark + light. **Partial evidence for D-3 only** — see below |
 | D-2 | Android phone | Chrome | Latest **and** previous major | TC-66 smoke + real-device cases | Owner / a tester with Android | Previous major: a second phone or a tester whose Chrome is one version behind; if none is available, report it as a gap |
 | D-3 | iPhone | Safari | Latest and previous iOS major | TC-66 smoke + real-device cases | A tester with an iPhone (owner to confirm someone has one) | iOS-only checks: Add to Home Screen, `.ics` in Calendar, share sheet |
 | D-4 | Windows laptop | Chrome | Latest | TC-66 smoke | Owner | 1280 px and 200 % zoom |
 | D-5 | Windows laptop | Edge | Latest | TC-66 smoke | Owner | |
 | D-6 | Windows laptop | Firefox | Latest | TC-66 smoke | Owner | No PWA install in Firefox desktop (expected) |
+
+**D-3a — what WebKit in CI covers and what it does not (added 2026-11-27; no UAT tester has an iPhone, RT-04).**
+Covers: Safari's rendering and JavaScript engine running every core journey at iPhone width — location allowed /
+denied / timeout → results, filters, chips, search, map pins, details page, save, share sheet and copy-link
+fallback, `.ics` download and its contents, area buttons, Change search area, About/privacy, offline (service
+worker), responsive 360/768/1280 px, axe scan, target size and keyboard walk, in dark and light.
+Does **not** cover (still needs a real iPhone, D-3): Add to Home Screen and standalone launch; the real iOS location
+prompt (Playwright grants the permission and fakes the position); the real share sheet (stubbed) and opening the
+`.ics` in the Calendar app; iOS-only viewport behaviour (Safari's collapsing address bar, safe areas, the on-screen
+keyboard resizing the page, rubber-band scrolling); real touch gestures on the map (tests drive it with mouse
+events); VoiceOver; the exact Safari version (Playwright's WebKit is a recent trunk build on Linux, not iOS
+Safari's "latest two majors"). So NFR-13 stays not passed until D-3 runs or the gap is accepted.
+
+**WebKit-only skips (named, visible, `test.skip(browserName === "webkit", reason)`; also tagged `@chromium-only`):**
+
+| Test | Reason |
+|---|---|
+| TC-56 NFR-01 perf | Network and CPU throttling use a Chrome DevTools Protocol session (`newCDPSession`), which WebKit doesn't have; NFR-01 is measured on Chrome (and on ENV-2) |
+
+**WebKit-specific adjustment (no skip, same assertions):** TC-34 grants only `clipboard-read` on WebKit, because
+Playwright's WebKit has no `clipboard-write` permission (it throws "Unknown permission"); Safari allows
+`writeText` after a tap without one.
 
 ---
 
@@ -255,7 +278,7 @@ Phase 4 finished early, so automated testing can start well before the original 
 |---|---|---|---|
 | **RT-01** | **Test data expires before UAT.** The latest curated event ends **Sat 19 Dec 2026, 19:00**. Upcoming events: 20 on 1 Dec, 3 on 15 Dec, **0 on 23 Dec** (Klang Valley and Kota Kinabalu). During the UAT window every tester would see "No events match" and every details link would say "This event has ended" | **Certain / High** | Refresh `curated-events.json` with events dated 23 Dec – Jan by 18 Dec (E-6). Automated tests use fixtures (§2.2, §2.3) and are not affected |
 | RT-02 | No Vercel URL → phones can't use real location (HTTPS only) and chat previews can't be checked | Medium / Medium | Testers use "Pick a spot" or an area button; FR-01 on a real phone waits for ENV-2 |
-| RT-03 | Only Chromium is available for automation | Certain / Medium | Firefox and Safari covered manually (TC-66); Safari-specific features (Add to Home Screen, Calendar) on a real iPhone |
+| RT-03 | Only Chromium runs in Claude's container; WebKit runs only in CI (since 2026-11-27) and is not real iOS Safari | Certain / Medium | WebKit as an emulated iPhone in CI (§3.2 D-3a: engine-level evidence for every e2e journey, one named skip); Firefox covered manually (TC-66); Safari-specific features (Add to Home Screen, real location prompt, share sheet, Calendar, iOS viewport/keyboard) still need a real iPhone — if no tester has one (RT-04), report the NFR-13 iOS row as a gap |
 | RT-04 | Nobody in the UAT group has an iPhone, or a previous-major browser | Medium / Medium | Ask before booking sessions; otherwise report NFR-13 iOS rows as a gap |
 | RT-05 | Classmates unavailable over the holidays | Medium / Medium | Book sessions now; allow remote sessions via screen share; three testers minimum, owner counts as a fourth |
 | RT-06 | Time-dependent flakiness (MYT midnight, weekends) | Medium / Low | Fixed browser clock + fixtures; unit tests cover boundaries with explicit `now` |

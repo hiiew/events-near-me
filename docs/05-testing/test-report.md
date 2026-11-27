@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Phase | 5 — Testing |
-| Version | 0.5 — details-page tests run on fixed server fixtures instead of real data (§1.4). Before: 0.4 — DEF-07 fix and the owner's acceptance of DEF-08 (§1.3); 0.3 — Lighthouse on ENV-1 and DEF-05 accepted; 0.2 — re-run after DEF-01 – DEF-06; 0.1 — first run. UAT, ENV-2 and real-device results follow |
+| Version | 0.6 — WebKit (emulated iPhone 15) added to CI; results pending the first CI run (§1.5). Before: 0.5 — details-page tests run on fixed server fixtures instead of real data (§1.4); 0.4 — DEF-07 fix and the owner's acceptance of DEF-08 (§1.3); 0.3 — Lighthouse on ENV-1 and DEF-05 accepted; 0.2 — re-run after DEF-01 – DEF-06; 0.1 — first run. UAT, ENV-2 and real-device results follow |
 | Run date | 2026-11-24 |
 | Commit under test | branch `claude/kind-gates-6ijzwm` = `main` after PR #21, plus the test files of this step (no app code changed). Lighthouse (§1.2): `main` after PR #22, no app code changed |
 | Standard | Structure based on IEEE 829 / ISO/IEC/IEEE 29119-3 (test completion report) |
@@ -122,6 +122,15 @@ variable's name in two server chunks; nothing in `.next/static`).
 
 **Not covered by e2e any more:** the real curated file itself. Vitest still checks every entry is valid and ids are
 unique; whether it has upcoming events (E-6) is checked by the data refresh, the ENV-2 smoke check and UAT (RT-01).
+
+### 1.5 v0.6 — WebKit added to CI (2026-11-27)
+
+**WebKit added to CI; results pending the first CI run.** No iPhone is available for UAT (RT-04), so CI now runs the
+whole e2e suite a second time on WebKit as an emulated iPhone 15 (project `webkit-iphone`, test-plan §3.2 D-3a):
+75 tests listed, 1 skipped on WebKit by name (TC-56, needs Chrome DevTools throttling), 74 expected to run. WebKit
+cannot be installed in Claude's container, so **no WebKit result exists yet**; nothing here is marked passed for it.
+Locally the Chromium run is unchanged: 75 passed, 0 skipped (incl. DEF-05 `test.fail()`). NFR-13 stays open: a green
+WebKit run is partial evidence; the real-iPhone part of TC-66 is still needed or must be accepted as a gap.
 
 ---
 

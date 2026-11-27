@@ -69,7 +69,7 @@
 | NFR-10 | M | Privacy: The server does not store or log users' coordinates | US-10 | ADR-07, T-01 | `route.ts`, `aggregator.ts`, `curated.ts` log ids only (+ tests) | TC-40 | 🛠 |
 | NFR-11 | S | Privacy: Bookmarks and settings are stored only in the browser… | US-07 | D-04, S-6 | `ClearSavedData.tsx`, `clearBookmarks` (+ test) | TC-29, TC-31, TC-32 | ✅ |
 | NFR-12 | M | Availability / resilience: If all live sources fail, curated events are… | US-09 | D-07 | `src/lib/sources/aggregator.ts` (+ test) | TC-36 | ✅ |
-| NFR-13 | M | Compatibility: Works on the latest two major versions of Chrome (Android)… | — | ADR-01 (modern browsers) | | TC-66 | 🎨 |
+| NFR-13 | M | Compatibility: Works on the latest two major versions of Chrome (Android)… | — | ADR-01 (modern browsers) | | TC-66 (partial automated evidence: e2e suite on WebKit / emulated iPhone 15 in CI, added 2026-11-27, first result pending; not a pass) | 🎨 |
 | NFR-14 | M | Maintainability: Adding a new source requires only a new adapter file and a… | — | ADR-05, adapter interface | `src/lib/sources/registry.ts`, `types.ts` | TC-37 | 🛠 |
 | NFR-15 | S | Maintainability: Core logic (adapters, filtering, distance, dedupe) has ≥ 70… | — | architecture §8 (src/test) | | TC-67 | 🎨 |
 | NFR-16 | M | Cost: Running cost is RM0 at expected student-project traffic | — | ADR-03, ADR-04, ADR-08 | | TC-68 | 🎨 |

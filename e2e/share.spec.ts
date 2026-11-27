@@ -19,9 +19,11 @@ test("TC-33 FR-22 US-08: the share sheet gets the title, date and link", async (
   await expect(page.getByText("Link copied")).toHaveCount(0);
 });
 
-test("TC-34 FR-22 US-08: without a share sheet the link is copied and announced", async ({ page, context }) => {
+test("TC-34 FR-22 US-08: without a share sheet the link is copied and announced", async ({ page, context, browserName }) => {
   const e = S.full; // server fixture (PRE-D)
-  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  // Only the permission needed to read the clipboard back in the test. Playwright's WebKit has no
+  // "clipboard-write" permission (it throws "Unknown permission"); Safari allows writeText after a tap anyway.
+  await context.grantPermissions(browserName === "webkit" ? ["clipboard-read"] : ["clipboard-read", "clipboard-write"]);
   await page.addInitScript(() => {
     delete (Navigator.prototype as Partial<Navigator>).share;
     delete (navigator as Partial<Navigator>).share;
