@@ -599,7 +599,13 @@
 - **Pre:** ENV-2; E-6 data; `uat-script.md`; owner + Tester A, B, C, each on their own phone.
 - **Steps:** Tasks (≈ 20 min): find events near a spot; show only free events this week; find a music
   event this weekend; open one and get directions; save it and find it on Saved; share it to yourself;
-  read what happens to your location. Then 3 rating questions and free comments.
+  read what happens to your location. Then 3 rating questions, one feedback question and free comments.
+- **Feedback question (not pass/fail; owner request 2026-11-27):** *"Saved events stay on this phone only.
+  Would you want them on more than one device, e.g. your phone and laptop? Yes / No / Don't mind — why?"*
+  It tests the decision not to build accounts (SRS W-01: no login; bookmarks device-only, NFR-11). Record
+  each tester's answer and reason in `test-report.md` §UAT. If most testers say Yes with a real reason, raise
+  a change request for Phase 7 and consider a lighter option than full accounts first (e.g. a "send my saved
+  list to myself" link); otherwise W-01 stands.
 - **Expected:** Each task completed without help by every tester; NFR-04 met (TC-59); issues raised become defects or backlog items.
 
 ---
