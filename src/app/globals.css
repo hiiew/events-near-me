@@ -70,17 +70,19 @@ body {
   border: none;
 }
 /* FR-32 / DEF-01: the map runs 26 px under the list sheet (so the sheet's rounded corners show map, not page),
-   which hid the OpenStreetMap credit. Lift the bottom controls clear of the sheet and use the theme colours.
-   The background is solid on purpose: a see-through one let the map behind decide the text contrast, which failed
-   WCAG 1.4.3 in CI depending on what had drawn behind it (NFR-05). Solid --bg gives 7.5:1 (text) / 14.9:1 (link) dark. */
+   which hid the OpenStreetMap credit. Lift the bottom controls clear of the sheet and use the theme colours. */
 .leaflet-bottom.leaflet-bottom {
   bottom: 26px;
 }
-.leaflet-control-attribution.leaflet-control-attribution {
+/* DEF-09 root cause: leaflet.css styles the credit with `.leaflet-container .leaflet-control-attribution`
+   (two classes, same specificity as a doubled class), and leaflet.css loads after this file with the map, so its
+   80 % white box won whenever it loaded last: 1.2–1.7:1 contrast in dark mode (CI, Chromium and WebKit). Three
+   classes beat it whatever the load order. Solid --bg: 7.5:1 text, 14.9:1 link (dark); NFR-05. */
+.leaflet-container .leaflet-control-attribution.leaflet-control-attribution {
   background: var(--bg);
   color: var(--text-muted);
 }
-.leaflet-control-attribution.leaflet-control-attribution a {
+.leaflet-container .leaflet-control-attribution.leaflet-control-attribution a {
   color: var(--accent-text);
 }
 

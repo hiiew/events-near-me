@@ -545,10 +545,11 @@
   Note: radius and dates are not server inputs (filtering runs on the device, ADR-06) — see Q-5.
 
 #### TC-66 — Device and browser compatibility matrix
-- **Req:** NFR-13 · **Type:** manual · **Playwright:** Partly (D-1 Chrome runs every e2e suite)
+- **Req:** NFR-13 · **Type:** manual · **Playwright:** Partly (D-1 Chrome runs every e2e suite; since 2026-11-27 D-3a WebKit as an emulated iPhone 15 runs every e2e suite in CI, except TC-56 — test-plan §3.2)
 - **Pre:** ENV-2; devices D-2 – D-6 from test-plan §3.2.
 - **Steps (smoke, ~10 min per browser):** open the app; Use my location (allow); filters (one of each); open details; save; share; add to calendar; Saved; About → Clear saved data; rotate phone.
 - **Expected:** Every step works on every row of the matrix; browser + version recorded; any row not available is reported as a gap.
+- **Note (2026-11-27):** a green WebKit CI run is partial, automated evidence for D-3 (Safari's engine, iPhone viewport, touch, user agent). It does not replace the real-iPhone steps: Add to Home Screen, the real location prompt, the share sheet, opening the `.ics` in Calendar, iOS viewport/keyboard behaviour. TC-66 passes only when the D-3 row runs on a real iPhone or the owner accepts it as a gap.
 
 #### TC-67 — Core logic coverage ≥ 70 % and lint passes
 - **Req:** NFR-15 · **Type:** audit · **Playwright:** No
@@ -598,7 +599,13 @@
 - **Pre:** ENV-2; E-6 data; `uat-script.md`; owner + Tester A, B, C, each on their own phone.
 - **Steps:** Tasks (≈ 20 min): find events near a spot; show only free events this week; find a music
   event this weekend; open one and get directions; save it and find it on Saved; share it to yourself;
-  read what happens to your location. Then 3 rating questions and free comments.
+  read what happens to your location. Then 3 rating questions, one feedback question and free comments.
+- **Feedback question (not pass/fail; owner request 2026-11-27):** *"Saved events stay on this phone only.
+  Would you want them on more than one device, e.g. your phone and laptop? Yes / No / Don't mind — why?"*
+  It tests the decision not to build accounts (SRS W-01: no login; bookmarks device-only, NFR-11). Record
+  each tester's answer and reason in `test-report.md` §UAT. If most testers say Yes with a real reason, raise
+  a change request for Phase 7 and consider a lighter option than full accounts first (e.g. a "send my saved
+  list to myself" link); otherwise W-01 stands.
 - **Expected:** Each task completed without help by every tester; NFR-04 met (TC-59); issues raised become defects or backlog items.
 
 ---

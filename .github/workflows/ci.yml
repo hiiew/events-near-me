@@ -20,7 +20,7 @@ jobs:
   check:
     name: lint, types, unit, build, e2e
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30 # 20 before WebKit was added (NFR-13); the e2e suite now runs twice
     steps:
       - uses: actions/checkout@v7
 
@@ -42,10 +42,12 @@ jobs:
         run: npm run build
 
       # npx uses the @playwright/test version pinned in package-lock.json, so the browser matches it.
-      - name: Install Playwright Chromium
-        run: npx playwright install --with-deps chromium
+      # WebKit = Safari's engine, run as an emulated iPhone 15 (project "webkit-iphone", NFR-13). Partial evidence
+      # only: not real iOS Safari (test-plan §3.2 D-3a). CI=true makes playwright.config.ts add that project.
+      - name: Install Playwright Chromium and WebKit
+        run: npx playwright install --with-deps chromium webkit
 
-      - name: Browser tests (Playwright)
+      - name: Browser tests (Playwright, Chromium + WebKit)
         run: npm run test:e2e
         env:
           E2E_SKIP_BUILD: "1" # reuse the build from the step above

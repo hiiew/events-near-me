@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Phase | 5 — Testing |
-| Version | 0.5 — details-page tests run on fixed server fixtures instead of real data (§1.4). Before: 0.4 — DEF-07 fix and the owner's acceptance of DEF-08 (§1.3); 0.3 — Lighthouse on ENV-1 and DEF-05 accepted; 0.2 — re-run after DEF-01 – DEF-06; 0.1 — first run. UAT, ENV-2 and real-device results follow |
+| Version | 0.6 — WebKit (emulated iPhone 15) added to CI; results pending the first CI run (§1.5). Before: 0.5 — details-page tests run on fixed server fixtures instead of real data (§1.4); 0.4 — DEF-07 fix and the owner's acceptance of DEF-08 (§1.3); 0.3 — Lighthouse on ENV-1 and DEF-05 accepted; 0.2 — re-run after DEF-01 – DEF-06; 0.1 — first run. UAT, ENV-2 and real-device results follow |
 | Run date | 2026-11-24 |
 | Commit under test | branch `claude/kind-gates-6ijzwm` = `main` after PR #21, plus the test files of this step (no app code changed). Lighthouse (§1.2): `main` after PR #22, no app code changed |
 | Standard | Structure based on IEEE 829 / ISO/IEC/IEEE 29119-3 (test completion report) |
@@ -122,6 +122,15 @@ variable's name in two server chunks; nothing in `.next/static`).
 
 **Not covered by e2e any more:** the real curated file itself. Vitest still checks every entry is valid and ids are
 unique; whether it has upcoming events (E-6) is checked by the data refresh, the ENV-2 smoke check and UAT (RT-01).
+
+### 1.5 v0.6 — WebKit added to CI (2026-11-27)
+
+**WebKit added to CI; results pending the first CI run.** No iPhone is available for UAT (RT-04), so CI now runs the
+whole e2e suite a second time on WebKit as an emulated iPhone 15 (project `webkit-iphone`, test-plan §3.2 D-3a):
+75 tests listed, 1 skipped on WebKit by name (TC-56, needs Chrome DevTools throttling), 74 expected to run. WebKit
+cannot be installed in Claude's container, so **no WebKit result exists yet**; nothing here is marked passed for it.
+Locally the Chromium run is unchanged: 75 passed, 0 skipped (incl. DEF-05 `test.fail()`). NFR-13 stays open: a green
+WebKit run is partial evidence; the real-iPhone part of TC-66 is still needed or must be accepted as a gap.
 
 ---
 
@@ -269,7 +278,7 @@ again if the defect comes back, so the fix PR can be checked with `npm run test:
 | **DEF-06** | S4 Low | TC-40 (log review) | FR-37 (C) | Server logs a Next.js "unstable value `Date.now()`" error on every details request | **Fixed** (0 such log lines on re-run) |
 | **DEF-07** | S4 Low | TC-61 (Lighthouse BP) | security-privacy §7 CSP (TC-72), T-03 | Zod's `Function("")` probe trips the CSP on every page (Chrome "issue", Best Practices 96) | **Fixed 2026-11-24** — `z.config({ jitless: true })` in `event-schema.ts`; Lighthouse Best Practices 96 → **100** on `/` and `/about` (same Lighthouse 13.6.0, with vs without the fix) |
 | **DEF-08** | S4 Low | TC-61 (Lighthouse SEO) | FR-37 (C) | Details page `<meta name="description">` is streamed into `<body>` for normal browsers (SEO 90) | **Accepted by owner 2026-11-24** — Next.js 16 streams metadata to normal browsers; bots still get it in `<head>` (TC-45 passes). Not fixed: `htmlLimitedBots` for everyone would slow the details page |
-| **DEF-09** | S3 Medium | TC-60 (CI, PR #32) | NFR-05 (M), FR-32 | OSM credit text contrast failed axe `color-contrast` (serious, 3 nodes, S-3 pick a spot, dark) on the CI runner only; the DEF-01 fix gave it a see-through background, so the contrast depended on what the map had drawn behind it. Not reproduced locally (12/12 passes); artifact not downloadable from Claude's container | **Fixed 2026-11-27** — solid `var(--bg)` background (7.5:1 text, 14.9:1 link in dark); axe findings now include axe's `failureSummary` so a CI-only failure is diagnosable from the log; CI re-run on PR #32 |
+| **DEF-09** | S3 Medium | TC-60 (CI, PR #32) | NFR-05 (M), FR-32 | OSM credit text contrast failed axe `color-contrast` (serious, 3 nodes, S-3 pick a spot, dark) on the CI runner only; the DEF-01 fix gave it a see-through background, so the contrast depended on what the map had drawn behind it. Not reproduced locally (12/12 passes); artifact not downloadable from Claude's container | **Fixed 2026-11-27, root cause corrected same day.** First fix (solid background) was not enough: the first WebKit CI run (PR #34) still failed, and the new axe `failureSummary` showed the measured background `#d0d1d2` = leaflet.css's `rgba(255,255,255,0.8)` box. Real cause: leaflet.css's `.leaflet-container .leaflet-control-attribution` has the same specificity as the app's doubled class, and leaflet.css loads later with the map, so Leaflet's box won whenever it loaded last (proved locally: Chromium computed `rgba(255, 255, 255, 0.8)` with the old CSS). Fix: three-class selectors in `globals.css` (beat Leaflet regardless of load order). TC-25 now asserts the computed background is `rgb(14, 15, 19)` (fails on the old CSS, passes on the fix). |
 
 **DEF-01 — OSM attribution hidden behind the list sheet (S2).**
 Steps: open `/` at 360 × 740 → Use my location → results show. Look at the bottom-right corner of the map.

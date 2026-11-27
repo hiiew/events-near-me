@@ -8,7 +8,10 @@ import { expect, resultsHeading, test } from "./helpers";
 const FAST_4G = { offline: false, latency: 165, downloadThroughput: (9_000_000 / 8) * 0.9, uploadThroughput: (1_500_000 / 8) * 0.9 };
 const CPU_SLOWDOWN = 4;
 
-test("TC-56 NFR-01: first result row within 3 s of tapping Klang Valley (5 runs, Fast 4G, 4× CPU)", async ({ page }, info) => {
+test("TC-56 NFR-01: first result row within 3 s of tapping Klang Valley (5 runs, Fast 4G, 4× CPU)", { tag: "@chromium-only" }, async ({ page, browserName }, info) => {
+  // NFR-13 / test-plan §3.2: network and CPU throttling go through the Chrome DevTools Protocol, which only
+  // Chromium has; WebKit has no CPU throttling at all. NFR-01 is a Chrome-on-Android figure (ENV-2 for the real one).
+  test.skip(browserName === "webkit", "TC-56 needs CDP network + CPU throttling (newCDPSession), Chromium only");
   test.setTimeout(120_000);
   const cdp = await page.context().newCDPSession(page);
   await cdp.send("Network.enable");
