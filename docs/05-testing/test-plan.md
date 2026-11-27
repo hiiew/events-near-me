@@ -123,11 +123,11 @@ is the KK area centre (FR-41 tests).
 | Tool | Status | Plan |
 |---|---|---|
 | Vitest 5.1.0 | Installed. **`npm test` works here with the default pool: 13 files, 156 tests pass in ~0.7 s.** The dev-log's "default pool crashes" was on the owner's machine | Use `npm test`; on the owner's machine fall back to `npx vitest run --pool=vmThreads` and record which was used |
-| Playwright 1.63.0 (library) | Pre-installed globally (`/opt/node-tools`), Google Chrome at `/usr/bin/google-chrome`. The test **runner** `@playwright/test` is **not** in the project | Next step: add `@playwright/test@1.63` as a devDependency and run Chrome via `channel: "chrome"`. **Do not run `playwright install`.** Only Chromium is available here; Firefox and WebKit (Safari engine) are covered manually (TC-66) |
+| Playwright 1.63.0 | Test runner `@playwright/test@1.63.0` is a devDependency (added 2026-11-24). **In Claude's container** Chromium is pre-installed, so `playwright install` is not run there. **In CI** (GitHub Actions, `.github/workflows/ci.yml`) the workflow runs `npx playwright install --with-deps chromium`, which is the normal set-up on a fresh runner | Only Chromium is automated (here and in CI); Firefox and WebKit (Safari engine) are covered manually (TC-66) |
 | axe-core 4.14.0 | Present only as a dependency of `eslint-plugin-jsx-a11y` | Add `axe-core` (or `@axe-core/playwright`) as an explicit devDependency so the audit does not break when ESLint updates |
 | Lighthouse CLI | Not installed; `lighthouse@13.6.0` is reachable on the npm registry from here | Run `npx lighthouse@13.6.0` against ENV-1 and ENV-2 with the local Chrome. Runs entirely on this machine — no Lighthouse service |
 | `@vitest/coverage-v8` | Not installed | Add (matching Vitest 5.1) for NFR-15 |
-| CI | No `.github/workflows` yet | NFR-15's "linting passes in CI" is checked after Phase 6 sets up CI; until then `npm run lint` is run locally |
+| CI | `.github/workflows/ci.yml` added in Phase 6 (2026-11-24): lint, unit tests, build and the Playwright suite on every PR and push to `main` | NFR-15's "linting passes in CI" is proven by the first green CI run on a PR |
 
 **Done 2026-11-24 (owner OK):** added as exact-version devDependencies `@playwright/test@1.63.0` (matches the installed browser; smoke test passed, no `playwright install`), `@axe-core/playwright@4.14.0` (brings `axe-core` 4.14 explicitly) and `@vitest/coverage-v8@5.1.0` (first run: 97.6 % lines, 92.7 % branches on the unit-tested files). Lighthouse stays `npx` only. Plain `npm test` works in this container.
 

@@ -182,8 +182,9 @@ when the bad change must also leave `main`.
 | `SOURCE_CACHE_SECONDS` | Not read yet (D-08 cache not built) | — | **No** |
 | Anything starting `NEXT_PUBLIC_` | — | — | **Never** for secrets: Next.js copies these into the browser bundle (security-privacy §6) |
 
-**Careful:** `ENABLED_SOURCES` set to an **empty** value, or to only `eventbrite`, leaves the app with no
-sources — every search shows no events. Either set it to `curated` or delete the variable.
+**Careful:** `ENABLED_SOURCES` set to only `eventbrite` leaves the app with no sources (Eventbrite is not built
+yet), so every search shows no events. Set it to `curated`. An **empty** value is safe since 2026-11-27: it now
+falls back to `curated` (`src/lib/sources/registry.ts`, unit-tested).
 
 ### 6.2 Rules (security-privacy §6)
 - Secret **values** live only in Vercel → Settings → Environment Variables and in your own `.env.local`.
@@ -258,7 +259,7 @@ and asks for a login. Always measure the Production URL.
 |---|---|---|
 | Build fails on Vercel but CI is green | Different Node version | §3.3 step 13 → 22.x, redeploy |
 | `npm ci` fails in CI | `package-lock.json` out of date | Run `npm install` locally, commit the lock file |
-| Every search shows "no events" | `ENABLED_SOURCES` empty/wrong (§6.1), **or** all curated events have ended | Fix the variable + redeploy; or add new events (events-curator) and merge |
+| Every search shows "no events" | `ENABLED_SOURCES` wrong, e.g. only `eventbrite` (§6.1), **or** all curated events have ended | Fix the variable + redeploy; or add new events (events-curator) and merge |
 | New events merged but not on the site | The merge's deployment failed or is still building | Deployments tab → look for a red **Error** → open **Build Logs** |
 | "Use my location" never asks | Opened over `http://` or inside an app's in-app browser | Use the `https://` URL in Chrome/Safari |
 | Map is grey | OpenStreetMap tiles blocked by the network or rate-limited | Try another network; see OSM tile policy (R-02) |
