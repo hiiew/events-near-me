@@ -1,0 +1,60 @@
+# CI for Happening — NFR-15 ("linting passes in CI", TC-67 CI part) and a release gate for Phase 6.
+# Runs on every pull request and on every push to main. Same commands as on your computer (README).
+# No secrets are used: the app needs none today (ENABLED_SOURCES defaults to "curated").
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A newer push to the same branch cancels the older, still-running check.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: lint, types, unit, build, e2e
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22 # Node 22 LTS, as in README
+          cache: npm
+
+      - name: Install dependencies (exact versions from package-lock.json)
+        run: npm ci
+
+      - name: Lint (ESLint)
+        run: npm run lint
+
+      - name: Unit tests (Vitest)
+        run: npm test
+
+      - name: Production build (also type-checks)
+        run: npm run build
+
+      # npx uses the @playwright/test version pinned in package-lock.json, so the browser matches it.
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Browser tests (Playwright)
+        run: npm run test:e2e
+        env:
+          E2E_SKIP_BUILD: "1" # reuse the build from the step above
+
+      # Screenshots of failed tests and results.json. Traces and videos are off (test-plan §2.1 rule 8).
+      - name: Upload Playwright results (only when something failed)
+        if: failure()
+        uses: actions/upload-artifact@v5
+        with:
+          name: playwright-results
+          path: test-results/
+          retention-days: 7

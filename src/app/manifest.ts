@@ -1,6 +1,6 @@
 // D-12 — FR-33: makes Happening installable ("Add to Home Screen"). Next.js serves this at
-// /manifest.webmanifest and adds the <link rel="manifest"> tag by itself. No service worker and no
-// offline mode (out of scope), so the installed app still needs a connection like the website.
+// /manifest.webmanifest and adds the <link rel="manifest"> tag by itself. Offline use is handled separately by
+// the service worker in public/sw.js and the last-search cache (FR-40, CR-10).
 import type { MetadataRoute } from "next";
 
 // Night Map dark tokens, docs/03-design/ui-ux.md §4 (--bg). A test keeps this in step with globals.css.
