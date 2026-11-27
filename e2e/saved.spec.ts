@@ -2,7 +2,8 @@
 import type { Page } from "@playwright/test";
 import type { Event } from "@/lib/event-schema";
 import { F, myt, NOW } from "./fixtures/events";
-import { expect, openResults, realEvent, test } from "./helpers";
+import { eventPath, S } from "./fixtures/server-events";
+import { expect, openResults, test } from "./helpers";
 
 const BOOKMARKS = "happening.bookmarks.v1";
 const LAST_SEARCH = "happening.lastsearch.v1";
@@ -15,10 +16,9 @@ async function seedBookmarks(page: Page, events: Event[]) {
   );
 }
 
-test("TC-28 FR-20 US-07: save and un-save an event; the Saved screen follows", async ({ page, request }) => {
-  const e = (await realEvent(request))!;
-  test.skip(!e, "no upcoming curated event (E-6)");
-  await page.goto(`/event/${encodeURIComponent(e.id)}`);
+test("TC-28 FR-20 US-07: save and un-save an event; the Saved screen follows", async ({ page }) => {
+  const e = S.full; // server fixture (PRE-D)
+  await page.goto(eventPath(e));
   await page.getByRole("button", { name: "Save event" }).click();
   const saved = page.getByRole("button", { name: "Saved — remove from Saved" });
   await expect(saved).toHaveAttribute("aria-pressed", "true");
@@ -34,10 +34,9 @@ test("TC-28 FR-20 US-07: save and un-save an event; the Saved screen follows", a
   await expect(page.getByRole("heading", { name: "Nothing saved yet" })).toBeVisible();
 });
 
-test("TC-29 FR-20 NFR-11 US-07: bookmarks survive closing the browser", async ({ page, browser, request }) => {
-  const e = (await realEvent(request))!;
-  test.skip(!e, "no upcoming curated event (E-6)");
-  await page.goto(`/event/${encodeURIComponent(e.id)}`);
+test("TC-29 FR-20 NFR-11 US-07: bookmarks survive closing the browser", async ({ page, browser }) => {
+  const e = S.full; // server fixture (PRE-D)
+  await page.goto(eventPath(e));
   await page.getByRole("button", { name: "Save event" }).click();
   await expect(page.getByRole("button", { name: "Saved — remove from Saved" })).toBeVisible();
   const state = await page.context().storageState();
@@ -75,12 +74,11 @@ test("TC-31 NFR-11 FR-40 US-07 US-18: 'Clear saved data' removes bookmarks and t
   await expect(page.getByRole("heading", { name: "Nothing saved yet" })).toBeVisible();
 });
 
-test("TC-32 FR-20 NFR-11: bookmarks never leave the device", async ({ page, context, request }) => {
-  const e = (await realEvent(request))!;
-  test.skip(!e, "no upcoming curated event (E-6)");
+test("TC-32 FR-20 NFR-11: bookmarks never leave the device", async ({ page, context }) => {
+  const e = S.full; // server fixture (PRE-D)
   const sent: string[] = [];
   page.on("request", (r) => sent.push(`${r.url()} ${r.postData() ?? ""}`));
-  await page.goto(`/event/${encodeURIComponent(e.id)}`);
+  await page.goto(eventPath(e));
   await page.getByRole("button", { name: "Save event" }).click();
   await page.goto("/saved");
   await expect(page.getByRole("link", { name: e.title, exact: true })).toBeVisible();
@@ -89,7 +87,7 @@ test("TC-32 FR-20 NFR-11: bookmarks never leave the device", async ({ page, cont
   await expect(page.getByRole("heading", { name: "Nothing saved yet" })).toBeVisible();
 
   // The id appears in the page address we opened, but never in any other request or body.
-  const leaks = sent.filter((s) => !s.includes(`/event/${encodeURIComponent(e.id)}`) && (s.includes(e.id) || s.includes(encodeURIComponent(e.id)) || s.includes("bookmarks")));
+  const leaks = sent.filter((s) => !s.includes(eventPath(e)) && (s.includes(e.id) || s.includes(encodeURIComponent(e.id)) || s.includes("bookmarks")));
   expect(leaks).toEqual([]);
   expect(await context.cookies()).toEqual([]);
 });

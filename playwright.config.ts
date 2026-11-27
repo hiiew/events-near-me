@@ -1,6 +1,7 @@
 // Phase 5 browser tests (test-plan.md §2, ENV-1). Runs the production build, because the service
 // worker (FR-40) and the CSP header only exist in production.
 import { defineConfig, devices } from "@playwright/test";
+import { SERVER_CURATED_JSON } from "./e2e/fixtures/server-events";
 
 const PORT = Number(process.env.E2E_PORT ?? 3100);
 // E2E_SKIP_BUILD=1 reuses the last `npm run build` (faster when only tests changed).
@@ -32,6 +33,9 @@ export default defineConfig({
   webServer: {
     // Server output goes to a file so TC-40 can check it never contains coordinates.
     command: `${build}npm start -- -p ${PORT} > ${SERVER_LOG} 2>&1`,
+    // PRE-D (test-plan §2.3): the server serves fixed, always-upcoming test events instead of the real curated
+    // file. Read at run time by src/lib/sources/curated.ts, so the same production build is tested.
+    env: { E2E_CURATED_EVENTS: SERVER_CURATED_JSON },
     url: `http://localhost:${PORT}/about`,
     reuseExistingServer: false,
     timeout: 240_000,

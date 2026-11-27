@@ -22,8 +22,9 @@
 - **PRE-B:** search responses replaced by the fixture (F-01 – F-09) and browser clock fixed at
   **Thu 17 Dec 2026 10:00 MYT** (test-plan §2.2).
 - **PRE-C:** geolocation granted at the KLCC test landmark (P).
-- **PRE-D:** at least one upcoming event in the real curated file (test-plan E-6); the test reads
-  its id from an unmocked search at run time.
+- **PRE-D:** the e2e server serves the server fixtures S-1 – S-4 (+ fillers) instead of the real
+  curated file (test-plan §2.3: `E2E_CURATED_EVENTS`, always upcoming, dates relative to the run day).
+  Details-page cases open a fixture by its id; they never skip for lack of data.
 
 ---
 
@@ -196,12 +197,13 @@
 
 #### TC-21 — Details page shows every FR-17 field and the source name
 - **Req:** FR-17, FR-32, NFR-18, US-05 · **Type:** e2e · **Playwright:** Yes (`e2e/detail.spec.ts`)
-- **Pre:** PRE-A, PRE-D (real curated event E chosen at run time; its JSON read from the API response).
+- **Pre:** PRE-A, PRE-D (run once for each server fixture E = S-1 every field + image, S-2 no price / no
+  end / no address / no image, S-3 free, S-4 Sabah).
 - **Steps:** Open `/event/<E.id>`.
 - **Expected:** Title; day and time with "(Malaysia time)" matching E.start/E.end formatted in MYT;
   venue name and address; category label; price formatted as in NFR-18; description; "Source:
-  Curated by Happening"; image with `alt` = title **if** E has `imageUrl` (no curated event has
-  one today — image path covered by unit test only, see Q-2). After arriving from a search, the
+  Curated by Happening"; image with `alt` = title, loaded (not broken), **if** E has `imageUrl`
+  (S-1), otherwise no image (closes Q-2 for FR-17). After arriving from a search, the
   distance from the search point is shown.
 
 #### TC-22 — "View official page" opens the source page in a new tab
@@ -213,7 +215,7 @@
 
 #### TC-23 — Event with no price shows "Price not listed"
 - **Req:** FR-17, FR-13, US-05 · **Type:** e2e · **Playwright:** Yes (`e2e/detail.spec.ts`)
-- **Pre:** PRE-D with an upcoming curated event whose `price` is `null` (8 exist today; skip with a recorded gap if none is upcoming).
+- **Pre:** PRE-A, PRE-D (server fixture S-2, `price: null`).
 - **Steps:** Open its details page.
 - **Expected:** Price line reads "Price not listed".
 
@@ -392,17 +394,17 @@
 
 #### TC-45 — Preview card metadata
 - **Req:** FR-37, US-15 · **Type:** e2e + manual · **Playwright:** Partly (`e2e/share.spec.ts`; `links.test.ts`)
-- **Pre:** PRE-A, PRE-D.
+- **Pre:** PRE-A, PRE-D (run for S-1 with an image and S-2 without).
 - **Steps:** 1. Fetch `/event/<E.id>` HTML with a chat-bot user agent; read `<title>`, `og:title`, `og:description`, `og:image`, `twitter:card`. 2. Same for a missing id. 3. Manual (ENV-2): paste the link in WhatsApp or Telegram.
 - **Expected:** 1: title "E.title — Happening"; description "<date> · <venue> · <price>"; `og:image`
   only if E has an image (`summary_large_image` then, else `summary`). 2: "Event — Happening", no
-  event description. 3: the chat shows the card. Image branch: unit test only (no curated image today).
+  event description. 3: the chat shows the card. `og:image` equals E.imageUrl for S-1 (Q-2 closed).
 
 ### US-17 — Calendar reminders
 
 #### TC-46 — "Add to calendar" downloads a correct .ics file
 - **Req:** FR-23, US-17 · **Type:** e2e + unit · **Playwright:** Yes (`e2e/calendar.spec.ts`; `ics.test.ts`)
-- **Pre:** PRE-A, PRE-D.
+- **Pre:** PRE-A, PRE-D (run for S-1 with an end time and S-2 without).
 - **Steps:** Tap **Add to calendar**; capture the download; parse it.
 - **Expected:** File name ends `.ics`; `BEGIN:VCALENDAR`/`VEVENT`; `SUMMARY` = title; `DTSTART`/`DTEND`
   in UTC equal to E.start/E.end (start + 2 h if no end); `LOCATION` = venue; `URL` = E.url; lines
@@ -692,7 +694,7 @@ that have no own NFR row.
 | # | Question | Where |
 |---|---|---|
 | Q-1 | ~~Kota Kinabalu in UAT scope?~~ **Answered 2026-11-24: no** — Klang Valley only (option A) | test-plan §1.3 |
-| Q-2 | No curated event has an image, so the FR-17 image and the FR-37 preview image can only be unit-tested. Add one event with an organiser image during the data refresh? | TC-21, TC-45 |
+| Q-2 | ~~No curated event has an image, so the FR-17 image and the FR-37 preview image can only be unit-tested.~~ **Closed 2026-11-27 for the automated tests:** server fixture S-1 has an image (TC-21 checks it loads, TC-45 checks `og:image` and the large card). A real organiser image on ENV-2 is still nice to have for UAT | TC-21, TC-45 |
 | Q-3 | Wording differs between SRS and app: US-04 "No events match your filters" vs app "No events match"; FR-09 "Location on map not available" vs app "not on map" (US-03 already says "not on map"); FR-07 "summary card" vs the built pin-highlights-row (US-03 updated by CR-13, FR-07 text not). Accept the app wording (doc fix via the change log) or change the app? Tests assert the app wording until decided | TC-14, TC-20, TC-12 |
 | Q-4 | **Max price:** an event priced RM 20 – RM 80 is shown under "Max RM 50" (the app compares the *lowest* price). US-04 says "events above RM 50 are hidden". Is "from RM 20" acceptable? **This weekend:** an event that started Friday and is still running on Saturday is shown, while US-04 says "starting this Saturday or Sunday". Accept the built behaviour? | TC-16, TC-18 |
 | Q-5 | NFR-08 lists radius and dates as server inputs, but since ADR-06 the server only takes lat/lon and the device filters. TC-65 tests what exists; a CR could update the NFR wording | TC-65 |

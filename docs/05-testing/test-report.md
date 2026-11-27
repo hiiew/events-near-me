@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Phase | 5 — Testing |
-| Version | 0.4 — adds the DEF-07 fix and the owner's acceptance of DEF-08 (§1.3). Before: 0.3 — Lighthouse on ENV-1 and DEF-05 accepted; 0.2 — re-run after DEF-01 – DEF-06; 0.1 — first run. UAT, ENV-2 and real-device results follow |
+| Version | 0.5 — details-page tests run on fixed server fixtures instead of real data (§1.4). Before: 0.4 — DEF-07 fix and the owner's acceptance of DEF-08 (§1.3); 0.3 — Lighthouse on ENV-1 and DEF-05 accepted; 0.2 — re-run after DEF-01 – DEF-06; 0.1 — first run. UAT, ENV-2 and real-device results follow |
 | Run date | 2026-11-24 |
 | Commit under test | branch `claude/kind-gates-6ijzwm` = `main` after PR #21, plus the test files of this step (no app code changed). Lighthouse (§1.2): `main` after PR #22, no app code changed |
 | Standard | Structure based on IEEE 829 / ISO/IEC/IEEE 29119-3 (test completion report) |
@@ -22,7 +22,7 @@
 | Environment | **ENV-1**: local production build (`next build` + `next start`, port 3100) in the Linux container, started by Playwright's `webServer` |
 | Browser | Playwright 1.63.0 bundled Chromium (headless), the only browser here (RT-03) |
 | Default context | 390 × 844, dark, `en-GB`, geolocation granted at the KLCC test landmark, service workers blocked (except TC-49), `--trace off`, screenshots only on failure |
-| Test data | Fixtures F-01 – F-09 + Kota Kinabalu pair (`e2e/fixtures/events.ts`), browser clock fixed at **Thu 17 Dec 2026 10:00 MYT** (21:00 for the second TC-44 run). Details-page cases (PRE-D) use a real upcoming curated event read from the unmocked API at run time, with the real clock |
+| Test data | Fixtures F-01 – F-09 + Kota Kinabalu pair (`e2e/fixtures/events.ts`), browser clock fixed at **Thu 17 Dec 2026 10:00 MYT** (21:00 for the second TC-44 run). Details-page cases (PRE-D): until v0.4 a real upcoming curated event read from the unmocked API at run time; **since v0.5 the server fixtures S-1 – S-4 (+ 20 fillers)**, test-plan §2.3 |
 | Outside hosts | None contacted: OSM tiles answered with a blank PNG, every other outside address (organiser pages, Google Maps, Waze) with a stub page (`e2e/helpers.ts`) |
 | Command | `npm run test:e2e` (= `playwright test`; set `E2E_SKIP_BUILD=1` to reuse the last build) |
 | Duration | **≈ 31 s** for a full run including the production build; ≈ 24 s against an existing build (4 workers) |
@@ -88,6 +88,41 @@ have no tab bar, so TC-28 opens `/saved` directly; an area button's accessible n
 target-size check now wait for the map pins / the streamed event content before measuring (the first
 scans ran too early and gave different results from run to run).
 
+### 1.4 v0.5 — details-page tests on fixed server fixtures (2026-11-27)
+
+**Why:** the details page is a Server Component that reads the bundled curated file, so its tests used a real
+upcoming event and called `test.skip()` when none matched. Real events expire: on 27 Nov TC-23 already skipped
+(the last "price not listed" event had ended) and after 19 Dec almost every details test would have skipped while
+CI stayed green. Four more tests (TC-58, TC-60, TC-62 target size, TC-72/TC-63) silently left out the details page
+through `if (e)`.
+
+**What changed:** the e2e web server now serves fixed, always-upcoming server fixtures through
+`E2E_CURATED_EVENTS` (test-plan §2.3), read by a small guarded seam `curatedEntries()` in
+`src/lib/sources/curated.ts` (ignored on Vercel, logged when used, throws on a broken value; 4 new unit tests).
+Same production build, so CI still builds once. All 18 `realEvent()` look-ups, the 14 data-dependent
+`test.skip()` calls and the 5 `if (e)` branches are gone; the only expected failure left is DEF-05's `test.fail()`.
+TC-21 now runs once per fixture (every field + image, no price / no end / no image, free, Sabah); TC-45 and TC-46
+run with and without image / end time. Outside image requests are answered with a 1 × 1 PNG (`e2e/helpers.ts`).
+
+**Runs on fixtures:** TC-21 (×4 + after-search distance), TC-22, TC-23, TC-26/27, TC-28, TC-29, TC-32, TC-33,
+TC-34, TC-45 (×2), TC-46 (×2), TC-56, TC-58 (S-4 step), TC-60 (S-4 scan), TC-62 (target size S-4, keyboard walk),
+TC-63, TC-72.
+
+| Run (2026-11-27, ENV-1) | Passed | Skipped | Failed |
+|---|---|---|---|
+| Before (v0.4 suite), real data | 69 (incl. DEF-05 expected failure) | **1** (TC-23) | 0 |
+| Before (v0.4 suite), copy of the data with every event moved 400 days into the past (not committed) | 56 | **14** | 0 |
+| After, `E2E_SKIP_BUILD=1 npm run test:e2e` and full `npm run test:e2e`, real data | **75** (incl. DEF-05) | **0** | 0 |
+| After, same expired copy of the data | **75** | **0** | 0 |
+| After, seam switched off (`E2E_CURATED_EVENTS` empty; temporary, not committed) — detail + calendar specs | 4 | 0 | **9** (fail loudly, no skips) |
+
+New total: 75 tests (TC-21 +3, TC-45 +1, TC-46 +1). `npm test` 165 passed (14 files), lint clean, TC-40 server log
+0 coordinate lines. TC-56 on fixtures: median 420 ms, max 614 ms. The build output has no fixture data (only the
+variable's name in two server chunks; nothing in `.next/static`).
+
+**Not covered by e2e any more:** the real curated file itself. Vitest still checks every entry is valid and ids are
+unique; whether it has upcoming events (E-6) is checked by the data refresh, the ENV-2 smoke check and UAT (RT-01).
+
 ---
 
 ## 2. Results per test case
@@ -117,9 +152,9 @@ scans ran too early and gave different results from run to run).
 | TC-18 | FR-13, US-04 | filters (+ unit) | Pass | Free → F-01; Max RM 50 → F-01, F-07, F-02, F-09; Any → 6 incl. "Price not listed" |
 | TC-19 | FR-14, US-04 | filters | Pass | Weekend + Music → F-03 only; no reload (window marker kept); no new search request |
 | TC-20 | FR-15, US-04 | filters | Pass | "0 events nearby", "No events match", hint text, Widen to 25 km keeps Today + Sports; no Widen at 50 km |
-| TC-21 | FR-17, FR-32, NFR-18, US-05 | detail | Pass | Real event: title, long day, time "(Malaysia time)", venue + address, category, price, description, "Source: Curated by Happening", no image (none in data, Q-2); after a search "x.x km from your search" |
+| TC-21 | FR-17, FR-32, NFR-18, US-05 | detail | Pass | v0.5, server fixtures S-1 – S-4: title, long day, time "(Malaysia time)" with and without end, venue + address, category, price (range, free, not listed, RM 20), description, "Source: Curated by Happening", **image shown and loaded for S-1** (Q-2 closed), none for the others; after a search "x.x km from your search" |
 | TC-22 | FR-18, US-05 | detail | Pass | New tab at exactly `E.url` (https); `target=_blank`, `rel="noopener noreferrer"` on the button and the row link |
-| TC-23 | FR-17, FR-13, US-05 | detail | Pass | A real upcoming event with `price: null` exists (2 today); shows "Price not listed" |
+| TC-23 | FR-17, FR-13, US-05 | detail | Pass | v0.5: server fixture S-2 (`price: null`) shows "Price not listed" and no price amount. (On 27 Nov the v0.4 version skipped: no real upcoming event without a price was left) |
 | TC-24 | FR-05, FR-17 | detail (+ unit) | **Partly** (missing link: Pass; malformed link: known failure DEF-05) | Missing id → "This event isn't available" + link to `/` ✓. Malformed `/event/%E0%A4%A` → **HTTP 500** "Internal Server Error" → **DEF-05**. Unit `isEnded` ✓ |
 | TC-25 | FR-32, NFR-17 | detail | **Pass** (re-run, DEF-01 fixed; first run: Fail) | OSM attribution is **covered by the list sheet** at 360 px → **DEF-01** ([screenshot](evidence/TC-25-attribution-hidden-360px.png)). About links to the OSM copyright page ✓ |
 | TC-26 | FR-19, US-06 | detail (+ unit) | Pass (auto part) | Google Maps `dir/?api=1&destination=lat,lon`, Waze `ll=lat,lon&navigate=yes`, both new tab + noopener. Opening the apps on a phone: open |
@@ -138,8 +173,8 @@ scans ran too early and gave different results from run to run).
 | TC-42 | FR-34, US-12 | chips | Pass | At 25 km: chip pressed with check mark → F-01, F-05; again → 7 rows, Any + Next 30 days, still 25 km; set by hand → chip pressed |
 | TC-43 | FR-35, US-13 | search | Pass | "jazz bukit" / "CAFE" → F-01; "market" + Free → empty state; Reset keeps "market" → F-02; empty → 6; no search requests |
 | TC-44 | FR-36, US-14 | chips | Pass | Today → F-01; again → 6; Music kept throughout; Today then Free this week → only Free pressed; 21:00 run: event ended at 19:00 not listed |
-| TC-45 | FR-37, US-15 | share | Pass (auto part) | Bot user agent: `<title>`/`og:title` "E.title — Happening", description "date · venue · price", `twitter:card` summary, no `og:image`; missing id → "Event — Happening", no `og:description`. Chat-app check on ENV-2: open |
-| TC-46 | FR-23, US-17 | calendar (+ unit) | Pass | `.ics` download: VCALENDAR/VEVENT, SUMMARY, DTSTART/DTEND in UTC = event times, LOCATION, URL, every line ≤ 75 bytes, status message, no network request |
+| TC-45 | FR-37, US-15 | share | Pass (auto part) | Bot user agent: `<title>`/`og:title` "E.title — Happening", description "date · venue · price", v0.5: S-1 `twitter:card` summary_large_image with `og:image` = its image URL, S-2 summary with no `og:image`; missing id → "Event — Happening", no `og:description`. Chat-app check on ENV-2: open |
+| TC-46 | FR-23, US-17 | calendar (+ unit) | Pass | v0.5: run for S-1 (end time) and S-2 (no end: DTEND = start + 2 h). `.ics` download: VCALENDAR/VEVENT, SUMMARY, DTSTART/DTEND in UTC = event times, LOCATION, URL, every line ≤ 75 bytes, status message, no network request |
 | TC-49 | FR-40, US-18 | offline | Pass | Service worker on: offline reload of `/`, `/about`, `/saved` render with the dark stylesheet; unvisited `/event/…` lands on `/` |
 | TC-50 | FR-40, NFR-09, US-18 | offline | Pass | `lastsearch` = `{savedAt, events}` only, P not in localStorage; offline map tap → "Can't reach the server. Showing events saved on Thu 17 Dec · 10:00 AM…" + Try again; online → notice gone |
 | TC-51 | FR-33, US-18 | pwa (+ unit) | Pass (auto part) | Manifest `short_name` "Happening", `name` "Happening — events near you", standalone, start `/`, icons 192/512/maskable 200 `image/png`; apple-touch-icon 200. Installing on phones: open |
@@ -147,7 +182,7 @@ scans ran too early and gave different results from run to run).
 | TC-53 | FR-41, NFR-09, US-19 | areas (+ unit) | Pass | "Kota Kinabalu · 50 km", 2 rows = button; 0 geolocation calls; only area centres sent; filters default + 50 km |
 | TC-54 | FR-41, US-19 | areas | Pass | Counts answered 500 → plain names, no "undefined"; Klang Valley still lists 8 |
 | TC-55 | FR-41, FR-03, US-19 | areas | Pass | After Klang Valley, map tap → "Pinned spot · 50 km", one new search from the tapped point |
-| TC-56 | NFR-01 | perf | Pass (ENV-1) | Real API, Fast 4G (165 ms RTT, 8.1 / 1.35 Mbit/s = DevTools preset) + 4× CPU: runs 461, 557, 382, 462, 488 ms; **median 462 ms, max 557 ms** (≤ 3000). Final figure on ENV-2 still to take |
+| TC-56 | NFR-01 | perf | Pass (ENV-1) | v0.5: real API serving the server fixtures (23 Klang Valley events): median 420 ms, max 614 ms. v0.4: real API and data, Fast 4G (165 ms RTT, 8.1 / 1.35 Mbit/s = DevTools preset) + 4× CPU: runs 461, 557, 382, 462, 488 ms; **median 462 ms, max 557 ms** (≤ 3000). Final figure on ENV-2 still to take |
 | TC-58 | NFR-03 | responsive | Pass | 360/768/1280 px × dark/light × S-1, S-2/3, S-7, S-4, S-5, S-6 = 36 checks: no sideways scroll, main button visible and clickable, "Change" in view; screenshots attached to the run for a manual glance |
 | TC-59 | NFR-04 | explore | Pass (auto part) | Row title → details = 1 action; pin → row title = 2 actions. UAT part: open |
 | TC-60 | NFR-05 | a11y | **Pass** (re-run, DEF-02/03 fixed; first run: Fail) | 9 screens × dark/light. 0 colour-contrast findings. Serious: unnamed focusable search-point pin (**DEF-02**), invalid `<dl>` on details (**DEF-03**). No moderate/minor. [findings JSON](evidence/TC-60-axe-findings.json) |

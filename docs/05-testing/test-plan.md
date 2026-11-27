@@ -69,9 +69,11 @@ FR-41 now shows a Kota Kinabalu button on the first screen, so testers *will* se
    tests that check filters, chips, map or list replace the search response with a **fixture**
    (`page.route("/api/events/search")`) whose dates are relative to a **fixed browser clock**
    (`page.clock.setFixedTime`). Unit tests already pass `now` as a parameter.
-3. Only the event **details page** reads the real curated file on the server. Detail tests pick
-   *any* upcoming event at run time from the unmocked API and assert facts relative to it; they
-   need at least one upcoming event in the file (entry criterion E-6).
+3. The event **details page** (a Server Component) and the unmocked API read the curated events
+   on the **server**, where `page.route` can't reach. For the e2e run the server is given fixed,
+   always-upcoming **server fixtures** S-1 – S-4 instead of the real file (§2.3), so these tests
+   never skip and never depend on the real data or date (changed 2026-11-27; before, they picked
+   a real upcoming event at run time and skipped silently when there was none).
 4. **Map tiles are not downloaded in tests:** requests to `*.tile.openstreetmap.org` are answered
    with a blank 256 px PNG. This respects the OSM tile usage policy and keeps tests stable. The
    attribution text is still checked.
@@ -106,6 +108,36 @@ Default view (10 km, Next 30 days, all, any price) must list **F-01, F-07, F-02,
 F-05 and F-06 are outside 10 km; F-08 has ended. Expected subsets for each filter are written in the test cases.
 A second fixture for Kota Kinabalu (two events near the KK centre) is returned when the request body
 is the KK area centre (FR-41 tests).
+
+### 2.3 Server fixtures (details page and unmocked API — PRE-D)
+`e2e/fixtures/server-events.ts` builds the curated entries the **e2e web server** serves. The server
+uses its real clock, so dates are relative to the day the run starts (Malaysia time; one anchor day
+per run, `E2E_DAY`, shared by the runner, the workers and the server) and lie 1 – 25 days ahead.
+
+| ID | App id | What it covers | When | Price | Other |
+|---|---|---|---|---|---|
+| S-1 `full` | `curated:e2e-s1` | Every field (TC-21, TC-22, TC-26/27, TC-28 – TC-34, TC-45, TC-46, TC-58, TC-60, TC-62, TC-72) | +2 days 20:00–22:30 | RM 35 – RM 60 | Address, description, **image** (FR-17 image, FR-37 `og:image`; closes Q-2) |
+| S-2 `noPrice` | `curated:e2e-s2` | TC-23 "Price not listed"; TC-45 without image; TC-46 without end | +3 days 19:30, **no end** | `null` | No address, no image |
+| S-3 `free` | `curated:e2e-s3` | TC-21 | +1 day 08:00–12:00 | Free | |
+| S-4 `sabah` | `curated:sb-e2e-s4` | TC-21 (a Sabah `sb-` event) | +4 days 18:00–21:00 | RM 20 | Kota Kinabalu waterfront |
+| 20 fillers | `curated:e2e-fill-01…20` | Keep the Klang Valley list ≈ the real file's length, so TC-56 (NFR-01) times a realistic list | +5 – +24 days | mixed | |
+
+**How it reaches the server (the seam).** `playwright.config.ts` passes the JSON array as
+`E2E_CURATED_EVENTS` in `webServer.env`; `curatedEntries()` in `src/lib/sources/curated.ts` serves it
+instead of the bundled `data/curated-events.json`. It is read at request time, so the **same
+production build** is tested (CI still builds once). Guards: the variable is **ignored on Vercel**
+(`VERCEL` is set there); when it is used the server log says `[curated] E2E_CURATED_EVENTS is set:
+serving N TEST events…`; a broken value throws instead of falling back to the real file; titles start
+with "E2E". No test data is in the build output — it only arrives through the environment. Unit tests
+in `curated.test.ts` cover unset, set, Vercel and broken values.
+
+**Images in tests:** S-1's image is on `images.organiser.example`; the browser's request is answered
+by `e2e/helpers.ts` with a 1 × 1 PNG (every outside image request, like the OSM tiles), so no outside
+network is used. The CSP already allows `img-src https:`, and TC-21 checks the image actually loaded.
+
+**What this no longer proves:** the e2e suite no longer reads the real curated file. Its validity
+is still checked by Vitest (`curated.test.ts`: every entry valid, ids unique); whether it has
+**upcoming** events (E-6) is a data-refresh and UAT question (RT-01), checked on ENV-2.
 
 ---
 
@@ -155,7 +187,7 @@ Chrome/Edge/Firefox. Record the exact version shown in each browser's "About" pa
 | E-3 | Test cases written and linked in the traceability matrix | ✅ (this step) |
 | E-4 | Test tooling added (§3.1) | ✅ 2026-11-24 (`playwright.config.ts`, `npm run test:e2e`) |
 | E-5 | ENV-1 starts and serves `/`, `/about`, `/saved`, `/event/<id>` | ✅ 2026-11-24 (Playwright `webServer`) |
-| E-6 | **Curated data has upcoming events on the test date**: ≥ 1 for automated detail-page tests; for UAT (23–29 Dec) ≥ 10 Klang Valley events dated in or after the UAT window, incl. ≥ 1 free, ≥ 1 "price not listed", ≥ 3 categories, ≥ 1 within 10 km of a typical tester's campus/home area, and ideally ≥ 1 with an image (FR-17/FR-37) | ❌ **Not met for UAT** — see RT-01 |
+| E-6 | **Curated data has upcoming events on the test date**: automated tests no longer need it (server fixtures, §2.3, since 2026-11-27); for UAT (23–29 Dec) ≥ 10 Klang Valley events dated in or after the UAT window, incl. ≥ 1 free, ≥ 1 "price not listed", ≥ 3 categories, ≥ 1 within 10 km of a typical tester's campus/home area, and ideally ≥ 1 with an image (FR-17/FR-37) | ❌ **Not met for UAT** — see RT-01 |
 | E-7 | Vercel URL live (for real-phone and HTTPS cases) | ❓ owner to confirm |
 
 ## 5. Exit criteria (Phase 5 done — milestone M5)
@@ -221,7 +253,7 @@ Phase 4 finished early, so automated testing can start well before the original 
 
 | ID | Risk | Likelihood / impact | Mitigation |
 |---|---|---|---|
-| **RT-01** | **Test data expires before UAT.** The latest curated event ends **Sat 19 Dec 2026, 19:00**. Upcoming events: 20 on 1 Dec, 3 on 15 Dec, **0 on 23 Dec** (Klang Valley and Kota Kinabalu). During the UAT window every tester would see "No events match" and every details link would say "This event has ended" | **Certain / High** | Refresh `curated-events.json` with events dated 23 Dec – Jan by 18 Dec (E-6). Automated filter tests use fixtures and are not affected |
+| **RT-01** | **Test data expires before UAT.** The latest curated event ends **Sat 19 Dec 2026, 19:00**. Upcoming events: 20 on 1 Dec, 3 on 15 Dec, **0 on 23 Dec** (Klang Valley and Kota Kinabalu). During the UAT window every tester would see "No events match" and every details link would say "This event has ended" | **Certain / High** | Refresh `curated-events.json` with events dated 23 Dec – Jan by 18 Dec (E-6). Automated tests use fixtures (§2.2, §2.3) and are not affected |
 | RT-02 | No Vercel URL → phones can't use real location (HTTPS only) and chat previews can't be checked | Medium / Medium | Testers use "Pick a spot" or an area button; FR-01 on a real phone waits for ENV-2 |
 | RT-03 | Only Chromium is available for automation | Certain / Medium | Firefox and Safari covered manually (TC-66); Safari-specific features (Add to Home Screen, Calendar) on a real iPhone |
 | RT-04 | Nobody in the UAT group has an iPhone, or a previous-major browser | Medium / Medium | Ask before booking sessions; otherwise report NFR-13 iOS rows as a gap |

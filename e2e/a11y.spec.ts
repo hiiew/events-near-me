@@ -3,7 +3,8 @@
 import AxeBuilder from "@axe-core/playwright";
 import type { Page } from "@playwright/test";
 import { F, NOW } from "./fixtures/events";
-import { chip, expect, openResults, openWelcome, realEvent, resultsHeading, setFilters, test } from "./helpers";
+import { eventPath, S } from "./fixtures/server-events";
+import { chip, expect, openResults, openWelcome, resultsHeading, setFilters, test } from "./helpers";
 
 type Finding = { screen: string; id: string; impact: string; nodes: number; help: string; first: string };
 
@@ -17,7 +18,7 @@ for (const theme of ["dark", "light"] as const) {
   test.describe(theme, () => {
     test.use({ colorScheme: theme });
 
-    test(`TC-60 NFR-05: axe finds no serious or critical WCAG 2.1 AA violations (${theme})`, async ({ page, request }, info) => {
+    test(`TC-60 NFR-05: axe finds no serious or critical WCAG 2.1 AA violations (${theme})`, async ({ page }, info) => {
       const found: Finding[] = [];
       await openWelcome(page);
       await scan(page, "S-1 welcome", found);
@@ -39,12 +40,9 @@ for (const theme of ["dark", "light"] as const) {
       await expect(resultsHeading(page)).toHaveText("0 events nearby");
       await scan(page, "S-2 empty state", found);
 
-      const e = await realEvent(request);
-      if (e) {
-        await page.goto(`/event/${encodeURIComponent(e.id)}`);
-        await expect(page.getByRole("heading", { level: 1 })).toHaveText(e.title); // the event part is streamed in after load
-        await scan(page, "S-4 details", found);
-      }
+      await page.goto(eventPath(S.full)); // server fixture with every field, incl. the image (PRE-D)
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(S.full.title); // the event part is streamed in after load
+      await scan(page, "S-4 details", found);
       await page.goto("/saved");
       await page.evaluate(() => localStorage.clear());
       await page.reload();
@@ -63,7 +61,7 @@ for (const theme of ["dark", "light"] as const) {
   });
 }
 
-test("TC-62 NFR-05 (automated part): every control is at least 44 × 44 px", async ({ page, request }) => {
+test("TC-62 NFR-05 (automated part): every control is at least 44 × 44 px", async ({ page }) => {
   // Inline text links (inside a sentence) are excepted, as in WCAG 2.5.8. Map pins are excepted because every
   // pinned event is also a full-size row in the list (ui-ux.md §6: "map is never the only way").
   const small = async (screen: string) =>
@@ -87,12 +85,9 @@ test("TC-62 NFR-05 (automated part): every control is at least 44 × 44 px", asy
   tooSmall.push(...(await small("S-2")));
   await page.getByRole("button", { name: "Filters", exact: true }).first().click();
   tooSmall.push(...(await small("S-7")));
-  const e = await realEvent(request);
-  if (e) {
-    await page.goto(`/event/${encodeURIComponent(e.id)}`);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText(e.title);
-    tooSmall.push(...(await small("S-4")));
-  }
+  await page.goto(eventPath(S.full));
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(S.full.title);
+  tooSmall.push(...(await small("S-4")));
   for (const path of ["/saved", "/about"]) {
     await page.goto(path);
     tooSmall.push(...(await small(path)));
@@ -100,9 +95,9 @@ test("TC-62 NFR-05 (automated part): every control is at least 44 × 44 px", asy
   expect(tooSmall).toEqual([]);
 });
 
-test("TC-62 NFR-05 (automated part): the core flow works by keyboard alone, with a visible focus ring", async ({ page, request }) => {
-  test.skip(!(await realEvent(request)), "needs a real upcoming event to reach the details page (E-6)");
-  // Generous limit: with real data the list can hold dozens of rows (two links each) before the tab cycles round.
+test("TC-62 NFR-05 (automated part): the core flow works by keyboard alone, with a visible focus ring", async ({ page }) => {
+  // The Klang Valley search below is real (unstubbed); the e2e server answers it with the server fixtures (PRE-D).
+  // Generous limit: the list can hold dozens of rows (two links each) before the tab cycles round.
   const tabTo = async (match: (el: { tag: string; label: string; cls: string }) => boolean, max = 250) => {
     for (let i = 0; i < max; i++) {
       await page.keyboard.press("Tab");

@@ -2,7 +2,8 @@
 // 3 sizes × 2 themes × 6 screens = 36 checks. Screenshots are attached to the test results for a manual glance.
 import type { Page, TestInfo } from "@playwright/test";
 import { F, NOW } from "./fixtures/events";
-import { expect, openResults, realEvent, test } from "./helpers";
+import { eventPath, S } from "./fixtures/server-events";
+import { expect, openResults, test } from "./helpers";
 
 const SIZES = [
   { width: 360, height: 740 },
@@ -24,8 +25,7 @@ for (const size of SIZES) {
     test.describe(`${size.width}px ${theme}`, () => {
       test.use({ viewport: size, colorScheme: theme });
 
-      test(`TC-58 NFR-03: ${size.width}px ${theme} — six screens, no horizontal scroll`, async ({ page, request }, info) => {
-        const e = await realEvent(request);
+      test(`TC-58 NFR-03: ${size.width}px ${theme} — six screens, no horizontal scroll`, async ({ page }, info) => {
         await page.clock.setFixedTime(NOW);
         await page.goto("/");
         await check(page, info, "S-1 welcome", "Use my location");
@@ -36,10 +36,8 @@ for (const size of SIZES) {
         await page.getByRole("button", { name: "Filters", exact: true }).first().click();
         await check(page, info, "S-7 filters", "Show 6 events");
         await page.keyboard.press("Escape");
-        if (e) {
-          await page.goto(`/event/${encodeURIComponent(e.id)}`);
-          await check(page, info, "S-4 details", "Directions (Google Maps)");
-        }
+        await page.goto(eventPath(S.full)); // server fixture with every field, incl. the image (PRE-D)
+        await check(page, info, "S-4 details", "Directions (Google Maps)");
         await page.evaluate((ev) => localStorage.setItem("happening.bookmarks.v1", JSON.stringify([{ savedAt: new Date().toISOString(), event: ev }])), F["01"]);
         await page.goto("/saved");
         await check(page, info, "S-5 saved", `Remove ${F["01"].title} from Saved`);

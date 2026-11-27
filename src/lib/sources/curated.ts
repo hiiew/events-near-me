@@ -31,8 +31,31 @@ export function filterCurated(entries: unknown[], query: SourceQuery): Event[] {
   return events;
 }
 
+let testEntries: { raw: string; entries: unknown[] } | undefined;
+
+/**
+ * FR-05, FR-17 — the raw curated entries the server uses: the bundled data/curated-events.json.
+ *
+ * Test seam (test-plan.md §2.3, PRE-D): the Playwright web server sets E2E_CURATED_EVENTS to a JSON array of
+ * always-upcoming test events, so the details page (a Server Component) can be tested without the real file,
+ * whose events expire. Guards: ignored on Vercel (VERCEL is set there); when used, a warning naming it goes to
+ * the server log; bad JSON throws instead of silently falling back to the real file. Unset: the real file,
+ * exactly as before. No test data is in the bundle — it only arrives through the environment.
+ */
+export function curatedEntries(env: Record<string, string | undefined> = process.env): unknown[] {
+  const raw = env.E2E_CURATED_EVENTS;
+  if (!raw || env.VERCEL) return curatedData as unknown[];
+  if (testEntries?.raw !== raw) {
+    const entries: unknown = JSON.parse(raw);
+    if (!Array.isArray(entries)) throw new Error("E2E_CURATED_EVENTS must be a JSON array");
+    console.warn(`[curated] E2E_CURATED_EVENTS is set: serving ${entries.length} TEST events instead of data/curated-events.json`);
+    testEntries = { raw, entries };
+  }
+  return testEntries.entries;
+}
+
 /** FR-17: one curated event by its app id ("curated:kl-0002"), or null if missing or invalid. */
-export function getCuratedEvent(id: string, entries: unknown[] = curatedData as unknown[]): Event | null {
+export function getCuratedEvent(id: string, entries: unknown[] = curatedEntries()): Event | null {
   const raw = entries.find((e) => `curated:${(e as { id?: unknown })?.id}` === id);
   const parsed = CuratedEventSchema.safeParse(raw);
   return parsed.success ? { ...parsed.data, id, sourceId: "curated" } : null;
@@ -41,5 +64,5 @@ export function getCuratedEvent(id: string, entries: unknown[] = curatedData as 
 export const curatedAdapter: SourceAdapter = {
   id: "curated",
   isEnabled: () => true,
-  getEvents: async (query) => filterCurated(curatedData as unknown[], query),
+  getEvents: async (query) => filterCurated(curatedEntries(), query),
 };

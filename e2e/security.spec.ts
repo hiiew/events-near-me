@@ -1,12 +1,12 @@
 // security-privacy.md T-03, T-04, §7 headers (TC-72) and NFR-06 browser part (TC-63 step 4).
 import { F } from "./fixtures/events";
-import { expect, openResults, realEvent, row, test } from "./helpers";
+import { eventPath, S } from "./fixtures/server-events";
+import { expect, openResults, row, test } from "./helpers";
 
 test("TC-72 T-03 T-04 FR-18: security headers on pages and the API", async ({ request }) => {
-  const e = await realEvent(request);
   const responses = [
     await request.get("/"),
-    await request.get(e ? `/event/${encodeURIComponent(e.id)}` : "/about"),
+    await request.get(eventPath(S.full)),
     await request.post("/api/events/search", { data: { lat: 3.139, lon: 101.687 } }),
   ];
   for (const res of responses) {
@@ -34,14 +34,14 @@ test("TC-72 T-03: HTML in an event title is shown as text, never run; no CSP vio
   expect(problems).toEqual([]);
 });
 
-test("TC-63 NFR-06 (browser part): no request in a full flow carries a key or token", async ({ page, request }) => {
+test("TC-63 NFR-06 (browser part): no request in a full flow carries a key or token", async ({ page }) => {
   const seen: string[] = [];
   page.on("request", (r) => seen.push(JSON.stringify({ url: r.url(), headers: r.headers(), body: r.postData() })));
   await openResults(page);
   await page.getByRole("button", { name: "Filters", exact: true }).first().click();
   await page.keyboard.press("Escape");
-  const e = await realEvent(request);
-  if (e) await page.goto(`/event/${encodeURIComponent(e.id)}`);
+  await page.goto(eventPath(S.full));
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(S.full.title);
   await page.goto("/saved");
   await page.goto("/about");
   expect(seen.length).toBeGreaterThan(5);
