@@ -6,12 +6,17 @@ import { F, NOW } from "./fixtures/events";
 import { eventPath, S } from "./fixtures/server-events";
 import { chip, expect, openResults, openWelcome, resultsHeading, setFilters, test } from "./helpers";
 
-type Finding = { screen: string; id: string; impact: string; nodes: number; help: string; first: string };
+type Finding = { screen: string; id: string; impact: string; nodes: number; help: string; first: string; why: string };
 
 async function scan(page: Page, screen: string, found: Finding[]) {
   // @axe-core/playwright brings its own newer playwright-core, so its Page type differs by version only; same object at run time.
   const { violations } = await new AxeBuilder({ page: page as unknown as ConstructorParameters<typeof AxeBuilder>[0]["page"] }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
-  for (const v of violations) found.push({ screen, id: v.id, impact: v.impact ?? "unknown", nodes: v.nodes.length, help: v.help, first: String(v.nodes[0]?.target) });
+  for (const v of violations)
+    found.push({
+      screen, id: v.id, impact: v.impact ?? "unknown", nodes: v.nodes.length, help: v.help, first: String(v.nodes[0]?.target),
+      // axe's own explanation (e.g. the measured colours and ratio), so a CI-only failure can be diagnosed from the log
+      why: v.nodes.slice(0, 3).map((n) => n.failureSummary ?? "").join(" | "),
+    });
 }
 
 for (const theme of ["dark", "light"] as const) {
