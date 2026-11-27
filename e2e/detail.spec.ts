@@ -88,6 +88,9 @@ test("TC-25 FR-32 NFR-17: OpenStreetMap attribution is visible on the map and li
   const attribution = page.locator(".leaflet-control-attribution");
   await expect(attribution).toContainText("OpenStreetMap");
   await expect(attribution).toBeInViewport();
+  // DEF-09: the theme's solid background must win over leaflet.css's 80 % white box whatever order the CSS
+  // loads in (the default test context is dark, so --bg is #0e0f13).
+  await expect(attribution).toHaveCSS("background-color", "rgb(14, 15, 19)");
   // Not covered by the list sheet: the element on top at the attribution's centre is the attribution itself.
   const onTop = await attribution.evaluate((el) => {
     const r = el.getBoundingClientRect();
