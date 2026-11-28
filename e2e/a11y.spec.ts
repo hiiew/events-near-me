@@ -24,6 +24,9 @@ for (const theme of ["dark", "light"] as const) {
     test.use({ colorScheme: theme });
 
     test(`TC-60 NFR-05: axe finds no serious or critical WCAG 2.1 AA violations (${theme})`, async ({ page }, info) => {
+      // Nine full-page axe scans in one test: ~10 s on Chromium, 20–31 s on CI's WebKit, which crossed the default
+      // 30 s limit on PR #38 while still scanning. The scans are unchanged; only the time budget fits the work.
+      test.setTimeout(90_000);
       const found: Finding[] = [];
       await openWelcome(page);
       await scan(page, "S-1 welcome", found);
