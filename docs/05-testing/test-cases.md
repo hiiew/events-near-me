@@ -320,11 +320,19 @@
   and "Some sources are unavailable right now." shown.
 
 #### TC-37 — Adding a source needs only an adapter file and a registry entry
-- **Req:** NFR-14 · **Type:** audit (design review) · **Playwright:** No
+- **Req:** NFR-14 · **Type:** audit (design review) + unit · **Playwright:** No (`route.test.ts` for the server side)
 - **Pre:** Code on `main`.
 - **Steps:** Walk through adding a dummy adapter on a scratch branch: create `src/lib/sources/dummy.ts` implementing `SourceAdapter`, add it to `ALL_ADAPTERS`, enable via `ENABLED_SOURCES`; run unit tests and build; `git diff --stat`.
 - **Expected:** Only those two files (+ env) change; no file under `src/components/` or `src/app/` is
   touched; dummy events appear in search results. Scratch branch discarded.
+- **Status (2026-11-27, test-report §1.6): Fail → DEF-10.** Walk-through done (scratch files, discarded): with a
+  dummy adapter (`id: "eventbrite"`) + one line in `ALL_ADAPTERS`, `git diff --stat` = `registry.ts` only (+ the new
+  file); unit tests, `tsc` and `next build` pass; its event comes back from `POST /api/events/search`. **But** its
+  details page `/event/eventbrite:dummy-1` says "This event isn't available" — `src/app/event/[id]/page.tsx` looks up
+  curated events only (`getCuratedEvent`), so rows, Saved and shared links of a new source are dead ends until that
+  UI file changes. A brand-new id (`"dummy"`) also needs `SourceIdSchema` in `event-schema.ts` and then fails `tsc`
+  in the same page (`SOURCE_NAMES`). Committed regression test: `route.test.ts` "NFR-14 (TC-37) a second source
+  needs no change to the route or the aggregator" (passes; proves the server side only).
 
 ### US-10 — Know my privacy
 
@@ -351,6 +359,16 @@
 - **Steps:** 1. Unit: spy on `console.*` while the route handles valid, invalid and oversize bodies; invalid curated entry. 2. After the whole e2e run, search the server log for the test landmark coordinates (all spellings: 3.158 / 3.1579…). 3. Code review: every `console.*` in `src/` (today: 2, in `curated.ts` and `aggregator.ts`); no file writes, no database.
 - **Expected:** No log line contains a coordinate or a request body; error messages name the field
   only; no persistence on the server. Result reported as a count of matches (must be 0).
+- **Status (2026-11-27, test-report §1.6): Pass.** Step 1 now exists: `route.test.ts` captures every
+  `console.log/info/warn/error/debug/trace` call in the file and, after **every** test, fails if a line contains
+  the 6-dp test point, its 3-dp rounding, its digits alone, the other tests' points or the invalid fixture entry's
+  venue; the NFR-10 tests also check the request body. Covered: valid 6-dp point with an invalid curated entry, a
+  throwing source and a source that times out (3 log lines, each naming only an id); malformed JSON, out-of-range,
+  string lat, extra field, > 1 KB (0 log lines, nothing echoed); unexpected error → plain 500, 0 log lines; the
+  `E2E_CURATED_EVENTS` seam (count only) and its bad-JSON path. Checked to fail when broken (4 temporary leaks in
+  `aggregator.ts`, `route.ts`, `curated.ts`: each failed 2–11 tests; reverted). Step 2: e2e log 0 of 12 lines.
+  Step 3: **3** `console.warn` in `src/` today (2 in `curated.ts`, 1 in `aggregator.ts`), all id/count only; no file
+  writes, no database. Observation OBS-1 (test-report §1.6) for future adapters.
 
 ### US-11 — Maintain curated events
 
@@ -572,6 +590,14 @@
   curated entry links to its official page (`url` https, spot-check 10 links open the right event);
   no data copied from sources that forbid it (Ticket2u pages exported by the owner — confirm terms note).
 - **Expected:** Every rule in architecture §5–6 met or a gap recorded.
+- **Status (2026-11-27, test-report §1.6): Partial — audit done, NFR-17 stays open.** Met: OSM attribution on
+  map and About (TC-25); tiles from `tile.openstreetmap.org` only, never cached by `sw.js` (cross-origin skipped);
+  all 46 curated `url`s https, 0 `imageUrl`, descriptions short (max 129 characters, median 72) and in own words;
+  Google Maps / Waze are plain links (no API, no key); Eventbrite deferred (nothing to audit). **Open (owner):**
+  OT-1 Ticket2u terms not checked although **39 of 46** entries come from Ticket2u exports, and Ticket2u is not
+  recorded as an origin in architecture §5; OT-2 OSM tile policy V-8; OT-3 the 10-link spot-check (outside hosts
+  are blocked from Claude's container). DEF-11 (S4): About / details say "organisers' official pages" / "Curated
+  by Happening" while 39 links are Ticket2u listings.
 
 #### TC-70 — Malaysia time and RM formatting
 - **Req:** NFR-18 · **Type:** unit + e2e · **Playwright:** Yes (`format.test.ts`; `e2e/explore.spec.ts`)
