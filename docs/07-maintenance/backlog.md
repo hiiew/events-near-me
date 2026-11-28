@@ -67,7 +67,7 @@ After UAT (23–29 Dec): re-rank BL-07 and BL-19 – BL-23 using the testers' an
    `docs/07-maintenance/`" — point it to the incident log (maintenance plan §3.5).
 4. `risk-register.md` "Top risks" are dated 2026-11-24 and still say "freeze features until Phase 5 is done"; review at the
    next phase gate with this plan's §8.
-5. `test-plan.md` / `test-cases.md` link `uat-script.md`, which exists only on the open PR #35 until it merges.
+5. ~~`test-plan.md` / `test-cases.md` link `uat-script.md`, which existed only on open PR #35.~~ Resolved: #35 merged 2026-11-28.
 6. `dev-log.md`: the 2026-11-13 and 2026-11-12 feature/data rows lack the "Req IDs" / "Deviation" cells, and two
    2026-11-13 rows sit before 2026-11-12 rows.
 
