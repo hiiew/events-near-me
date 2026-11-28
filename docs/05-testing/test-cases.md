@@ -503,8 +503,8 @@
 #### TC-59 — Details within 3 taps after results appear
 - **Req:** NFR-04 · **Type:** UAT + e2e · **Playwright:** Partly (`e2e/explore.spec.ts`)
 - **Pre:** e2e: results shown. UAT: tester who has not used the app, ENV-2.
-- **Steps:** e2e: count the user actions from the results list to `/event/…` (expected path: tap a row title = 1; via the map: pin → row title = 2). UAT: "Find an event that interests you and open its details" — observer counts taps after the list appears.
-- **Expected:** e2e ≤ 3 actions. UAT: every tester (owner, Tester A, B, C) ≤ 3 taps.
+- **Steps:** e2e: count the user actions from the results list to `/event/…` (expected path: tap a row title = 1; via the map: pin → row title = 2). UAT: `uat-script.md` task T1 ("Find out what's happening near a place of your choice, then open one event that looks interesting to you") — observer counts taps from the results heading to the details page (tap definition in `uat-script.md` §6).
+- **Expected:** e2e ≤ 3 actions. UAT: every new user (Tester A, B, C) ≤ 3 taps; the owner's taps are reported separately, not counted (owner decision 2026-11-27, `uat-script.md` OD-2).
 
 #### TC-60 — Automated WCAG 2.1 AA scan (axe)
 - **Req:** NFR-05 · **Type:** audit · **Playwright:** Yes (`e2e/a11y.spec.ts`)
@@ -596,7 +596,7 @@
 
 #### TC-73 — UAT: core tasks by real users
 - **Req:** NFR-04, US-01 – US-08 (acceptance) · **Type:** UAT · **Playwright:** No
-- **Pre:** ENV-2; E-6 data; `uat-script.md`; owner + Tester A, B, C, each on their own phone.
+- **Pre:** ENV-2; E-6 data; [`uat-script.md`](uat-script.md) (pre-session checklist §3, tasks T1–T10, recording sheet §8); owner + Tester A, B, C, each on their own Android phone (no iPhone in the group).
 - **Steps:** Tasks (≈ 20 min): find events near a spot; show only free events this week; find a music
   event this weekend; open one and get directions; save it and find it on Saved; share it to yourself;
   read what happens to your location. Then 3 rating questions, one feedback question and free comments.

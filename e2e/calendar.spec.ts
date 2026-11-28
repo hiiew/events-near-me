@@ -10,8 +10,16 @@ for (const e of [S.full, S.noPrice]) {
   test(`TC-46 FR-23 US-17: the .ics file has the right event, times in UTC and folded lines (${e.end ? "with" : "without"} end time)`, async ({ page }) => {
     await page.goto(eventPath(e));
     await page.waitForLoadState("networkidle");
+    // Anything that could carry event data off the device: every request except the browser fetching the app's
+    // own static code (same-origin GET of /_next/static/, which Next.js may load lazily on the first click —
+    // WebKit did, failing CI on PR #35). Other methods, other hosts and /api/ still count.
+    const origin = new URL(page.url()).origin;
     const sent: string[] = [];
-    page.on("request", (r) => sent.push(r.url()));
+    page.on("request", (r) => {
+      const u = new URL(r.url());
+      const ownCode = r.method() === "GET" && u.origin === origin && u.pathname.startsWith("/_next/static/");
+      if (!ownCode) sent.push(`${r.method()} ${r.url()}`);
+    });
 
     const [download] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: "Add to calendar" }).click()]);
     expect(download.suggestedFilename()).toMatch(/\.ics$/);
