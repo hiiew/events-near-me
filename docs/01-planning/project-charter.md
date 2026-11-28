@@ -8,7 +8,7 @@
 | Version | 1.0 — approved 2026-11-11 |
 | Date | 2026-11-11 |
 | Owner / developer | Project student (sole developer) |
-| Mentor / reviewer | AI assistant (senior engineer role) |
+| Mentor / reviewer | AI assistant (senior engineer role). *(updated 2026-11-28) Since 2026-11-11, at the owner's request, the AI assistant also writes the application code and explains it in each pull request; the owner reviews and decides (dev-log 2026-11-11, CLAUDE.md).* |
 
 > **What is a project charter?** It is the first document in most projects. It answers *why* the
 > project exists, *what* it will and won't do, and *who* is involved. Every later decision should be
@@ -43,7 +43,7 @@ As a result people miss events they would have enjoyed, and checking several sou
 
 ### In scope (MVP candidates — finalised with MoSCoW in Phase 2)
 - Detect the user's location (with permission) or let them choose an area manually.
-- Fetch events from **official third-party event APIs** and a **curated dataset of real public KL events** maintained by the developer, combined through an adapter layer (*changed 2026-11-11 after the data-source spike — see `data-source-spike.md`*).
+- Fetch events from **official third-party event APIs** and a **curated dataset of real public KL events** maintained by the developer, combined through an adapter layer (*changed 2026-11-11 after the data-source spike — see `data-source-spike.md`*). *(updated 2026-11-28) As built, the curated dataset is the only enabled source; the Eventbrite adapter (FR-26) is deferred to the maintenance backlog (CR-03, BL-02).*
 - Show events as a **list** and on a **map**.
 - Filter by distance, date range, category and price (free / paid / price range where available).
 - Event detail view with a link to the official event or ticket page and a directions link.
@@ -56,7 +56,7 @@ As a result people miss events they would have enjoyed, and checking several sou
 - Selling tickets or handling payments.
 - Scraping websites or social media (Instagram, Facebook, etc.).
 - Push notifications, social features (friends, comments, ratings).
-- Coverage outside the Klang Valley (the design should not *prevent* it, but it won't be tested). Kota Kinabalu (Sabah) has curated data since CR-11, still without testing.
+- Coverage outside the Klang Valley (the design should not *prevent* it, but it won't be tested). Kota Kinabalu (Sabah) has curated data since CR-11, still without testing. *(updated 2026-11-28) The Kota Kinabalu area button is covered by automated tests with fixture data (TC-52 – TC-55); it is not part of UAT (test-plan §1.3).*
 
 ## 5. Stakeholders
 
@@ -75,7 +75,7 @@ As a result people miss events they would have enjoyed, and checking several sou
 | A-1 | Developer is comfortable with JavaScript or Python but new to mobile and cloud | `ASSUMPTION` (default accepted) |
 | A-2 | Timeline is 8 weeks at ~10 hours/week (~80 hours total) | `ASSUMPTION` (default accepted) |
 | A-3 | Purpose is a university assignment that also serves as a portfolio piece | `ASSUMPTION` (default accepted) |
-| A-4 | At least one free official event API returns enough KL events to be useful | **Unverified — highest risk, see R-01** |
+| A-4 | At least one free official event API returns enough KL events to be useful | **Unverified — highest risk, see R-01** · *(updated 2026-11-28) Shown false by the spike on 2026-11-11 (Ticketmaster: 0 KL events); replaced by the curated dataset, R-01 closed* |
 | A-5 | A mobile-friendly web app (PWA) satisfies the "mobile-friendly" goal | `ASSUMPTION` (recommended in feasibility study) |
 | A-6 | Users have a modern smartphone browser with geolocation support | `ASSUMPTION` |
 
