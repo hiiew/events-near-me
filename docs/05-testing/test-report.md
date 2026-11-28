@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Phase | 5 — Testing |
-| Version | 0.6 — WebKit (emulated iPhone 15) added to CI; results pending the first CI run (§1.5). Before: 0.5 — details-page tests run on fixed server fixtures instead of real data (§1.4); 0.4 — DEF-07 fix and the owner's acceptance of DEF-08 (§1.3); 0.3 — Lighthouse on ENV-1 and DEF-05 accepted; 0.2 — re-run after DEF-01 – DEF-06; 0.1 — first run. UAT, ENV-2 and real-device results follow |
+| Version | 0.7 — NFR-10 unit log-leak test, NFR-14 walk-through (TC-37) and NFR-17 audit (TC-69), §1.6. Before: 0.6 — WebKit (emulated iPhone 15) added to CI; results pending the first CI run (§1.5); 0.5 — details-page tests run on fixed server fixtures instead of real data (§1.4); 0.4 — DEF-07 fix and the owner's acceptance of DEF-08 (§1.3); 0.3 — Lighthouse on ENV-1 and DEF-05 accepted; 0.2 — re-run after DEF-01 – DEF-06; 0.1 — first run. UAT, ENV-2 and real-device results follow |
 | Run date | 2026-11-24 |
 | Commit under test | branch `claude/kind-gates-6ijzwm` = `main` after PR #21, plus the test files of this step (no app code changed). Lighthouse (§1.2): `main` after PR #22, no app code changed |
 | Standard | Structure based on IEEE 829 / ISO/IEC/IEEE 29119-3 (test completion report) |
@@ -132,6 +132,67 @@ cannot be installed in Claude's container, so **no WebKit result exists yet**; n
 Locally the Chromium run is unchanged: 75 passed, 0 skipped (incl. DEF-05 `test.fail()`). NFR-13 stays open: a green
 WebKit run is partial evidence; the real-iPhone part of TC-66 is still needed or must be accepted as a gap.
 
+### 1.6 v0.7 — NFR-10 log-leak unit test, NFR-14 walk-through, NFR-17 audit (2026-11-27)
+
+Branch `next-work` (from `main` at df32e9b). **Test code only, no app code changed.** Run in this step on ENV-1:
+`npm run lint` 0 problems · `npm test` **174 passed** (14 files; 165 before + 9 new in `route.test.ts`) ·
+`npm run build` OK · Chromium e2e **75 passed** (TC-40 global teardown: server log 12 lines, 0 with a coordinate or body).
+
+| TC | Req | Result | Evidence |
+|---|---|---|---|
+| TC-40 | NFR-10 | **Pass** | Unit step added: `route.test.ts` captures every `console.log/info/warn/error/debug/trace` call and after **each** of its 15 tests fails if a line contains the 6-dp test point (3.157931, 101.712345), its 3-dp rounding, its digits alone, the other tests' points or the invalid fixture entry's venue. Valid 6-dp point + invalid curated entry + throwing source + timed-out source → 200 and exactly 3 log lines, each naming only an entry or source id; malformed JSON / lat 93.157931 / lat as string / extra field / 2 KB → 400/413, **0** log lines, nothing echoed; forced server error → `{"error":"server_error"}`, 0 lines; `E2E_CURATED_EVENTS` seam logs the count only, its bad-JSON path logs the parse error only. **Shown to catch leaks:** 4 temporary mutations (query in the aggregator warning; `console.log` of the body in the route; whole invalid entry in the curated warning; rounded point logged before the search) made 2, 11, 4 and 6 tests fail; all reverted. e2e log scan 0 / 12 lines. Code review: 3 `console.warn` in `src/` (2 `curated.ts`, 1 `aggregator.ts`), no file writes, no database |
+| TC-37 | NFR-14 | **Fail → DEF-10** | Walk-through on scratch files (deleted afterwards, `git status` clean): a dummy adapter with `id: "eventbrite"` + one entry in `ALL_ADAPTERS` → `git diff --stat` shows `registry.ts` only (+ the new file); unit tests, `tsc`, `next build` pass; with `ENABLED_SOURCES=curated,eventbrite` the search returned `sources: [curated ok 25, eventbrite ok 1]` and the dummy event. Opening `/event/eventbrite%3Adummy-1` on the same server showed **"This event isn't available"**: the details page is a UI file that only knows curated events. A brand-new id (`"dummy"`) fails `tsc` until `SourceIdSchema` (`event-schema.ts`) is extended, and then fails again in `src/app/event/[id]/page.tsx` (`SOURCE_NAMES`). Committed: `route.test.ts` "a second source needs no change to the route or the aggregator" (pass — server side only) |
+| TC-69 | NFR-17 | **Partial** (audit done; 3 owner items open, 1 S4 defect) | Table below |
+
+**Every place a new source still needs a change (NFR-14 asks for "only a new adapter file and a config entry — no
+changes to UI code"):**
+
+| # | Place | Needed when | UI code? |
+|---|---|---|---|
+| 1 | `src/lib/sources/<name>.ts` (adapter) + one entry in `ALL_ADAPTERS` (`registry.ts`) | always | no — allowed by NFR-14 |
+| 2 | `ENABLED_SOURCES` (Vercel / `.env.local`; `.env.example` comment) + the source's own secrets | always | no — config |
+| 3 | **`src/app/event/[id]/page.tsx`: `getCuratedEvent(id)`** (`generateMetadata` and `EventDetail`) — no lookup by id for other sources; the code comment calls it a shortcut | always: otherwise list rows, Saved and shared links of that source open "This event isn't available" | **yes → DEF-10** |
+| 4 | `SourceIdSchema` in `src/lib/event-schema.ts` (`curated`, `eventbrite`, `predicthq`) | only for a source not already named | no (shared schema), but more than "one config entry" |
+| 5 | `SOURCE_NAMES` in `src/app/event/[id]/page.tsx` | only for a source not already named (`tsc` forces it) | **yes → DEF-10** |
+| 6 | Attribution text in `src/app/about/page.tsx` ("Events are curated by Happening…") | whenever the source's terms ask to be named (FR-32, NFR-17) | yes — content; acceptable as source attribution, but should come from the source list if DEF-10 is fixed |
+| 7 | FR-29 dedupe and FR-30 cache (aggregator / D-08) | when a live second source is added (Should, not built) | no |
+
+Not affected: `route.ts`, `aggregator.ts`, Explore (`page.tsx`, `EventRow`, `MapView`, filters), the
+"Some sources are unavailable" notice (uses `sources[].ok`), offline cache and bookmarks (stored as `Event`).
+In the deep-module terms of `codebase-design`: the `SourceAdapter` seam covers search (`getEvents`) but not
+"get one event by id", so the details page reaches past the seam to the curated module.
+
+**TC-69 — NFR-17 compliance audit (what the app does vs. what the design docs record):**
+
+| Source | Rule (architecture §5–6, curated guide, OSM licence) | What the app does | Result |
+|---|---|---|---|
+| OpenStreetMap tiles | Attribution visible | "© OpenStreetMap contributors" on the map (TC-25, computed background checked) and linked on About | **Pass** (TC-25) |
+| | Light use, no bulk download / offline tile caching; browser sends normal Referer and User-Agent | Tiles only from `https://tile.openstreetmap.org/{z}/{x}/{y}.png` by Leaflet as the user pans; `public/sw.js` returns early for every cross-origin request (never stores tiles); `Referrer-Policy: strict-origin-when-cross-origin` still sends the site origin | Code part **pass**; the policy text itself (V-8, deployment-guide §10) could not be read here → **OT-2, pending owner** |
+| Curated JSON | Every entry links to its official page, `https://` | 46 / 46 `url`s are https: 39 `ticket2u.com.my`, 4 `klpac.org`, 1 each `gdg.community.dev`, `raceroster.com`, `comicfiesta.org` | Code/data part **pass**; spot-check of 10 links not possible (outside hosts refused by the container proxy) → **OT-3, owner** |
+| | Facts only, own words, no long descriptions | Descriptions at most 129 characters (median 72); samples read as own-words summaries | **Pass** |
+| | No images unless the page allows it | 0 of 46 entries has an `imageUrl` | **Pass** |
+| | Source of the data recorded and allowed | **39 of 46** entries (85 %) come from Ticket2u list pages exported by the owner (dev-log 2026-11-13: "Ticket2u's terms of use were not checked"); Ticket2u is **not** recorded in architecture §5 (only "Curated JSON … official page") | **Open → OT-1, owner** |
+| | Attribution shown matches the origin | Details page "Source: Curated by Happening"; About "curated by Happening from organisers' official pages", but 39 links are a ticket seller's listings, not organisers' pages | **DEF-11 (S4)** |
+| Google Maps / Waze | Links only, no API, no key | `links.ts` builds `google.com/maps/dir/?api=1…` and `waze.com/ul?…` URLs; no Maps script, no key in `src/` | **Pass** (Waze URL format is still `[verify]` in architecture §5; real-phone check belongs to FR-19 / TC-26) |
+| Eventbrite | Token server-only, rate limits, caching | Deferred (CR-03): no adapter, nothing sent | N/A |
+
+**NFR-17 verdict: stays open.** The requirement has two parts — rules *followed* and *recorded in the design
+docs* — and for the source behind 85 % of the events neither can be confirmed until the owner reads Ticket2u's
+terms (OT-1). The OSM tile policy (OT-2) and the link spot-check (OT-3) are owner-pending too. The project rule (§4)
+allows ✅ only with nothing manual or owner-pending left, so ✅ is not given "with documented owner items".
+
+**Observation OBS-1 (NFR-10, not a defect today):** `aggregator.ts` logs a failed source's `error.message`
+verbatim. Today's only adapter never puts the query in a message, so nothing leaks (proven above), but a future
+adapter that throws e.g. `` `HTTP 500 for ${url}` `` with coordinates in the URL would log them. For the developer
+when a live source is added: never put the query or URL in adapter errors, or log only a fixed reason; add that
+adapter's failure case to the `route.test.ts` NFR-10 block.
+
+**Owner actions from this step:** decide DEF-10 (fix — a small developer slice — or accept through a change
+request narrowing NFR-14); OT-1 read Ticket2u's terms and say whether listing facts with a link is allowed (and
+whether Ticket2u must be named); OT-2 confirm the OSM tile policy (V-8); OT-3 open the 10 sample links
+(`kl-0011`, `kl-0016`, `kl-0021`, `kl-0026`, `kl-0031`, `kl-0036`, `kl-0041`, `kl-0046`, `kl-0051`, `sb-0005`) and
+confirm each shows the same event; DEF-11 wording after OT-1.
+
 ---
 
 ## 2. Results per test case
@@ -178,7 +239,7 @@ WebKit run is partial evidence; the real-iPhone part of TC-66 is still needed or
 | TC-36 | FR-28, FR-24, NFR-12 | explore (+ unit) | Pass | Fixture with Eventbrite `ok:false`: 6 events + "Some sources are unavailable right now."; unit: failing and hanging sources |
 | TC-38 | FR-31, US-10 | privacy | Pass (auto part) | All §5 points present, OSM link, Clear saved data, GitHub link. Owner's wording read: open |
 | TC-39 | NFR-09, US-10 | privacy (+ unit) | Pass | 5 searches (counts, location, map tap, map area): all POST, body exactly `{lat, lon}`, ≤ 3 dp; landmark sent as P; no other request carries any spelling of the point |
-| TC-40 | NFR-10 | global teardown | Pass (auto part) | After every full run the server log held **0** lines with a landmark coordinate, `90.0001` or a `lat`/`lon` key (335 lines in the build run). Code review: 2 `console.warn` in `src/` (curated id, source id + error message), no file writes, no database. **Gap:** the unit step "spy on `console.*` while the route handles valid/invalid/oversize bodies" does not exist in `route.test.ts` yet |
+| TC-40 | NFR-10 | global teardown | Pass (auto part) | After every full run the server log held **0** lines with a landmark coordinate, `90.0001` or a `lat`/`lon` key (335 lines in the build run). Code review: 2 `console.warn` in `src/` (curated id, source id + error message), no file writes, no database. **Gap:** the unit step "spy on `console.*` while the route handles valid/invalid/oversize bodies" does not exist in `route.test.ts` yet. **v0.7: unit step added and passing → TC-40 Pass (§1.6)** |
 | TC-42 | FR-34, US-12 | chips | Pass | At 25 km: chip pressed with check mark → F-01, F-05; again → 7 rows, Any + Next 30 days, still 25 km; set by hand → chip pressed |
 | TC-43 | FR-35, US-13 | search | Pass | "jazz bukit" / "CAFE" → F-01; "market" + Free → empty state; Reset keeps "market" → F-02; empty → 6; no search requests |
 | TC-44 | FR-36, US-14 | chips | Pass | Today → F-01; again → 6; Music kept throughout; Today then Free this week → only Free pressed; 21:00 run: event ended at 19:00 not listed |
@@ -217,7 +278,7 @@ WebKit run is partial evidence; the real-iPhone part of TC-66 is still needed or
 | TC-64 | Needs the Vercel URL (ENV-2) |
 | TC-66 | Device/browser matrix needs real phones and other browsers; row D-1 (headless Chromium) = this whole run |
 | TC-35, TC-48, TC-73 and the manual parts of TC-08, TC-26, TC-27, TC-38, TC-45, TC-51, TC-59, TC-62 | Need a real phone, a calendar/chat app, a screen reader or UAT testers (owner; test-plan §9) |
-| TC-37, TC-68, TC-69, TC-71 | Review/process audits planned with the owner (design walk-through, Vercel dashboard, source-terms check, curated-data history) |
+| TC-68, TC-71 | Review/process audits planned with the owner (Vercel dashboard, curated-data history). TC-37 and TC-69 were run in v0.7 (§1.6) |
 
 ### 2.4 Lighthouse (TC-57, TC-61) — ENV-1, mobile
 
@@ -279,6 +340,8 @@ again if the defect comes back, so the fix PR can be checked with `npm run test:
 | **DEF-07** | S4 Low | TC-61 (Lighthouse BP) | security-privacy §7 CSP (TC-72), T-03 | Zod's `Function("")` probe trips the CSP on every page (Chrome "issue", Best Practices 96) | **Fixed 2026-11-24** — `z.config({ jitless: true })` in `event-schema.ts`; Lighthouse Best Practices 96 → **100** on `/` and `/about` (same Lighthouse 13.6.0, with vs without the fix) |
 | **DEF-08** | S4 Low | TC-61 (Lighthouse SEO) | FR-37 (C) | Details page `<meta name="description">` is streamed into `<body>` for normal browsers (SEO 90) | **Accepted by owner 2026-11-24** — Next.js 16 streams metadata to normal browsers; bots still get it in `<head>` (TC-45 passes). Not fixed: `htmlLimitedBots` for everyone would slow the details page |
 | **DEF-09** | S3 Medium | TC-60 (CI, PR #32) | NFR-05 (M), FR-32 | OSM credit text contrast failed axe `color-contrast` (serious, 3 nodes, S-3 pick a spot, dark) on the CI runner only; the DEF-01 fix gave it a see-through background, so the contrast depended on what the map had drawn behind it. Not reproduced locally (12/12 passes); artifact not downloadable from Claude's container | **Fixed 2026-11-27, root cause corrected same day.** First fix (solid background) was not enough: the first WebKit CI run (PR #34) still failed, and the new axe `failureSummary` showed the measured background `#d0d1d2` = leaflet.css's `rgba(255,255,255,0.8)` box. Real cause: leaflet.css's `.leaflet-container .leaflet-control-attribution` has the same specificity as the app's doubled class, and leaflet.css loads later with the map, so Leaflet's box won whenever it loaded last (proved locally: Chromium computed `rgba(255, 255, 255, 0.8)` with the old CSS). Fix: three-class selectors in `globals.css` (beat Leaflet regardless of load order). TC-25 now asserts the computed background is `rgb(14, 15, 19)` (fails on the old CSS, passes on the fix). |
+| **DEF-10** | **S2 High** | TC-37 | NFR-14 (M) | A new source's events can't be opened: the details page (UI) looks up curated events only, and a new source id also needs `SOURCE_NAMES` in the same page | **Open** — owner to decide fix or CR (found 2026-11-27, v0.7) |
+| **DEF-11** | S4 Low | TC-69 | NFR-17 (M), FR-32 (M) | About and details page say the events come from "organisers' official pages" / "Curated by Happening", but 39 of 46 links are Ticket2u listings | **Open** — owner, together with OT-1 (found 2026-11-27, v0.7) |
 
 **DEF-01 — OSM attribution hidden behind the list sheet (S2).**
 Steps: open `/` at 360 × 740 → Use my location → results show. Look at the bottom-right corner of the map.
@@ -354,6 +417,25 @@ Evidence: [`event-details-mobile-median.json`](evidence/lighthouse/event-details
 (developer/owner): accept; or set Next's `htmlLimitedBots` so more agents get blocking metadata (costs streaming
 time on the details page — measure TC-57/56 again after).
 
+**DEF-10 — New source's events open "This event isn't available" (S2).**
+Steps (scratch, not committed): add `src/lib/sources/dummy.ts` with `id: "eventbrite"` returning one event
+`eventbrite:dummy-1`; add it to `ALL_ADAPTERS`; `npm run build`; `ENABLED_SOURCES=curated,eventbrite npx next start`;
+POST a search near KLCC → the event is in the list; open `/event/eventbrite%3Adummy-1`.
+Expected (NFR-14): a new source needs only an adapter file and a config entry, no UI change, and works end to end.
+Actual: "This event isn't available" — `EventDetail` and `generateMetadata` call `getCuratedEvent(id)` only. A new
+id not in `SourceIdSchema` additionally fails `tsc` in the same page (`SOURCE_NAMES[event.sourceId]`). No effect on
+users today (only the curated source is enabled), which is the workaround: edit the page when a source is added.
+Why S2: a Must requirement fails, with a workaround. Likely fix (developer to decide): give the adapter seam an
+optional "get one event by id" (or a registry `findEvent(id)` that routes by the id prefix), call it from the details
+page, and keep each source's display name with its adapter. Re-test: TC-37 walk-through again.
+
+**DEF-11 — Attribution text doesn't match where the events come from (S4).**
+Steps: open About, then any Ticket2u-based event (e.g. `kl-0021`). Expected (NFR-17, FR-32): the source named on
+screen matches the data's origin. Actual: About says "curated by Happening from organisers' official pages"; details
+say "Source: Curated by Happening"; "View official page" goes to a Ticket2u listing. Why S4: no effect on use; may
+matter once Ticket2u's terms are known (OT-1). Fix after OT-1: reword (e.g. "from organisers' and ticket sellers'
+official pages") or name Ticket2u if its terms require it.
+
 **Observation (not a defect, for TC-62's manual part):** after choosing an area or "Use my location" with the
 keyboard, the pressed button disappears and focus falls back to the page start, so a keyboard user Tabs
 through the map pins again. The owner's keyboard/screen-reader check should judge whether this is acceptable.
@@ -368,10 +450,13 @@ blocks FR-01 but not FR-04/FR-06.
 
 | Priority | Rows | ✅ now | Rows ✅ |
 |---|---|---|---|
-| **Must** | 39 (24 FR + 15 NFR) | **26** | FR-03 – FR-15, FR-17, FR-18, FR-20, FR-24, FR-25, FR-28, FR-32; NFR-03, NFR-06, NFR-08, NFR-09, NFR-12, NFR-18 |
+| **Must** | 39 (24 FR + 15 NFR) | **27** | FR-03 – FR-15, FR-17, FR-18, FR-20, FR-24, FR-25, FR-28, FR-32; NFR-03, NFR-06, NFR-08, NFR-09, NFR-10, NFR-12, NFR-18 |
 | **Should** | 9 (5 FR + 4 NFR) | **2** | FR-21, NFR-11 |
 | **Could** (built) | 11 (FR-16 deferred) | **5** | FR-34, FR-35, FR-36, FR-40, FR-41 |
-| **Must + Should** | **48** | **28** | |
+| **Must + Should** | **48** | **29** | |
+
+**v0.7 changes:** NFR-10 ✅ (TC-40 unit step added and passing, §1.6). NFR-14 stays open (TC-37 fails, DEF-10);
+NFR-17 stays open (TC-69 partial, owner items OT-1 – OT-3, DEF-11).
 
 **v0.3 changes:** FR-05 (TC-05 ✓, TC-24 missing-link part ✓) and FR-17 (TC-21 ✓, TC-23 ✓, TC-24 missing-link part ✓)
 had only DEF-05 open and no manual part; with DEF-05 accepted by the owner they are ✅. NFR-02 and NFR-05 stay open
@@ -385,14 +470,13 @@ Must rows **not** ✅ and what they wait for:
 | FR-02 | TC-08 real-phone note (Q-6) |
 | FR-19 | TC-26 app part on a phone |
 | FR-31 | TC-38 owner's read of the wording |
-| NFR-17 | TC-69 audit (DEF-01 fixed, FR-32 now ✅) |
+| NFR-17 | TC-69 owner items: OT-1 Ticket2u terms (39 / 46 entries), OT-2 OSM tile policy V-8, OT-3 link spot-check; DEF-11 (S4) wording (§1.6) |
 | NFR-01 | TC-56 final figure on ENV-2 (passes on ENV-1) |
 | NFR-04 | TC-73 UAT (TC-59 e2e part passes) |
 | NFR-05 | TC-62 manual part (screen reader, 200 % zoom, contrast spot-check); TC-61 re-run on ENV-2 (TC-60, TC-62 auto part and TC-61 on ENV-1 pass) |
 | NFR-07 | TC-64 on ENV-2 |
-| NFR-10 | TC-40 unit step (console spy in `route.test.ts`) missing |
 | NFR-13 | TC-66 device matrix |
-| NFR-14 | TC-37 design walk-through |
+| NFR-14 | DEF-10 fix (or a change request) and a TC-37 re-run (§1.6) |
 | NFR-16 | TC-68 Vercel dashboard |
 
 Should rows not ✅: FR-22 (TC-35 phone share sheet), NFR-02 (TC-57 passes on ENV-1 with median 98; final figure on ENV-2, RT-08), NFR-15 (CI part of TC-67),
@@ -404,12 +488,12 @@ NFR-19 (TC-71 process check); **FR-26, FR-29, FR-30 are gaps — not built** (CR
 
 | # | Criterion | Status |
 |---|---|---|
-| 1 | Every Must row ✅ | ❌ 26 / 39 |
+| 1 | Every Must row ✅ | ❌ 27 / 39 |
 | 2 | Every built Should row ✅; FR-26/29/30 listed as gaps | ❌ 2 of 6 built; gaps listed ✅ |
-| 3 | No open Critical/High defects | ✅ No open defects: DEF-01 – DEF-04, DEF-06, DEF-07 fixed; DEF-05 and DEF-08 (S4) accepted by owner |
+| 3 | No open Critical/High defects | ❌ **DEF-10 (S2) open** (v0.7); DEF-11 (S4) open; DEF-01 – DEF-04, DEF-06, DEF-07, DEF-09 fixed; DEF-05 and DEF-08 (S4) accepted by owner |
 | 4 | UAT done (owner + Testers A–C), NFR-04 met | ❌ not started (23–29 Dec; needs refreshed data, RT-01) |
-| 5 | `test-report.md` written | 🟡 this v0.3 (UAT, ENV-2 and real-device results to add) |
+| 5 | `test-report.md` written | 🟡 this v0.7 (UAT, ENV-2 and real-device results to add) |
 | 6 | Core logic line coverage ≥ 70 % | ✅ 90.7 % |
 
-**Next:** add the TC-40 console-spy unit test; ENV-2
+**Next:** owner decision on DEF-10 and the TC-69 owner items (§1.6); ENV-2
 (Vercel URL) for TC-57/TC-61 final runs, TC-56, TC-64; owner's real-device cases, TC-62 manual part and UAT (test-plan §7).

@@ -5,7 +5,7 @@
 | Phase | 2 — Requirements (living document — filled in during Phases 3–5) |
 | Version | 1.1 |
 | Product name | Written as "Events Near Me"; the product is now **Happening** (CR-01). Title kept as approved. |
-| Date | 2026-11-11 (last updated 2026-11-24: DEF-05 accepted by the owner → FR-05 and FR-17 ✅; Lighthouse TC-57/TC-61 pass on ENV-1 but NFR-02/NFR-05 wait for ENV-2 and TC-62's manual part; earlier: first Phase 5 run — ✅ set only for rows whose every linked test case passed with no manual/phone/ENV-2/UAT part left, see `docs/05-testing/test-report.md` §4; before that, Phase 5 test case IDs linked from `docs/05-testing/test-cases.md`; earlier the same day: user stories US-12–US-18 linked, screen IDs corrected — CR-13) |
+| Date | 2026-11-11 (last updated 2026-11-27: NFR-10 ✅ — TC-40 unit log-leak step added and passing; NFR-14 stays open — TC-37 fails, DEF-10; NFR-17 stays open — TC-69 partial, owner items, `test-report.md` §1.6. Before, 2026-11-24: DEF-05 accepted by the owner → FR-05 and FR-17 ✅; Lighthouse TC-57/TC-61 pass on ENV-1 but NFR-02/NFR-05 wait for ENV-2 and TC-62's manual part; earlier: first Phase 5 run — ✅ set only for rows whose every linked test case passed with no manual/phone/ENV-2/UAT part left, see `docs/05-testing/test-report.md` §4; before that, Phase 5 test case IDs linked from `docs/05-testing/test-cases.md`; earlier the same day: user stories US-12–US-18 linked, screen IDs corrected — CR-13) |
 
 > **What is an RTM?** A table that links every requirement forward to the design element that
 > handles it, the code that builds it and the test that proves it. It answers two questions an
@@ -66,14 +66,14 @@
 | NFR-07 | M | Security: Served over HTTPS only | — | ADR-08, T-08 | | TC-64 | 🎨 |
 | NFR-08 | M | Security: Server endpoints validate all inputs (lat/lon ranges, radius from… | — | D-06, ADR-09, T-05 | `route.ts`, `src/lib/event-schema.ts` (+ tests) | TC-65 | ✅ |
 | NFR-09 | M | Privacy: The search point is rounded to 3 decimal places (~100 m) before it… | US-10 | D-02, T-01 | `src/lib/geo.ts`, `src/lib/location.ts`, `route.ts` (+ tests) | TC-39, TC-50, TC-53 | ✅ |
-| NFR-10 | M | Privacy: The server does not store or log users' coordinates | US-10 | ADR-07, T-01 | `route.ts`, `aggregator.ts`, `curated.ts` log ids only (+ tests) | TC-40 | 🛠 |
+| NFR-10 | M | Privacy: The server does not store or log users' coordinates | US-10 | ADR-07, T-01 | `route.ts`, `aggregator.ts`, `curated.ts` log ids only (+ tests; `route.test.ts` console capture) | TC-40 | ✅ |
 | NFR-11 | S | Privacy: Bookmarks and settings are stored only in the browser… | US-07 | D-04, S-6 | `ClearSavedData.tsx`, `clearBookmarks` (+ test) | TC-29, TC-31, TC-32 | ✅ |
 | NFR-12 | M | Availability / resilience: If all live sources fail, curated events are… | US-09 | D-07 | `src/lib/sources/aggregator.ts` (+ test) | TC-36 | ✅ |
 | NFR-13 | M | Compatibility: Works on the latest two major versions of Chrome (Android)… | — | ADR-01 (modern browsers) | | TC-66 (partial automated evidence: e2e suite on WebKit / emulated iPhone 15 in CI, added 2026-11-27, first result pending; not a pass) | 🎨 |
-| NFR-14 | M | Maintainability: Adding a new source requires only a new adapter file and a… | — | ADR-05, adapter interface | `src/lib/sources/registry.ts`, `types.ts` | TC-37 | 🛠 |
+| NFR-14 | M | Maintainability: Adding a new source requires only a new adapter file and a… | — | ADR-05, adapter interface | `src/lib/sources/registry.ts`, `types.ts` | TC-37 (**fails** 2026-11-27: details page looks up curated events only — DEF-10, S2 open) | 🛠 |
 | NFR-15 | S | Maintainability: Core logic (adapters, filtering, distance, dedupe) has ≥ 70… | — | architecture §8 (src/test) | | TC-67 | 🎨 |
 | NFR-16 | M | Cost: Running cost is RM0 at expected student-project traffic | — | ADR-03, ADR-04, ADR-08 | | TC-68 | 🎨 |
-| NFR-17 | M | Compliance: Each source's attribution, caching and display rules are… | — | architecture §5–6 | | TC-25, TC-69 | 🎨 |
+| NFR-17 | M | Compliance: Each source's attribution, caching and display rules are… | — | architecture §5–6 | OSM attribution `MapView.tsx` + `about/page.tsx`; `public/sw.js` never caches tiles; curated `url`s https, no images | TC-25 ✅, TC-69 partial (owner: Ticket2u terms, OSM tile policy V-8, link spot-check; DEF-11 S4) | 🛠 |
 | NFR-18 | M | Localisation: Dates/times shown in Malaysia time; prices formatted like `RM… | — | ui-ux §5 | `src/lib/format.ts` (+ test) | TC-03, TC-70 | ✅ |
 | NFR-19 | S | Data freshness: Curated dataset reviewed at least weekly; ended events never… | — | curated-events-guide | | TC-05, TC-71 | 🎨 |
 
@@ -81,7 +81,7 @@
 
 | Priority | Total | Designed | Built | Tested ✅ |
 |---|---|---|---|---|
-| Must | 39 (24 FR + 15 NFR) | 39 | 31 built + 2 partial (NFR-03, NFR-05); 6 NFRs shown in Phase 5/6 (NFR-01, 04, 07, 13, 16, 17) | **26** (2026-11-24 e2e run + DEF-01–06 fix re-run + DEF-05 accepted; open: FR-01, 02, 19, 31, NFR-01, 04, 05, 07, 10, 13, 14, 16, 17 — reasons in test-report §4) |
+| Must | 39 (24 FR + 15 NFR) | 39 | 31 built + 2 partial (NFR-03, NFR-05); 6 NFRs shown in Phase 5/6 (NFR-01, 04, 07, 13, 16, 17) | **27** (2026-11-24 e2e run + DEF-01–06 fix re-run + DEF-05 accepted; NFR-10 added 2026-11-27; open: FR-01, 02, 19, 31, NFR-01, 04, 05, 07, 13, 14, 16, 17 — reasons in test-report §4) |
 | Should | 9 (5 FR + 4 NFR) | 9 | 3 built (FR-21, FR-22, NFR-11); FR-26 deferred (CR-03); FR-29/FR-30 only needed with a 2nd source; NFR-02/15/19 in Phases 5–7 | **2** (FR-21, NFR-11) |
 | Could | 12 | 11 (FR-23, FR-27 conditional, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38, FR-39, FR-40, FR-41); FR-16 deferred | 10 built (FR-23, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38, FR-39, FR-40, FR-41) | **5** (FR-34, FR-35, FR-36, FR-40, FR-41) |
 
