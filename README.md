@@ -20,10 +20,12 @@ requirements first, code later.
 | 1 | Planning | [`docs/01-planning`](docs/01-planning) | ✅ Approved 2026-11-11 |
 | 2 | Requirements | [`docs/02-requirements`](docs/02-requirements) | ✅ Approved 2026-11-11 |
 | 3 | Design | [`docs/03-design`](docs/03-design) | ✅ Approved 2026-11-11 |
-| 4 | Implementation | [`docs/04-implementation`](docs/04-implementation) | ✅ Slices 1–3 done |
-| 5 | Testing | [`docs/05-testing`](docs/05-testing) | ⏳ In progress (test plan drafted) |
-| 6 | Deployment | [`docs/06-deployment`](docs/06-deployment) | ⏳ In progress (early deploy prepared — owner imports the repo on Vercel, see [deployment guide](docs/06-deployment/deployment-guide.md); [user manual](docs/06-deployment/user-manual.md) drafted) |
-| 7 | Maintenance | [`docs/07-maintenance`](docs/07-maintenance) | ⏳ In progress (maintenance plan drafted) |
+| 4 | Implementation | [`docs/04-implementation`](docs/04-implementation) | ✅ Done — FR-01 – FR-41 built except FR-16, FR-26, FR-27, FR-29, FR-30 (deferred / need a second source, CR-03) |
+| 5 | Testing | [`docs/05-testing`](docs/05-testing) | ⏳ In progress (as of 2026-11-28) — 75 automated browser tests run in CI on Chromium + WebKit (emulated iPhone); Lighthouse passed on the local production build; **27 of 39 Must requirements ✅**; [UAT script](docs/05-testing/uat-script.md) ready for 23–29 Dec; open defects DEF-10 (S2, awaiting owner decision) and DEF-11 (S4) — see [test report](docs/05-testing/test-report.md) |
+| 6 | Deployment | [`docs/06-deployment`](docs/06-deployment) | ⏳ In progress (as of 2026-11-28) — CI, Dependabot, [deployment guide](docs/06-deployment/deployment-guide.md), release checklist and [user manual](docs/06-deployment/user-manual.md) done; Vercel project connected (preview deploys on PRs); **production URL and smoke checks pending (owner)** |
+| 7 | Maintenance | [`docs/07-maintenance`](docs/07-maintenance) | ⏳ In progress (as of 2026-11-28) — maintenance plan, backlog and dependency-update log drafted |
+
+Latest project status: [`docs/01-planning/status-report-2026-11-28.md`](docs/01-planning/status-report-2026-11-28.md).
 
 ## Run it on your computer
 
@@ -65,4 +67,4 @@ npm run build
 npm run start -- -H 0.0.0.0
 ```
 Then open `http://<your PC's local IP>:3000` on the phone (find the IP with `ipconfig`).
-Phones only share location over `https`, so use **Pick a spot on the map** — or use the Vercel link.
+Phones only share location over `https`, so use **Pick a spot on the map** — or use the live Vercel link once the production URL is confirmed (Phase 6).

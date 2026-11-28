@@ -99,12 +99,12 @@ coverage must be confirmed by the spike.**
 
 | Item | Planned tool | Cost |
 |---|---|---|
-| Code hosting & version control | GitHub (private repo) | RM0 |
+| Code hosting & version control | GitHub (private repo) — *(updated 2026-11-28) the repo is **public** (deployment guide §7)* | RM0 |
 | App hosting + server functions | Vercel Hobby | RM0 **[verify limits]** |
 | Maps | Leaflet + OpenStreetMap | RM0 |
 | Event data | Curated JSON file in the repo (Eventbrite free key if FR-26 is built) — *updated after the spike* | RM0 |
 | Domain | Free `*.vercel.app` subdomain | RM0 |
-| CI | GitHub Actions (free minutes for private repos) | RM0 **[verify limits]** |
+| CI | GitHub Actions (free minutes for private repos) — *(updated 2026-11-28) public repo, so Actions minutes are free (deployment guide V-9)* | RM0 **[verify limits]** |
 | Development tools | VS Code, Node.js, Git | RM0 |
 | **Total** | | **RM0** |
 

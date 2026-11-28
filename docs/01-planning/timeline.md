@@ -4,7 +4,7 @@
 |---|---|
 | Phase | 1 — Planning |
 | Product name | Written as "Events Near Me"; the product is now **Happening** (CR-01). Title kept as approved. |
-| Version | 1.0 — approved 2026-11-11 |
+| Version | 1.0 — approved 2026-11-11 · 1.1 — §1a "actual vs plan" and §3b remaining-schedule Gantt added 2026-11-28 (baseline unchanged) |
 | Date | 2026-11-11 |
 | Duration | 8 weeks, ~10 h/week (~80 h) — `ASSUMPTION` A-2 |
 
@@ -29,6 +29,38 @@
 
 *Week 4–6 fall over the holiday period — adjust if you plan time off (that's what the buffer is for).*
 
+## 1a. Actual vs plan (updated 2026-11-28)
+
+> The table above and the weekly plan / Gantt below are the **approved baseline** and are kept as they
+> were. This section compares them with what really happened (dev-log, test report, git history) and
+> lists the remaining schedule with what each step depends on.
+
+**Done**
+
+| ID | Milestone | Baseline date | Actual date | Note |
+|---|---|---|---|---|
+| M1 | Planning approved | Tue 17 Nov | ✅ Wed 11 Nov | 6 days early |
+| M2 | Requirements approved | Tue 24 Nov | ✅ Wed 11 Nov | 13 days early |
+| M3 | Design approved | Tue 1 Dec | ✅ Wed 11 Nov | 20 days early |
+| M4a | Slice 1 working | Tue 8 Dec (end of week 4) | ✅ Wed 11 Nov | PR #1 |
+| M4b | Slice 2 working | Tue 15 Dec (end of week 5) | ✅ Wed 11 Nov | |
+| M4c | Implementation complete | Tue 22 Dec | ✅ Wed 11 Nov | Musts built; FR-26 deferred (CR-03). Could features FR-23, FR-33 – FR-41 added 12–13 Nov via CR-04 – CR-12; FR-03 fix 24 Nov (CR-14) |
+| — | Real events (≥ 20) | Sun 6 Dec | ✅ Fri 13 Nov | 46 real entries (41 Klang Valley + 5 Kota Kinabalu); sample data removed |
+| — | Phase 5 started | Wed 23 Dec | ✅ Tue 24 Nov | Test plan, test cases, Playwright suites, Lighthouse on ENV-1 |
+| — | Phase 6 started (early deploy prep) | Wed 30 Dec | ✅ Tue 24 Nov | CI, Dependabot, deployment guide, release checklist; user manual 27 Nov |
+| — | Phase 7 drafted | Wed 30 Dec | ✅ Fri 27 Nov | Maintenance plan, backlog, dependency-update log |
+
+**Remaining (dates from the baseline and test-plan §7; none moved)**
+
+| When | Step | Depends on (owner items in **bold**) | Status 2026-11-28 |
+|---|---|---|---|
+| By Fri 11 Dec | Defect fixes merged and re-tested; ENV-2 (production URL) confirmed and smoke checks S-1 – S-13 run | **Owner decision on DEF-10** (fix or CR); **owner confirms the production URL and runs the smoke checks** (deployment guide §3–4) | Not started — waiting on owner |
+| By Fri 18 Dec | Curated data refreshed for the UAT window (E-6, RT-01): ≥ 10 Klang Valley events dated 23 Dec onwards | **Owner sends late-December event pages**; events-curator adds them; ideally after **OT-1 (Ticket2u terms)** is answered, because most data comes from Ticket2u | Not started — latest event today is Sat 19 Dec |
+| Mon 21 – Tue 22 Dec | Owner's real-device and manual cases (TC-35, TC-48, TC-51, TC-62 screen reader, TC-64, TC-66) | Production URL live; owner's Android phone and laptop; no iPhone available (iOS gap) | Not started |
+| Wed 23 – Tue 29 Dec (avoid 24–25) | UAT: owner + Testers A–C, ~20 min each, in person (`uat-script.md`) | Refreshed data passes the script's data check; production URL + QR code; testers booked | Script ready (v1.1); sessions not booked in the docs |
+| **Tue 29 Dec — M5** | Testing complete: test report v1.0, every Must ✅, no open S1/S2 defect | All of the above; 12 Must rows still open (see status report) | **At risk** — not late, but every remaining step waits on an owner action |
+| **Tue 5 Jan 2027 — M6** | Deployed + docs, final sign-off | M5; production deploy; deployment guide, user manual and maintenance plan approved by the owner | Docs drafted; approvals and live URL pending |
+
 ## 2. Weekly plan (original baseline)
 
 > Kept as approved on 2026-11-11. Phases 1–4 finished early (see the milestones table); the
@@ -48,11 +80,11 @@
 The **buffer** (~6 h) is spread inside weeks 6–8; if Phase 4 overruns, "Should" items move to the
 maintenance backlog rather than extending the deadline.
 
-## 3. Gantt chart
+## 3. Gantt chart (baseline, as approved 2026-11-11)
 
 ```mermaid
 gantt
-    title Events Near Me — SDLC timeline
+    title Events Near Me — SDLC timeline (baseline)
     dateFormat  YYYY-MM-DD
     axisFormat  %d %b
 
@@ -84,8 +116,40 @@ gantt
     M6 Final sign-off               :milestone, m6, 2027-01-05, 0d
 ```
 
+## 3b. Gantt chart — actual and remaining (updated 2026-11-28)
+
+Phases 1–4 all finished on 11 Nov, so their bars collapse to a day; the end dates M5 and M6 are unchanged.
+Red (critical) bars are the steps that wait on the owner.
+
+```mermaid
+gantt
+    title Happening — actual and remaining schedule (2026-11-28)
+    dateFormat  YYYY-MM-DD
+    axisFormat  %d %b
+
+    section Done
+    Phases 1-3 and Slices 1-3        :done, d1, 2026-11-11, 1d
+    Could features and real events   :done, d2, 2026-11-12, 2d
+    Test plan, e2e, Lighthouse, CI   :done, d3, 2026-11-24, 4d
+
+    section 5 Testing
+    DEF-10 decision, ENV-2 live      :crit, active, r1, 2026-11-28, 2026-12-11
+    Data refresh for UAT             :crit, r2, 2026-11-28, 2026-12-18
+    Owner real-device cases          :r3, 2026-12-21, 2d
+    UAT sessions                     :crit, r4, 2026-12-23, 2026-12-29
+    M5 Testing complete              :milestone, m5b, 2026-12-29, 0d
+
+    section 6-7 Deploy and Maintain
+    Production deploy, final docs    :r5, 2026-12-30, 2027-01-05
+    M6 Final sign-off                :milestone, m6b, 2027-01-05, 0d
+```
+
 ## 4. Critical path
 
 Data-source spike → Requirements → Design → Slices 1–3 → Testing → Deployment.
 Every phase depends on the previous one being approved, so a delay anywhere pushes the end date.
 The spike is on the critical path because **if KL data is too thin, requirements must change.**
+
+**Critical path now (updated 2026-11-28):** owner decisions (DEF-10, OT-1 Ticket2u terms) → production URL +
+smoke checks → data refresh by 18 Dec → UAT 23–29 Dec → M5 → production deploy → M6. Claude's remaining work
+(DEF-10 fix if chosen, test-report updates) is small; the path is set by owner actions.
